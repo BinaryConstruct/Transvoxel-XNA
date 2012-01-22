@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace VoxelTest.helper
+namespace VoxelStuff.helper
 {
     using T = System.Single;
 
@@ -145,6 +145,26 @@ namespace VoxelTest.helper
             return new Vector3f(s / v.X,
                                     s / v.Y,
                                     s / v.Z);
+        }
+
+        public static bool operator <(Vector3f a, Vector3f b)
+        {
+            return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
+        }
+
+        public static bool operator >(Vector3f a, Vector3f b)
+        {
+            return a.X > b.X && a.Y > b.Y && a.Z > b.Z;
+        }
+
+        public static bool operator <=(Vector3f a, Vector3f b)
+        {
+            return a.X <= b.X && a.Y <= b.Y && a.Z <= b.Z;
+        }
+
+        public static bool operator >=(Vector3f a, Vector3f b)
+        {
+            return a.X >= b.X && a.Y >= b.Y && a.Z >= b.Z;
         }
 
         #endregion
