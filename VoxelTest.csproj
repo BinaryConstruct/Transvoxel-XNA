@@ -108,7 +108,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellData.cs" />
+    <Compile Include="helper\TransvoxelConstantsTable.cs" />
+    <Compile Include="helper\Vector3f.cs" />
     <Compile Include="Implementation.cs" />
+    <Compile Include="helper\Vector3i.cs" />
     <Compile Include="Tables.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="IVolumeData.cs" />
