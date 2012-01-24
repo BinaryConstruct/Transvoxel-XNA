@@ -5,35 +5,38 @@ namespace TransvoxelXna.helper
 {
     public struct Vector3i
     {
-        public Int32 X;
-        public Int32 Y;
-        public Int32 Z;
+        public int X;
+        public int Y;
+        public int Z;
 
-        public Vector3i(Int32 x, Int32 y, Int32 z)
+        public Vector3i(int x, int y, int z)
         {
             X = x;
             Y = y;
             Z = z;
         }
 
-        public Vector3i(Int32 [] arr)
+        public Vector3i(int [] arr)
         {
             X = arr[0];
             Y = arr[1];
             Z = arr[2];
         }
 
+        // this is redundant of the static explicit operator Vector3
+        // use (Vector3f)v instead of v.cast()
         public Vector3f cast()
         {
             return new Vector3f((float)X, (float)Y, (float)Z);
         }
 
-        public Int32[] toArray()
+        // this is redundant of the indexer below
+        public int[] toArray()
         {
-            return new Int32[3]{X,Y,Z};
+            return new int[3]{X,Y,Z};
         }
 
-        public Int32 this[Int32 i]
+        public int this[int i]
         {
             get
             {
@@ -74,7 +77,7 @@ namespace TransvoxelXna.helper
 
         public static explicit operator Vector3i(Vector3 v)
         {
-            return new Vector3i((Int32)v.X, (Int32)v.Y, (Int32)v.Z);
+            return new Vector3i((int)v.X, (int)v.Y, (int)v.Z);
         }
 
         public static Vector3i operator +(Vector3i v0, Vector3i v1)
@@ -103,46 +106,32 @@ namespace TransvoxelXna.helper
                                     v0.Z * v1.Z);
         }
 
-        public static Vector3i operator +(Vector3i v, Int32 s)
+        public static Vector3i operator +(Vector3i v, int s)
         {
             return new Vector3i(v.X + s,
                                     v.Y + s,
                                     v.Z + s);
         }
 
-        public static Vector3i operator -(Vector3i v, Int32 s)
+        public static Vector3i operator -(Vector3i v, int s)
         {
             return new Vector3i(v.X - s,
                                     v.Y - s,
                                     v.Z - s);
         }
 
-        public static Vector3i operator -(Int32 s, Vector3i v)
-        {
-            return new Vector3i(s - v.X,
-                                    s - v.Y,
-                                    s - v.Z);
-        }
-
-        public static Vector3i operator *(Vector3i v, Int32 s)
+        public static Vector3i operator *(Vector3i v, int s)
         {
             return new Vector3i(v.X * s,
                                     v.Y * s,
                                     v.Z * s);
         }
 
-        public static Vector3i operator /(Vector3i v, Int32 s)
+        public static Vector3i operator /(Vector3i v, int s)
         {
             return new Vector3i(v.X / s,
                                     v.Y / s,
                                     v.Z / s);
-        }
-
-        public static Vector3i operator /(Int32 s, Vector3i v)
-        {
-            return new Vector3i(s / v.X,
-                                    s / v.Y,
-                                    s / v.Z);
         }
 
         public static bool operator <(Vector3i a, Vector3i b)
@@ -181,11 +170,11 @@ namespace TransvoxelXna.helper
             return Equals((Vector3i) obj);
         }
 
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
             unchecked
             {
-                Int32 result = Y;
+                int result = Y;
                 result = (result*397) ^ Z;
                 result = (result*397) ^ X;
                 return result;

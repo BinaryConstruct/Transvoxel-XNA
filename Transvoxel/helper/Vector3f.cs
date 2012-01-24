@@ -5,18 +5,18 @@ namespace TransvoxelXna.helper
 {
     public struct Vector3f
     {
-        public Single X;
-        public Single Y;
-        public Single Z;
+        public float X;
+        public float Y;
+        public float Z;
 
-        public Vector3f(Single x, Single y, Single z)
+        public Vector3f(float x, float y, float z)
         {
             X = x;
             Y = y;
             Z = z;
         }
 
-        public Vector3f(Single [] arr)
+        public Vector3f(float [] arr)
         {
             X = arr[0];
             Y = arr[1];
@@ -28,12 +28,12 @@ namespace TransvoxelXna.helper
             return new Vector3i((int)X,(int)Y,(int)Z);
         }
 
-        public Single[] toArray()
+        public float[] toArray()
         {
-            return new Single[3]{X,Y,Z};
+            return new float[3]{X,Y,Z};
         }
 
-        public Single this[Single i]
+        public float this[float i]
         {
             get
             {
@@ -74,7 +74,7 @@ namespace TransvoxelXna.helper
 
         public static explicit operator Vector3f(Vector3 v)
         {
-            return new Vector3f((Single)v.X, (Single)v.Y, (Single)v.Z);
+            return new Vector3f((float)v.X, (float)v.Y, (float)v.Z);
         }
 
         public static Vector3f operator +(Vector3f v0, Vector3f v1)
@@ -103,46 +103,32 @@ namespace TransvoxelXna.helper
                                     v0.Z * v1.Z);
         }
 
-        public static Vector3f operator +(Vector3f v, Single s)
+        public static Vector3f operator +(Vector3f v, float s)
         {
             return new Vector3f(v.X + s,
                                     v.Y + s,
                                     v.Z + s);
         }
 
-        public static Vector3f operator -(Vector3f v, Single s)
+        public static Vector3f operator -(Vector3f v, float s)
         {
             return new Vector3f(v.X - s,
                                     v.Y - s,
                                     v.Z - s);
         }
 
-        public static Vector3f operator -(Single s, Vector3f v)
-        {
-            return new Vector3f(s - v.X,
-                                    s - v.Y,
-                                    s - v.Z);
-        }
-
-        public static Vector3f operator *(Vector3f v, Single s)
+        public static Vector3f operator *(Vector3f v, float s)
         {
             return new Vector3f(v.X * s,
                                     v.Y * s,
                                     v.Z * s);
         }
 
-        public static Vector3f operator /(Vector3f v, Single s)
+        public static Vector3f operator /(Vector3f v, float s)
         {
             return new Vector3f(v.X / s,
                                     v.Y / s,
                                     v.Z / s);
-        }
-
-        public static Vector3f operator /(Single s, Vector3f v)
-        {
-            return new Vector3f(s / v.X,
-                                    s / v.Y,
-                                    s / v.Z);
         }
 
         public static bool operator <(Vector3f a, Vector3f b)
