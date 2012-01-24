@@ -10,6 +10,7 @@ namespace VoxelStuff.VolumeData
     {
         public const int CHUNKBITS = 3;
         public const int CHUNKSIZE = 1 << CHUNKBITS; // = 2^(CHUNKBITS)
+        public const int CHUNKMASK = 0x7;
 
         private readonly sbyte[] values = new sbyte[CHUNKSIZE * CHUNKSIZE * CHUNKSIZE];
 
@@ -17,12 +18,12 @@ namespace VoxelStuff.VolumeData
         {
             get
             {
-                return values[Coord2Index(x,y,z)];
+                return values[Coord2Index(x & CHUNKMASK, y & CHUNKMASK, z & CHUNKMASK)];
             }
 
             set
             {
-                values[Coord2Index(x, y, z)] = value;
+                values[Coord2Index(x & CHUNKMASK, y & CHUNKMASK, z & CHUNKMASK)] = value;
             }
         }
 

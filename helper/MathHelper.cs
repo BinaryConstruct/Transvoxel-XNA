@@ -14,13 +14,30 @@ namespace VoxelTest.helper
             for (int i = 1; i < MASK_LR.Length; i++)
             {
                 MASK_LR[i] = (MASK_LR[i - 1]>>1);
-                Console.WriteLine(int2bitstr(MASK_LR[i]));
             }
         }
 
         public static uint Mask(int i)
         {
             return MASK_LR[i];
+        }
+
+        public static int min(int a, int b)
+        {
+            if (a < b)
+                return a;
+            else
+                return b;
+        }
+
+        public static uint Mask(int i, int j)
+        {
+            uint ret = 0;
+            for (int x = i; i < j+1; i++)
+            {
+                ret |= MASK_LR[i];
+            }
+            return ret;
         }
 
         public static string int2bitstr(uint val)
@@ -48,7 +65,7 @@ namespace VoxelTest.helper
         {
             for (int i = 0; i < num; i++)
             {
-                if (cmpBit(v1,v2,startIndex+i))
+                if (!cmpBit(v1,v2,startIndex+i))
                 {
                     return i;
                 }
