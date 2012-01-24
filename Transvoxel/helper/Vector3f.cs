@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna.helper
+namespace TransvoxelXna.Helper
 {
     public struct Vector3f
     {

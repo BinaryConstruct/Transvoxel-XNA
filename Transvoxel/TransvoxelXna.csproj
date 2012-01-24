@@ -107,19 +107,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CellData.cs" />
-    <Compile Include="helper\MathHelper.cs" />
-    <Compile Include="helper\TransvoxelConstantsTable.cs" />
-    <Compile Include="helper\Vector3f.cs" />
+    <Compile Include="Helper\MathHelper.cs" />
+    <Compile Include="Helper\Matrix3X3.cs" />
+    <Compile Include="Helper\Vector3f.cs" />
     <Compile Include="Implementation.cs" />
-    <Compile Include="helper\Vector3i.cs" />
-    <Compile Include="Tables.cs" />
+    <Compile Include="Helper\Vector3i.cs" />
+    <Compile Include="Lengyel\CellData.cs" />
+    <Compile Include="Lengyel\Tables.cs" />
+    <Compile Include="Lengyel\TransvoxelConstantsTable.cs" />
     <Compile Include="Cache.cs" />
     <None Include="VolumeData\IVolumeData_REF.cs" />
-    <Compile Include="Matrix3X3.cs" />
     <Compile Include="Transvoxel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Vector3Int32.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="VertexVoxel.cs" />
     <Compile Include="VolumeData\VolumeDataBase.cs" />

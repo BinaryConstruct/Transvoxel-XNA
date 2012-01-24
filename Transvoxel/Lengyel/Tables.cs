@@ -1,7 +1,11 @@
 using System;
+using TransvoxelXna.Helper;
 
-namespace TransvoxelXna
+namespace TransvoxelXna.Lengyel
 {
+    /// <summary>
+    /// Contains the Lengyel Transvoxel Lookup Tables
+    /// </summary>
     public static class Tables
     {
         private static readonly bool IsInitialized = false;
@@ -14,6 +18,8 @@ namespace TransvoxelXna
             ResizeArrays();
         }
 
+        // TODO: These can be initialized static/readonly if resizing arrays is not required
+
         public static byte[] RegularCellClass;
         public static CellData[] RegularCellData;
         public static ushort[][] RegularVertexData;
@@ -22,9 +28,23 @@ namespace TransvoxelXna
         public static CellData[] TransitionCellData;
         public static byte[] TransitionCornerData;
         public static ushort[][] TransitionVertexData;
+        public static Vector3i[] CornerIndex;
 
         private static void CreateRegularCellData()
         {
+            CornerIndex =
+                new[]
+		            {
+			            new Vector3i(0,0,0), 
+			            new Vector3i(1,0,0),      
+			            new Vector3i(0,0,1),      
+			            new Vector3i(1,0,1),      
+			            new Vector3i(0,1,0),      
+			            new Vector3i(1,1,0),      
+			            new Vector3i(0,1,1),      
+			            new Vector3i(1,1,1)
+		            };
+
             RegularCellClass =
                 new byte[]
                     {

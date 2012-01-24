@@ -1,4 +1,4 @@
-﻿using TransvoxelXna.helper;
+﻿using TransvoxelXna.Helper;
 
 namespace TransvoxelXna.VolumeData
 {

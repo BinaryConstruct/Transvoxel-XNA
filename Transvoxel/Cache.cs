@@ -1,3 +1,5 @@
+using TransvoxelXna.Helper;
+
 namespace TransvoxelXna
 {
     public class Cell
@@ -38,7 +40,7 @@ namespace TransvoxelXna
             }
         }
 
-        public Cell this[Vector3Int32 v]
+        public Cell this[Vector3i v]
         {
             get { return this[v.X, v.Y, v.Z]; }
             set { this[v.X, v.Y, v.Z] = value; }

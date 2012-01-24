@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TransvoxelXna.helper
+namespace TransvoxelXna.Helper
 {
     public class MathHelper
     {

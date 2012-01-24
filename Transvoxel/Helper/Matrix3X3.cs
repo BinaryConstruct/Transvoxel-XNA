@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna
+namespace TransvoxelXna.Helper
 {
     public struct Matrix3X3
     {
@@ -65,9 +65,10 @@ namespace TransvoxelXna
                 m.M21 * v.X + m.M22 * v.Y + m.M23 * v.Z,
                 m.M31 * v.X + m.M32 * v.Y + m.M33 * v.Z);
         }
-        public static Vector3Int32 operator *(Matrix3X3 m, Vector3Int32 v)
+
+        public static Vector3i operator *(Matrix3X3 m, Vector3i v)
         {
-            return new Vector3Int32(
+            return new Vector3i(
                 (int)(m.M11 * v.X + m.M12 * v.Y + m.M13 * v.Z),
                 (int)(m.M21 * v.X + m.M22 * v.Y + m.M23 * v.Z),
                 (int)(m.M31 * v.X + m.M32 * v.Y + m.M33 * v.Z));
