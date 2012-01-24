@@ -23,16 +23,16 @@ namespace TransvoxelXna.VolumeData
 
             set
             {
-                Console.WriteLine("------ CALL SET ---------");
-                Console.WriteLine("<Head>");
+               // Console.WriteLine("------ CALL SET ---------");
+               // Console.WriteLine("<Head>");
                 head.Set(x, y, z, value,0);
-                Console.WriteLine("------ RETN SET ---------");
+               // Console.WriteLine("------ RETN SET ---------");
             }
         }
 
-        public string ToString()
+        public override string ToString()
         {
-            return head.ToString();
+            return "NumLeafNodes: "+ head.numLeafNodes()+ "\n"+head.ToString(0);
         }
     }
 
@@ -55,6 +55,17 @@ namespace TransvoxelXna.VolumeData
 
         public abstract sbyte Sample(int x, int y, int z,int bitlevel);
         public abstract void Set(int x, int y, int z, sbyte val, int bitlevel);
+
+        public virtual string ToString(int lz)
+        {
+            string lzstr = "";
+            for (int i = 0; i < lz; i++)
+            {
+                lzstr += " ";
+            }
+
+            return lzstr+"< " + this.GetType().ToString() + " > offsetBitNum:"+offsetBitNum;
+        }
     }
 
     internal class OctreeChildNode : OctreeNode
@@ -64,6 +75,43 @@ namespace TransvoxelXna.VolumeData
         public OctreeChildNode(OctreeChildNode parent)
             : base(parent)
         { }
+
+        public int numLeafNodes()
+        {
+            int num = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                if (nodes[i] is OctreeLeafNode)
+                {
+                    num++;
+                }
+                else if (nodes[i] is OctreeChildNode)
+                {
+                    OctreeChildNode n = (OctreeChildNode)nodes[i];
+                    num += n.numLeafNodes();
+                }
+            }
+
+            return num;
+        }
+
+        public override string ToString(int lz)
+        {
+            string lzstr = "";
+            for (int i = 0; i < lz+1;i++ )
+            {
+                lzstr += " ";
+            }
+
+            string ret = base.ToString(lz)+"\n";
+
+            for(int i=0;i<8;i++)
+            {
+                ret += lzstr+"Node"+i+" = "+(nodes[i]==null?"null":nodes[i].ToString(lz+1))+"\n";
+            }
+
+            return ret;
+        }
 
         public OctreeChildNode initChild(int place, int x, int y, int z, int bitlevel)
         {
@@ -118,7 +166,7 @@ namespace TransvoxelXna.VolumeData
             {
                 bitlevel += offsetBitNum;
             }
-            else 
+            else
             {
                 return 0;
             }
@@ -133,7 +181,7 @@ namespace TransvoxelXna.VolumeData
                 return 0;
             }
 
-            return nodes[xx+yy*2+zz*4].Sample(x,y,z,bitlevel+1);
+            return nodes[xx + yy * 2 + zz * 4].Sample(x, y, z, bitlevel + 1);
         }
 
         public override void Set(int x, int y, int z, sbyte val, int bitlevel)
@@ -142,9 +190,12 @@ namespace TransvoxelXna.VolumeData
             int equalY = MathHelper.cmpBit(yoff, y, bitlevel, offsetBitNum);
             int equalZ = MathHelper.cmpBit(zoff, z, bitlevel, offsetBitNum);
 
-            if (offsetBitNum == 0 || (equalX == offsetBitNum && equalY == offsetBitNum && equalZ == offsetBitNum))
+            int equalOffsetNum = MathHelper.min(equalX, MathHelper.min(equalY, equalZ));
+
+            //if (offsetBitNum == 0 || (equalX == offsetBitNum && equalY == offsetBitNum && equalZ == offsetBitNum))
+            if (equalOffsetNum == offsetBitNum)
             {
-                Console.WriteLine("All offsetBitNum == 0 or all offsets are equal");
+                //Console.WriteLine("All offsetBitNum == 0 or all offsets are equal");
 
                 bitlevel += offsetBitNum;
 
@@ -154,21 +205,21 @@ namespace TransvoxelXna.VolumeData
 
                 if (nodes[xx + yy * 2 + zz * 4] == null)
                 {
-                    Console.WriteLine("Child: " + (xx + yy * 2 + zz * 4)+" doesn't exist - Create LeafChild");
+                    //Console.WriteLine("Child: " + (xx + yy * 2 + zz * 4)+" doesn't exist - Create LeafChild");
                     OctreeLeafNode leaf = initLeaf(xx + yy * 2 + zz * 4,x,y,z, bitlevel + 1);
                     leaf.setChunkVal(x, y, z, val);
                     //leaf.Set(x, y, z, val,bitlevel);
                 }
                 else
                 {
-                    Console.WriteLine("Child: " + (xx + yy * 2 + zz * 4) + " does exist - Go to next level in tree");
+                    //Console.WriteLine("Child: " + (xx + yy * 2 + zz * 4) + " does exist - Go to next level in tree");
                     nodes[xx + yy * 2 + zz * 4].Set(x, y, z, val,bitlevel+1);
                 }
             }
             else 
             {
-                Console.WriteLine("Offsets are not equal");
-                int equalOffsetNum = MathHelper.min(equalX, MathHelper.min(equalY, equalZ));
+                //Console.WriteLine("Offsets are not equal");
+                //int equalOffsetNum = MathHelper.min(equalX, MathHelper.min(equalY, equalZ));
                 int currentChildIndex = parent.GetChildIndex(this);
                 OctreeChildNode newc = parent.initChild(currentChildIndex,x,y,z,bitlevel);
                 newc.offsetBitNum = equalOffsetNum;
@@ -186,7 +237,7 @@ namespace TransvoxelXna.VolumeData
                 zz = MathHelper.bitAt(z, bitlevel);
 
                 OctreeLeafNode leaf = newc.initLeaf(xx + yy * 2 + zz * 4,x,y,z,bitlevel);
-                leaf.offsetBitNum = offsetBitNum;
+                leaf.offsetBitNum = 32 - bitlevel - 1 - VolumeChunk.CHUNKBITS;
                 leaf.setChunkVal(x, y, z, val);
                 //leaf.Set(x, y, z, val, bitlevel);
             }
@@ -204,10 +255,21 @@ namespace TransvoxelXna.VolumeData
             : base(parent)
         { }
 
+        public override string ToString(int lz)
+        {
+            string lzstr = "";
+            for (int i = 0; i < lz; i++)
+            {
+                lzstr += " ";
+            }
+
+            string ret = lzstr+base.ToString(lz);
+
+            return ret;
+        }
+
         public override sbyte Sample(int x, int y, int z, int bitlevel)
         {
-            Debug.Assert(bitlevel + offsetBitNum == sizeof(int)*8-VolumeChunk.CHUNKSIZE);
-            Console.WriteLine(bitlevel+offsetBitNum);
             return chunk[x, y, z];
         }
 
@@ -223,28 +285,36 @@ namespace TransvoxelXna.VolumeData
             int equalZ = MathHelper.cmpBit(zoff, z, bitlevel, offsetBitNum);
 
             int equalOffsetNum = MathHelper.min(equalX, MathHelper.min(equalY, equalZ));
-            int currentChildIndex = parent.GetChildIndex(this);
-            OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
-            newc.offsetBitNum = equalOffsetNum;
-            bitlevel += equalOffsetNum;
 
-            int xx = MathHelper.bitAt(xoff, bitlevel);
-            int yy = MathHelper.bitAt(yoff, bitlevel);
-            int zz = MathHelper.bitAt(zoff, bitlevel);
+            if (equalOffsetNum == offsetBitNum)
+            {
+                //existing leaf
+                chunk[x, y, z] = val;
+            }
+            else
+            { 
+                //new leaf
 
-            newc.ReferChild(this, xx + yy * 2 + zz * 4);
-            offsetBitNum -= (equalOffsetNum + 1);
+                int currentChildIndex = parent.GetChildIndex(this);
+                OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
+                newc.offsetBitNum = equalOffsetNum;
+                bitlevel += equalOffsetNum;
 
-            xx = MathHelper.bitAt(x, bitlevel);
-            yy = MathHelper.bitAt(y, bitlevel);
-            zz = MathHelper.bitAt(z, bitlevel);
+                int xx = MathHelper.bitAt(xoff, bitlevel);
+                int yy = MathHelper.bitAt(yoff, bitlevel);
+                int zz = MathHelper.bitAt(zoff, bitlevel);
 
-            OctreeLeafNode leaf = newc.initLeaf(xx + yy * 2 + zz * 4, x, y, z, bitlevel);
-            leaf.offsetBitNum = offsetBitNum;
-            leaf.chunk[x, y, z] = val;
-            
+                newc.ReferChild(this, xx + yy * 2 + zz * 4);
+                offsetBitNum -= (equalOffsetNum + 1);
 
+                xx = MathHelper.bitAt(x, bitlevel);
+                yy = MathHelper.bitAt(y, bitlevel);
+                zz = MathHelper.bitAt(z, bitlevel);
 
+                OctreeLeafNode leaf = newc.initLeaf(xx + yy * 2 + zz * 4, x, y, z, bitlevel);
+                leaf.offsetBitNum = 32 - bitlevel-1-VolumeChunk.CHUNKBITS;
+                leaf.chunk[x, y, z] = val;
+            }
             //todo
             //chunk[x, y, z] = val;
         }

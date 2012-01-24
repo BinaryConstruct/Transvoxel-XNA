@@ -10,7 +10,7 @@ namespace TransvoxelXna.VolumeData
     public class VolumeChunk : VolumeDataBase
     {
         // the used bits of a coordinate to adress a voxel in the chunk
-        public static readonly int CHUNKBITS = 3;
+        public static readonly int CHUNKBITS = 2;
 
         // = 2^(CHUNKBITS)
         public static readonly int CHUNKSIZE = 1 << CHUNKBITS; 
