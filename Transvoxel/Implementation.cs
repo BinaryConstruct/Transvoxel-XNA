@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using TransvoxelXna.VolumeData;
 
 namespace TransvoxelXna
 {
