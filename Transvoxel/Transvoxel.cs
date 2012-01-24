@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
+using TransvoxelXna.Helper;
+using TransvoxelXna.Lengyel;
+using TransvoxelXna.VolumeData;
 
-namespace VoxelTest
+namespace TransvoxelXna
 {
     public static class Transvoxel
     {
@@ -34,12 +30,12 @@ namespace VoxelTest
             return (b >> 7) & 1;
         }
 
-        private static Vector3 Interp(Vector3Int32 v0, Vector3Int32 v1, Vector3Int32 p0, Vector3Int32 p1, IVolumeData samples, byte lodIndex = 0)
+        private static Vector3 Interp(Vector3i v0, Vector3i v1, Vector3i p0, Vector3i p1, IVolumeData samples, byte lodIndex = 0)
         {
             return Interp((Vector3)v0, (Vector3)v1, p0, p1, samples, lodIndex);
         }
 
-        private static Vector3 Interp(Vector3 v0, Vector3 v1, Vector3Int32 p0, Vector3Int32 p1, IVolumeData samples, byte lodIndex = 0)
+        private static Vector3 Interp(Vector3 v0, Vector3 v1, Vector3i p0, Vector3i p1, IVolumeData samples, byte lodIndex = 0)
         {
             sbyte s0 = samples[p0];
             sbyte s1 = samples[p1];
@@ -62,7 +58,7 @@ namespace VoxelTest
                 for (int i = 0; i < lodIndex; ++i)
                 {
                     Vector3 vm = (v0 + v1) / 2;
-                    Vector3Int32 pm = (p0 + p1) / 2;
+                    Vector3i pm = (p0 + p1) / 2;
 
                     sbyte sm = samples[pm];
 
@@ -152,15 +148,15 @@ namespace VoxelTest
             return mat * delta;
         }
 
-        private static Vector3Int32 PrevOffset(byte dir)
+        private static Vector3i PrevOffset(byte dir)
         {
-            return new Vector3Int32(-(dir & 1),
+            return new Vector3i(-(dir & 1),
                                     -((dir >> 1) & 1),
                                     -((dir >> 2) & 1));
         }
 
 
-        public static int PolygonizeRegularCell(Vector3Int32 min, Vector3 offset, Vector3Int32 xyz,
+        public static int PolygonizeRegularCell(Vector3i min, Vector3 offset, Vector3i xyz,
                                                 IVolumeData samples, byte lodIndex, float cellSize,
                                                 ref IList<Vertex> verts, ref IList<int> indices, ref RegularCache cache)
         {
@@ -180,21 +176,21 @@ namespace VoxelTest
                 if (min[i] == last) { near |= (byte)(1 << (i * 2 + 1)); }
             }
 
-            Vector3Int32[] cornerPositions =
-                new Vector3Int32[]
+            Vector3i[] cornerPositions =
+                new Vector3i[]
                     {
-                        min + new Vector3Int32(0, 0, 0)*lodScale,
-                        min + new Vector3Int32(1, 0, 0)*lodScale,
-                        min + new Vector3Int32(0, 1, 0)*lodScale,
-                        min + new Vector3Int32(1, 1, 0)*lodScale,
+                        min + new Vector3i(0, 0, 0)*lodScale,
+                        min + new Vector3i(1, 0, 0)*lodScale,
+                        min + new Vector3i(0, 1, 0)*lodScale,
+                        min + new Vector3i(1, 1, 0)*lodScale,
 
-                        min + new Vector3Int32(0, 0, 1)*lodScale,
-                        min + new Vector3Int32(1, 0, 1)*lodScale,
-                        min + new Vector3Int32(0, 1, 1)*lodScale,
-                        min + new Vector3Int32(1, 1, 1)*lodScale
+                        min + new Vector3i(0, 0, 1)*lodScale,
+                        min + new Vector3i(1, 0, 1)*lodScale,
+                        min + new Vector3i(0, 1, 1)*lodScale,
+                        min + new Vector3i(1, 1, 1)*lodScale
                     };
 
-            Vector3Int32 dif = cornerPositions[7] - cornerPositions[1];
+            Vector3i dif = cornerPositions[7] - cornerPositions[1];
 
             // Retrieve sample values for all the corners.
             sbyte[] cornerSamples =
@@ -231,9 +227,9 @@ namespace VoxelTest
             for (int i = 0; i < 8; ++i)
             {
                 var p = cornerPositions[i];
-                float nx = (samples[p + Vector3Int32.UnitX] - samples[p - Vector3Int32.UnitX]) * 0.5f;
-                float ny = (samples[p + Vector3Int32.UnitY] - samples[p - Vector3Int32.UnitY]) * 0.5f;
-                float nz = (samples[p + Vector3Int32.UnitZ] - samples[p - Vector3Int32.UnitZ]) * 0.5f;
+                float nx = (samples[p + Vector3i.UnitX] - samples[p - Vector3i.UnitX]) * 0.5f;
+                float ny = (samples[p + Vector3i.UnitY] - samples[p - Vector3i.UnitY]) * 0.5f;
+                float nz = (samples[p + Vector3i.UnitZ] - samples[p - Vector3i.UnitZ]) * 0.5f;
                 cornerNormals[i] = new Vector3(nx, ny, nz);
                 cornerNormals[i].Normalize();
             }
@@ -257,8 +253,8 @@ namespace VoxelTest
                 byte v0 = HiNibble((byte)(edgeCode & 0xFF));
                 byte v1 = LoNibble((byte)(edgeCode & 0xFF));
 
-                Vector3Int32 p0 = cornerPositions[v0];
-                Vector3Int32 p1 = cornerPositions[v1];
+                Vector3i p0 = cornerPositions[v0];
+                Vector3i p1 = cornerPositions[v1];
                 Vector3 n0 = cornerNormals[v0];
                 Vector3 n1 = cornerNormals[v1];
 
@@ -402,8 +398,8 @@ namespace VoxelTest
             return nt;
         }
 
-        public static int PolygonizeTransitionCell(Vector3 offset, Vector3Int32 origin,
-                                                   Vector3Int32 localX, Vector3Int32 localY, Vector3Int32 localZ,
+        public static int PolygonizeTransitionCell(Vector3 offset, Vector3i origin,
+                                                   Vector3i localX, Vector3i localY, Vector3i localZ,
                                                    int x, int y, float cellSize,
                                                    byte lodIndex, byte axis, byte directionMask,
                                                    IVolumeData samples,
@@ -427,13 +423,13 @@ namespace VoxelTest
                 if (origin[i] == last) { near |= (byte)(1 << (i * 2 + 1)); }
             }
 
-            Vector3Int32[] coords = 
+            Vector3i[] coords = 
                 {
-                    new Vector3Int32(0,0,0), new Vector3Int32(1,0,0), new Vector3Int32(2,0,0), // High-res lower row
-                    new Vector3Int32(0,1,0), new Vector3Int32(1,1,0), new Vector3Int32(2,1,0), // High-res middle row
-                    new Vector3Int32(0,2,0), new Vector3Int32(1,2,0), new Vector3Int32(2,2,0), // High-res upper row
-                    new Vector3Int32(0,0,2), new Vector3Int32(2,0,2), // Low-res lower row
-                    new Vector3Int32(0,2,2), new Vector3Int32(2,2,2)  // Low-res upper row
+                    new Vector3i(0,0,0), new Vector3i(1,0,0), new Vector3i(2,0,0), // High-res lower row
+                    new Vector3i(0,1,0), new Vector3i(1,1,0), new Vector3i(2,1,0), // High-res middle row
+                    new Vector3i(0,2,0), new Vector3i(1,2,0), new Vector3i(2,2,0), // High-res upper row
+                    new Vector3i(0,0,2), new Vector3i(2,0,2), // Low-res lower row
+                    new Vector3i(0,2,2), new Vector3i(2,2,2)  // Low-res upper row
                 };
 
             // TODO: Implement Matrix Math
@@ -443,7 +439,7 @@ namespace VoxelTest
 
             Matrix3X3 basis = new Matrix3X3((Vector3)mx, (Vector3)my, (Vector3)mz);
 
-            Vector3Int32[] pos = {
+            Vector3i[] pos = {
                         origin + basis * coords[0x00], origin + basis * coords[0x01], origin + basis * coords[0x02],
                         origin + basis * coords[0x03], origin + basis * coords[0x04], origin + basis * coords[0x05],
                         origin + basis * coords[0x06], origin + basis * coords[0x07], origin + basis * coords[0x08],
@@ -455,10 +451,10 @@ namespace VoxelTest
 
             for (int i = 0; i < 9; i++)
             {
-                Vector3Int32 p = pos[i];
-                float nx = (samples[p + Vector3Int32.UnitX] - samples[p - Vector3Int32.UnitX]) * 0.5f;
-                float ny = (samples[p + Vector3Int32.UnitY] - samples[p - Vector3Int32.UnitY]) * 0.5f;
-                float nz = (samples[p + Vector3Int32.UnitZ] - samples[p - Vector3Int32.UnitZ]) * 0.5f;
+                Vector3i p = pos[i];
+                float nx = (samples[p + Vector3i.UnitX] - samples[p - Vector3i.UnitX]) * 0.5f;
+                float ny = (samples[p + Vector3i.UnitY] - samples[p - Vector3i.UnitY]) * 0.5f;
+                float nz = (samples[p + Vector3i.UnitZ] - samples[p - Vector3i.UnitZ]) * 0.5f;
                 normals[i] = new Vector3(nx, ny, nz);
                 normals[i].Normalize();
             }
@@ -468,7 +464,7 @@ namespace VoxelTest
             normals[0xB] = normals[6];
             normals[0xC] = normals[8];
 
-            Vector3Int32[] samplePos = {
+            Vector3i[] samplePos = {
                 pos[0], pos[1], pos[2], 
                 pos[3], pos[4], pos[5], 
                 pos[6], pos[7], pos[8],

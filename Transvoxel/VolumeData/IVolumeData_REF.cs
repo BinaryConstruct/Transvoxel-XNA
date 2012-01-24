@@ -1,9 +1,10 @@
-namespace VoxelTest
+/*
+namespace TransvoxelXna.VolumeData
 {
     public interface IVolumeData
     {
         sbyte this[int x, int y, int z] { get; set; }
-        sbyte this[Vector3Int32 v] { get; set; }
+        sbyte this[Vector3i v] { get; set; }
         sbyte[] Buffer { get; }
         int GetBufferSize();
     }
@@ -12,16 +13,16 @@ namespace VoxelTest
     public class VolumeData : IVolumeData
     {
         private readonly sbyte[] _samples;
-        private Vector3Int32 _offset;
-        private Vector3Int32 _size;
-        public VolumeData(Vector3Int32 size, Vector3Int32 offset)
+        private Vector3i _offset;
+        private Vector3i _size;
+        public VolumeData(Vector3i size, Vector3i offset)
         {
             _size = size;
             _offset = offset;
             _samples = new sbyte[size.X * size.Y * size.Z];
         }
-        public VolumeData(Vector3Int32 size)
-            : this(size, Vector3Int32.Zero)
+        public VolumeData(Vector3i size)
+            : this(size, Vector3i.Zero)
         {
         }
 
@@ -41,7 +42,7 @@ namespace VoxelTest
             }
         }
 
-        public sbyte this[Vector3Int32 v]
+        public sbyte this[Vector3i v]
         {
             get
             {
@@ -67,3 +68,4 @@ namespace VoxelTest
         }
     }
 }
+*/

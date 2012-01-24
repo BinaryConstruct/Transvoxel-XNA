@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace VoxelTest
+namespace TransvoxelXna
 {
+    /// <summary>
+    /// VertexVoxel is holds the vertex data for the Triplanar project shader (needs to be implemented)
+    /// </summary>
     public struct VertexVoxel : IVertexType
     {
         public Vector3 Position;
@@ -39,8 +42,16 @@ namespace VoxelTest
         #endregion
     }
 
+    /// <summary>
+    /// VertexProcessor contains functions to process vertex data to build tangent space data
+    /// </summary>
     public static class VertexProcessor
     {
+        /// <summary>
+        /// Appends Normal, Tangent and Binormal data to an indexed VertexVoxel array
+        /// </summary>
+        /// <param name="indices">Vertex Order</param>
+        /// <param name="vertices">Vertex Data</param>
         public static void BuildTangentSpaceDataForTriangleList(short[] indices, VertexVoxel[] vertices)
         {
             for (int i = 0; i < vertices.Length; i++)
