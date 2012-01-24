@@ -37,7 +37,7 @@ namespace TransvoxelXna.Helper
             return ret;
         }
 
-        public static string int2bitstr(uint val)
+        public static string int2bitstr(int val)
         {
             string a = Convert.ToString(val,2);
             
@@ -52,7 +52,7 @@ namespace TransvoxelXna.Helper
 
         public static int bitAt(int val,int i)
         {
-            return (val >> i) & 1;
+            return (val >> (sizeof(int)*8-i-1)) & 1;
         }
 
         /**
