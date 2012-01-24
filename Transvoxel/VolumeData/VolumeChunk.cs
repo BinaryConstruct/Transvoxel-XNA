@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using VoxelStuff.helper;
-
-namespace VoxelStuff.VolumeData
+﻿namespace TransvoxelXna.VolumeData
 {
-    public class VolumeChunk : IVolumeData
+    public class VolumeChunk : VolumeDataBase
     {
         public const int CHUNKBITS = 3;
         public const int CHUNKSIZE = 1 << CHUNKBITS; // = 2^(CHUNKBITS)

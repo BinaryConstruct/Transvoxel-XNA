@@ -1,4 +1,5 @@
-namespace VoxelTest
+/*
+namespace TransvoxelXna.VolumeData
 {
     public interface IVolumeData
     {
@@ -67,3 +68,4 @@ namespace VoxelTest
         }
     }
 }
+*/

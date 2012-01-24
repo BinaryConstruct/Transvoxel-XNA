@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using VoxelStuff.helper;
-using VoxelTest.helper;
+using TransvoxelXna.helper;
 
-namespace VoxelStuff.VolumeData
+namespace TransvoxelXna.VolumeData
 {
-    public class VolumeDataOctree : IVolumeData
+    public class VolumeDataBaseOctree : VolumeDataBase
     {
         private OctreeNode head;
 

@@ -1,41 +1,39 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace VoxelStuff.helper
+namespace TransvoxelXna.helper
 {
-    using T = System.Single;
-
-    public struct Vector3f
+    public struct Vector3i
     {
-        public T X;
-        public T Y;
-        public T Z;
+        public Int32 X;
+        public Int32 Y;
+        public Int32 Z;
 
-        public Vector3f(T x, T y, T z)
+        public Vector3i(Int32 x, Int32 y, Int32 z)
         {
             X = x;
             Y = y;
             Z = z;
         }
 
-        public Vector3f(T [] arr)
+        public Vector3i(Int32 [] arr)
         {
             X = arr[0];
             Y = arr[1];
             Z = arr[2];
         }
 
-        public Vector3i cast()
+        public Vector3f cast()
         {
-            return new Vector3i((int)X,(int)Y,(int)Z);
+            return new Vector3f((float)X, (float)Y, (float)Z);
         }
 
-        public T[] toArray()
+        public Int32[] toArray()
         {
-            return new T[3]{X,Y,Z};
+            return new Int32[3]{X,Y,Z};
         }
 
-        public T this[T i]
+        public Int32 this[Int32 i]
         {
             get
             {
@@ -61,108 +59,108 @@ namespace VoxelStuff.helper
             }
         }
 
-        public static Vector3f UnitX = new Vector3f(1, 0, 0);
-        public static Vector3f UnitY = new Vector3f(0, 1, 0);
-        public static Vector3f UnitZ = new Vector3f(0, 0, 1);
-        public static Vector3f Zero = new Vector3f(0, 0, 0);
-        public static Vector3f One = new Vector3f(1, 1, 1);
+        public static Vector3i UnitX = new Vector3i(1, 0, 0);
+        public static Vector3i UnitY = new Vector3i(0, 1, 0);
+        public static Vector3i UnitZ = new Vector3i(0, 0, 1);
+        public static Vector3i Zero = new Vector3i(0, 0, 0);
+        public static Vector3i One = new Vector3i(1, 1, 1);
 
         #region Operators
 
-        public static explicit operator Vector3(Vector3f v)
+        public static explicit operator Vector3(Vector3i v)
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
 
-        public static explicit operator Vector3f(Vector3 v)
+        public static explicit operator Vector3i(Vector3 v)
         {
-            return new Vector3f((T)v.X, (T)v.Y, (T)v.Z);
+            return new Vector3i((Int32)v.X, (Int32)v.Y, (Int32)v.Z);
         }
 
-        public static Vector3f operator +(Vector3f v0, Vector3f v1)
+        public static Vector3i operator +(Vector3i v0, Vector3i v1)
         {
-            return new Vector3f(v0.X + v1.X,
+            return new Vector3i(v0.X + v1.X,
                                     v0.Y + v1.Y,
                                     v0.Z + v1.Z);
         }
 
-        public static Vector3f operator -(Vector3f v0, Vector3f v1)
+        public static Vector3i operator -(Vector3i v0, Vector3i v1)
         {
-            return new Vector3f(v0.X - v1.X,
+            return new Vector3i(v0.X - v1.X,
                                     v0.Y - v1.Y,
                                     v0.Z - v1.Z);
         }
-        public static Vector3f operator /(Vector3f v0, Vector3f v1)
+        public static Vector3i operator /(Vector3i v0, Vector3i v1)
         {
-            return new Vector3f(v0.X / v1.X,
+            return new Vector3i(v0.X / v1.X,
                                     v0.Y / v1.Y,
                                     v0.Z / v1.Z);
         }
-        public static Vector3f operator *(Vector3f v0, Vector3f v1)
+        public static Vector3i operator *(Vector3i v0, Vector3i v1)
         {
-            return new Vector3f(v0.X * v1.X,
+            return new Vector3i(v0.X * v1.X,
                                     v0.Y * v1.Y,
                                     v0.Z * v1.Z);
         }
 
-        public static Vector3f operator +(Vector3f v, T s)
+        public static Vector3i operator +(Vector3i v, Int32 s)
         {
-            return new Vector3f(v.X + s,
+            return new Vector3i(v.X + s,
                                     v.Y + s,
                                     v.Z + s);
         }
 
-        public static Vector3f operator -(Vector3f v, T s)
+        public static Vector3i operator -(Vector3i v, Int32 s)
         {
-            return new Vector3f(v.X - s,
+            return new Vector3i(v.X - s,
                                     v.Y - s,
                                     v.Z - s);
         }
 
-        public static Vector3f operator -(T s, Vector3f v)
+        public static Vector3i operator -(Int32 s, Vector3i v)
         {
-            return new Vector3f(s - v.X,
+            return new Vector3i(s - v.X,
                                     s - v.Y,
                                     s - v.Z);
         }
 
-        public static Vector3f operator *(Vector3f v, T s)
+        public static Vector3i operator *(Vector3i v, Int32 s)
         {
-            return new Vector3f(v.X * s,
+            return new Vector3i(v.X * s,
                                     v.Y * s,
                                     v.Z * s);
         }
 
-        public static Vector3f operator /(Vector3f v, T s)
+        public static Vector3i operator /(Vector3i v, Int32 s)
         {
-            return new Vector3f(v.X / s,
+            return new Vector3i(v.X / s,
                                     v.Y / s,
                                     v.Z / s);
         }
 
-        public static Vector3f operator /(T s, Vector3f v)
+        public static Vector3i operator /(Int32 s, Vector3i v)
         {
-            return new Vector3f(s / v.X,
+            return new Vector3i(s / v.X,
                                     s / v.Y,
                                     s / v.Z);
         }
 
-        public static bool operator <(Vector3f a, Vector3f b)
+        public static bool operator <(Vector3i a, Vector3i b)
         {
             return a.X < b.X && a.Y < b.Y && a.Z < b.Z;
         }
 
-        public static bool operator >(Vector3f a, Vector3f b)
+        public static bool operator >(Vector3i a, Vector3i b)
         {
             return a.X > b.X && a.Y > b.Y && a.Z > b.Z;
         }
 
-        public static bool operator <=(Vector3f a, Vector3f b)
+        public static bool operator <=(Vector3i a, Vector3i b)
         {
             return a.X <= b.X && a.Y <= b.Y && a.Z <= b.Z;
         }
 
-        public static bool operator >=(Vector3f a, Vector3f b)
+        public static bool operator >=(Vector3i a, Vector3i b)
         {
             return a.X >= b.X && a.Y >= b.Y && a.Z >= b.Z;
         }
@@ -171,7 +169,7 @@ namespace VoxelStuff.helper
 
         #region Equality
         
-        public bool Equals(Vector3f other)
+        public bool Equals(Vector3i other)
         {
             return other.Y == Y && other.Z == Z && other.X == X;
         }
@@ -179,17 +177,17 @@ namespace VoxelStuff.helper
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof (Vector3f)) return false;
-            return Equals((Vector3f) obj);
+            if (obj.GetType() != typeof (Vector3i)) return false;
+            return Equals((Vector3i) obj);
         }
 
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             unchecked
             {
-                int result = (int)Y;
-                result = (result*397) ^ (int)Z;
-                result = (result*397) ^ (int)X;
+                Int32 result = Y;
+                result = (result*397) ^ Z;
+                result = (result*397) ^ X;
                 return result;
             }
         }

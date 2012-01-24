@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace VoxelTest
+namespace TransvoxelXna
 {
     public struct Matrix3X3
     {

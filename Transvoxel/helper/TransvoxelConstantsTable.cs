@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using VoxelStuff.helper;
-
-namespace VoxelStuff.helper
+﻿namespace TransvoxelXna.helper
 {
 	public class VoxelConstants
 	{

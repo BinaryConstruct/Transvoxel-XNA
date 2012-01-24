@@ -1,4 +1,4 @@
-namespace VoxelTest
+namespace TransvoxelXna
 {
     public class Cell
     {

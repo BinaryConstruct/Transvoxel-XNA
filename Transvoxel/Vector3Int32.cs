@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace VoxelTest
+namespace TransvoxelXna
 {
     public struct Vector3Int32
     {

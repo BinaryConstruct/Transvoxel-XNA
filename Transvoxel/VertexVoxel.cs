@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace VoxelTest
+namespace TransvoxelXna
 {
     public struct VertexVoxel : IVertexType
     {

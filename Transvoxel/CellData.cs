@@ -1,6 +1,6 @@
 using System;
 
-namespace VoxelTest
+namespace TransvoxelXna
 {
     public class CellData
     {
