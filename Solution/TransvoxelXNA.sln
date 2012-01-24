@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransvoxelXna", "..\Transvoxel\TransvoxelXna.csproj", "{D73F9E2C-6A8A-4BD8-B024-A828B5108217}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{357CC850-C311-4E20-8EA1-C7C1E2E1D13B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,10 @@ Global
 		{D73F9E2C-6A8A-4BD8-B024-A828B5108217}.Debug|x86.Build.0 = Debug|x86
 		{D73F9E2C-6A8A-4BD8-B024-A828B5108217}.Release|x86.ActiveCfg = Release|x86
 		{D73F9E2C-6A8A-4BD8-B024-A828B5108217}.Release|x86.Build.0 = Release|x86
+		{357CC850-C311-4E20-8EA1-C7C1E2E1D13B}.Debug|x86.ActiveCfg = Debug|x86
+		{357CC850-C311-4E20-8EA1-C7C1E2E1D13B}.Debug|x86.Build.0 = Debug|x86
+		{357CC850-C311-4E20-8EA1-C7C1E2E1D13B}.Release|x86.ActiveCfg = Release|x86
+		{357CC850-C311-4E20-8EA1-C7C1E2E1D13B}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

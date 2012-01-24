@@ -1,4 +1,4 @@
-using TransvoxelXna.Helper;
+/*using TransvoxelXna.Helper;
 
 namespace TransvoxelXna.Lengyel
 {
@@ -344,3 +344,4 @@ namespace TransvoxelXna.Lengyel
 		};
 	}
 }
+*/
