@@ -36,4 +36,4 @@ _ReSharper*/
 *.ReSharper*
 [Tt]est[Rr]esult*
 *.docstates
-*.sln
+*.user
