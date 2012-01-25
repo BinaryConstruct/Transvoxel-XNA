@@ -391,7 +391,7 @@ namespace TransvoxelXna
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + i]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + i]]);
                 }
             }
 
@@ -488,12 +488,12 @@ namespace TransvoxelXna
             cache[x, y].CaseIndex = (byte)caseCode;
 
             byte classIndex = Tables.TransitionCellClass[caseCode]; // Equivalence class index.
-            var data = Tables.TransitionCellData[classIndex & 0x7F];
+            var data = Tables.TransitionRegularCellData[classIndex & 0x7F];
             bool inverse = (classIndex & 128) != 0;
             int[] localVertexMapping = new int[12];
 
-            int nv = data.GetVertexCount();
-            int nt = data.GetTriangleCount();
+            int nv = (int)data.GetVertexCount();
+            int nt = (int)data.GetTriangleCount();
 
             Debug.Assert(nv <= 12);
             var vert = new Vertex();
@@ -667,18 +667,18 @@ namespace TransvoxelXna
             {
                 if (inverse)
                 {
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + 2]]);
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + 1]]);
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + 0]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + 2]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + 1]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + 0]]);
                     //indices.push_back(localVertexMapping[ptr[2]]);
                     //indices.push_back(localVertexMapping[ptr[1]]);
                     //indices.push_back(localVertexMapping[ptr[0]]);
                 }
                 else
                 {
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + 0]]);
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + 1]]);
-                    indices.Add(localVertexMapping[data.VertexIndex[t * 3 + 2]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + 0]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + 1]]);
+                    indices.Add(localVertexMapping[data.Indizes()[t * 3 + 2]]);
                     // indices.push_back(localVertexMapping[ptr[0]]);
                     // indices.push_back(localVertexMapping[ptr[1]]);
                     // indices.push_back(localVertexMapping[ptr[2]]);
