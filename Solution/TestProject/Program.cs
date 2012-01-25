@@ -1,10 +1,12 @@
 ﻿using System;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TransvoxelXna.Helper;
 using TransvoxelXna.VolumeData;
 using TransvoxelXna.VolumeData.CompactOctree;
+using System.Diagnostics;
 
 namespace TestProject
 {
@@ -15,25 +17,6 @@ namespace TestProject
         {
             CompactOctree octree = new CompactOctree();       
     
-            
-            
-         /*   octree[1, 2, 1] = 15;
-            octree[9, 1, 1] = 3;
-            octree[18, 1, 1] = 3;
-
-            Console.WriteLine(octree[-1, -2, -1]);
-
-            Console.WriteLine(MathHelper.int2bitstr(1));
-            Console.WriteLine(MathHelper.int2bitstr(2));
-            Console.WriteLine(MathHelper.int2bitstr(1));
-            Console.WriteLine();
-            Console.WriteLine(MathHelper.int2bitstr(9));
-            Console.WriteLine(MathHelper.int2bitstr(1));
-            Console.WriteLine(MathHelper.int2bitstr(1));
-            Console.WriteLine();
-            Console.WriteLine(MathHelper.int2bitstr(18));
-            Console.WriteLine(MathHelper.int2bitstr(1));
-            Console.WriteLine(MathHelper.int2bitstr(1));*/
 
 
             for (int x = -10; x < 50; x+=2)
@@ -54,6 +37,17 @@ namespace TestProject
            
             Console.WriteLine(octree.ToString());
             Console.WriteLine(fail);
+            Random rnd = new Random();
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
+            for(int i=0;i<100000000;i++)
+            {
+                MathHelper.bitAt(rnd.Next(),rnd.Next(0,31));
+            }
+
+            watch.Stop();
+            Console.WriteLine(watch.ElapsedMilliseconds);
 
             Console.ReadLine();
         }

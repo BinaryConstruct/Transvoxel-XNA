@@ -5,12 +5,14 @@ namespace TransvoxelXna.VolumeData
     /*
      * VolumeChunk represents the smallest unit in the octree
      * it holds a sbyte array with all voxel densities of a CHUNKSIZE^3 cube
-     * the density of a voxel can be adressed 
+     * 
+     * VolumeChunk is also the smallest unit for triangulation at level of detail 0
+     * 
      */
     public class VolumeChunk : VolumeDataBase
     {
         // the used bits of a coordinate to adress a voxel in the chunk
-        public static readonly int CHUNKBITS = 3;
+        public static readonly int CHUNKBITS = 4;
 
         // = 2^(CHUNKBITS)
         public static readonly int CHUNKSIZE = 1 << CHUNKBITS; 

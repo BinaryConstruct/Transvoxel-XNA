@@ -9,19 +9,14 @@ namespace TransvoxelXna.VolumeData.CompactOctree
     internal class OctreeLeafNode : OctreeNode
     {
         private VolumeChunk chunk = new VolumeChunk();
-        private static readonly int shiftval = sizeof(int) - VolumeChunk.CHUNKBITS;
-
+  
         public OctreeLeafNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
             : base(parent, x, y, z, bitlevel)
         { }
 
-        public override void Set(int x, int y, int z, sbyte val, int bitlevel)
+        internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
         {
-            int equalX = MathHelper.cmpBit(xcoord, x, bitlevel, offsetBitNum);
-            int equalY = MathHelper.cmpBit(ycoord, y, bitlevel, offsetBitNum);
-            int equalZ = MathHelper.cmpBit(zcoord, z, bitlevel, offsetBitNum);
-
-            int equalOffsetNum = MathHelper.min(equalX, equalY, equalZ);
+            int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
 
             if (equalOffsetNum == offsetBitNum)
             {
@@ -54,12 +49,12 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             }
         }
 
-        public override sbyte Get(int x, int y, int z, int bitlevel)
+        internal override sbyte Get(int x, int y, int z, int bitlevel)
         {
             return chunk[x, y, z];
         }
 
-        public void setChunkVal(int x, int y, int z, sbyte val)
+        internal void setChunkVal(int x, int y, int z, sbyte val)
         {
             chunk[x, y, z] = val;
         }

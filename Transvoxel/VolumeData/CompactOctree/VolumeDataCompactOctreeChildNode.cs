@@ -8,7 +8,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
 {
     internal class OctreeChildNode : OctreeNode
     {
-        internal OctreeNode[] nodes = new OctreeNode[8]; //index: x+y*2+z*4 | x,y,z elementof {0,1}
+        private OctreeNode[] nodes = new OctreeNode[8]; //index: x+y*2+z*4 | x,y,z elementof {0,1}
 
         public OctreeChildNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
             : base(parent, x, y, z, bitlevel)
@@ -46,13 +46,9 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             n.parent = this;
         }
 
-        public override sbyte Get(int x, int y, int z, int bitlevel)
+        internal override sbyte Get(int x, int y, int z, int bitlevel)
         {
-            int equalX = MathHelper.cmpBit(xcoord, x, bitlevel, offsetBitNum);
-            int equalY = MathHelper.cmpBit(ycoord, y, bitlevel, offsetBitNum);
-            int equalZ = MathHelper.cmpBit(zcoord, z, bitlevel, offsetBitNum);
-
-            int equalOffsetNum = MathHelper.min(equalX, MathHelper.min(equalY, equalZ));
+            int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
 
             if (equalOffsetNum == offsetBitNum)
             {
@@ -73,13 +69,9 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             return nodes[bitIndex].Get(x, y, z, bitlevel + 1);
         }
 
-        public override void Set(int x, int y, int z, sbyte val, int bitlevel)
+        internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
         {
-            int equalX = MathHelper.cmpBit(xcoord, x, bitlevel, offsetBitNum);
-            int equalY = MathHelper.cmpBit(ycoord, y, bitlevel, offsetBitNum);
-            int equalZ = MathHelper.cmpBit(zcoord, z, bitlevel, offsetBitNum);
-
-            int equalOffsetNum = MathHelper.min(equalX, equalY, equalZ);
+            int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
 
             if (equalOffsetNum == offsetBitNum)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TransvoxelXna.Helper;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
@@ -13,7 +14,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
         internal int zcoord = 0;
         internal OctreeChildNode parent;
 
-        public OctreeNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
+        internal OctreeNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
         {
             this.parent = parent;
             xcoord = x;
@@ -22,13 +23,28 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             offsetBitNum = sizeof(int) * 8 - bitlevel - VolumeChunk.CHUNKBITS;
         }
 
-        public abstract sbyte Get(int x, int y, int z, int bitlevel);
-        public abstract void Set(int x, int y, int z, sbyte val, int bitlevel);
+        internal abstract sbyte Get(int x, int y, int z, int bitlevel);
+        internal abstract void Set(int x, int y, int z, sbyte val, int bitlevel);
 
         public virtual string ToString(int lz)
         {
             string lzstr = new string(' ', lz);
             return lzstr + "< " + this.GetType().ToString() + " > offsetBitNum:" + offsetBitNum;
+        }
+
+        // calculates the num of equal bits between bitlevel and offsetBitNum
+        // Example:
+        //      x: 00000000000
+        // xcoord: 00000111001
+        // from left to right the number of equal bits is 5
+        // this is done for x,y and z coordinate, minimum of those 3 is returned
+        internal int EqualOffsetNum(int x, int y, int z, int bitlevel)
+        {
+            int equalX = MathHelper.cmpBit(xcoord, x, bitlevel, offsetBitNum);
+            int equalY = MathHelper.cmpBit(ycoord, y, bitlevel, offsetBitNum);
+            int equalZ = MathHelper.cmpBit(zcoord, z, bitlevel, offsetBitNum);
+
+            return MathHelper.min(equalX, equalY, equalZ);
         }
     }
 }
