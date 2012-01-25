@@ -33,6 +33,34 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             return new float[3]{X,Y,Z};
         }
 
+        public void Add(Vector3f v)
+        {
+            X += v.X;
+            Y += v.Y;
+            Z += v.Z;
+        }
+
+        public void Sub(Vector3f v)
+        {
+            X -= v.X;
+            Y -= v.Y;
+            Z -= v.Z;
+        }
+
+        public void Mul(float skalar)
+        {
+            X *= skalar;
+            Y *= skalar;
+            Z *= skalar;
+        }
+
+        public void Div(float skalar)
+        {
+            X /= skalar;
+            Y /= skalar;
+            Z /= skalar;
+        }
+
         public float this[float i]
         {
             get
