@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace TransvoxelXna.Helper
+namespace TransvoxelXna.VolumeData.CompactOctree
 {
-    public class MathHelper
+    public class BitHack
     {
         public static readonly uint[] MASK_LR = new uint[sizeof(int)*8]; //BitMask 1....0
-        static MathHelper()
+        static BitHack()
         {
             MASK_LR[0] = 0x80000000;
             for (int i = 1; i < MASK_LR.Length; i++)

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 using TransvoxelXna.Lengyel;
 using TransvoxelXna.VolumeData;
 

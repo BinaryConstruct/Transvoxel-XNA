@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
@@ -40,11 +40,11 @@ namespace TransvoxelXna.VolumeData.CompactOctree
         // this is done for x,y and z coordinate, minimum of those 3 is returned
         internal int EqualOffsetNum(int x, int y, int z, int bitlevel)
         {
-            int equalX = MathHelper.cmpBit(xcoord, x, bitlevel, offsetBitNum);
-            int equalY = MathHelper.cmpBit(ycoord, y, bitlevel, offsetBitNum);
-            int equalZ = MathHelper.cmpBit(zcoord, z, bitlevel, offsetBitNum);
+            int equalX = BitHack.cmpBit(xcoord, x, bitlevel, offsetBitNum);
+            int equalY = BitHack.cmpBit(ycoord, y, bitlevel, offsetBitNum);
+            int equalZ = BitHack.cmpBit(zcoord, z, bitlevel, offsetBitNum);
 
-            return MathHelper.min(equalX, equalY, equalZ);
+            return BitHack.min(equalX, equalY, equalZ);
         }
     }
 }

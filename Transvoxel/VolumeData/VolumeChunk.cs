@@ -1,4 +1,4 @@
-﻿using TransvoxelXna.Helper;
+﻿using TransvoxelXna.VolumeData.CompactOctree;
 namespace TransvoxelXna.VolumeData
 {
     
@@ -18,7 +18,7 @@ namespace TransvoxelXna.VolumeData
         public static readonly int CHUNKSIZE = 1 << CHUNKBITS; 
 
         //For a 3 ChunkBits the Mask would be 0x7
-        public static readonly int CHUNKMASK = (int)MathHelper.Mask(sizeof(int)*8-CHUNKBITS,sizeof(int)*8-1);
+        public static readonly int CHUNKMASK = (int)BitHack.Mask(sizeof(int)*8-CHUNKBITS,sizeof(int)*8-1);
 
         //signed bit density values
         private readonly sbyte[] values = new sbyte[CHUNKSIZE * CHUNKSIZE * CHUNKSIZE];

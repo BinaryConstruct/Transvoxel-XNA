@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
@@ -59,7 +59,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 return 0;
             }
 
-            int bitIndex = MathHelper.BitIndex(x, y, z, bitlevel);
+            int bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
 
             if (nodes[bitIndex] == null)
             {
@@ -77,7 +77,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             {
                 bitlevel += offsetBitNum;
 
-                int bitIndex = MathHelper.BitIndex(x, y, z, bitlevel);
+                int bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
 
                 if (nodes[bitIndex] == null)
                 {
@@ -95,10 +95,10 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
                 newc.offsetBitNum = equalOffsetNum;
                 bitlevel += equalOffsetNum;
-                int bitIndex = MathHelper.BitIndex(xcoord, ycoord, zcoord, bitlevel);
+                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, bitlevel);
                 newc.ReferChild(this, bitIndex);
                 offsetBitNum -= (equalOffsetNum + 1);
-                bitIndex = MathHelper.BitIndex(x, y, z, bitlevel);
+                bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
                 OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z, bitlevel);
                 leaf.offsetBitNum -= 1;
                 leaf.setChunkVal(x, y, z, val);

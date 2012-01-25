@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 using TransvoxelXna.VolumeData;
 
 namespace TransvoxelXna

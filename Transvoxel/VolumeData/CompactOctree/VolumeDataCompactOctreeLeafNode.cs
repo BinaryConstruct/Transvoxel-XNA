@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
@@ -37,12 +37,12 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 bitlevel += equalOffsetNum;
 
                 //the current node get's attached to it's newly generated parent node
-                int bitIndex = MathHelper.BitIndex(xcoord, ycoord, zcoord, bitlevel);
+                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, bitlevel);
                 newc.ReferChild(this, bitIndex);
                 offsetBitNum -= (equalOffsetNum + 1);
 
                 //a sibling for this node, or child for the parent node is generated, to hold the new value
-                bitIndex = MathHelper.BitIndex(x, y, z, bitlevel);
+                bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
                 OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z, bitlevel);
                 leaf.offsetBitNum -= 1; //bitIndex adressing consumes 1bit
                 leaf.chunk[x, y, z] = val;

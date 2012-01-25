@@ -1,5 +1,5 @@
 using System;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 
 namespace TransvoxelXna.Lengyel
 {

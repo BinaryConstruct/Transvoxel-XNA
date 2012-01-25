@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TransvoxelXna.Helper;
+using TransvoxelXna.VolumeData.CompactOctree;
 using TransvoxelXna.VolumeData;
 using TransvoxelXna.VolumeData.CompactOctree;
 using System.Diagnostics;
@@ -43,7 +43,7 @@ namespace TestProject
 
             for(int i=0;i<100000000;i++)
             {
-                MathHelper.bitAt(rnd.Next(),rnd.Next(0,31));
+                BitHack.bitAt(rnd.Next(),rnd.Next(0,31));
             }
 
             watch.Stop();

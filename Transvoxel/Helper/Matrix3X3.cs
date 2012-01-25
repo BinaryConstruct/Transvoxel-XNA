@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna.Helper
+namespace TransvoxelXna.VolumeData.CompactOctree
 {
     public struct Matrix3X3
     {
