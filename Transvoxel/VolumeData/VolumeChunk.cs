@@ -1,4 +1,6 @@
-﻿using TransvoxelXna.VolumeData.CompactOctree;
+﻿
+
+using TransvoxelXna.VolumeData.CompactOctree;
 namespace TransvoxelXna.VolumeData
 {
     

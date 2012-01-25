@@ -3,10 +3,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TransvoxelXna.VolumeData.CompactOctree;
-using TransvoxelXna.VolumeData;
-using TransvoxelXna.VolumeData.CompactOctree;
 using System.Diagnostics;
+using TransvoxelXna.VolumeData.CompactOctree;
+
 
 namespace TestProject
 {

@@ -107,13 +107,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\PerlinNoise.cs" />
-    <Compile Include="Helper\SimplexNoise.cs" />
+    <Compile Include="Math\PerlinNoise.cs" />
+    <Compile Include="Math\SimplexNoise.cs" />
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
-    <Compile Include="Helper\Matrix3X3.cs" />
-    <Compile Include="Helper\Vector3f.cs" />
+    <Compile Include="Math\Matrix3X3.cs" />
+    <Compile Include="Math\Vector3f.cs" />
     <Compile Include="portedStuffFromGamedev\Implementation.cs" />
-    <Compile Include="Helper\Vector3i.cs" />
+    <Compile Include="Math\Vector3i.cs" />
     <Compile Include="Lengyel\Tables.cs" />
     <Compile Include="portedStuffFromGamedev\Cache.cs" />
     <Compile Include="portedStuffFromGamedev\Transvoxel.cs" />

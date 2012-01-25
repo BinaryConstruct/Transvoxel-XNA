@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna.VolumeData.CompactOctree
+namespace TransvoxelXna.MathHelper
 {
     public struct Vector3i
     {

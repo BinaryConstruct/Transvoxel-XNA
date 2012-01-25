@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace TransvoxelXna.Helper
+namespace TransvoxelXna.MathHelper
 {
     public class PerlinNoise
     {
