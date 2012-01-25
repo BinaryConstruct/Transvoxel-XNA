@@ -107,6 +107,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\PerlinNoise.cs" />
+    <Compile Include="Helper\SimplexNoise.cs" />
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
     <Compile Include="Helper\Matrix3X3.cs" />
     <Compile Include="Helper\Vector3f.cs" />
@@ -147,7 +149,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="SurfaceExtractor\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--
