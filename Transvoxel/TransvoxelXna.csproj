@@ -112,9 +112,7 @@
     <Compile Include="Helper\Vector3f.cs" />
     <Compile Include="Implementation.cs" />
     <Compile Include="Helper\Vector3i.cs" />
-    <Compile Include="Lengyel\CellData.cs" />
     <Compile Include="Lengyel\Tables.cs" />
-    <Compile Include="Lengyel\TransvoxelConstantsTable.cs" />
     <Compile Include="Cache.cs" />
     <Compile Include="Transvoxel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
