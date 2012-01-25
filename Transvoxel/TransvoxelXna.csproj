@@ -116,13 +116,15 @@
     <Compile Include="Lengyel\Tables.cs" />
     <Compile Include="Lengyel\TransvoxelConstantsTable.cs" />
     <Compile Include="Cache.cs" />
-    <None Include="VolumeData\IVolumeData_REF.cs" />
     <Compile Include="Transvoxel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vertex.cs" />
     <Compile Include="VertexVoxel.cs" />
+    <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctree.cs" />
+    <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeChildNode.cs" />
+    <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeLeafNode.cs" />
+    <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeNode.cs" />
     <Compile Include="VolumeData\VolumeDataBase.cs" />
-    <Compile Include="VolumeData\VolumeData.cs" />
     <Compile Include="VolumeData\VolumeChunk.cs" />
   </ItemGroup>
   <ItemGroup>

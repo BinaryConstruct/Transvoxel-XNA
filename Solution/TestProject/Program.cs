@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TransvoxelXna.Helper;
 using TransvoxelXna.VolumeData;
+using TransvoxelXna.VolumeData.CompactOctree;
 
 namespace TestProject
 {
@@ -12,8 +13,7 @@ namespace TestProject
     {
         static void Main(string[] args)
         {
-            VolumeDataBaseOctree octree = new VolumeDataBaseOctree();            
-
+            CompactOctree octree = new CompactOctree();       
     
             
             
@@ -36,15 +36,15 @@ namespace TestProject
             Console.WriteLine(MathHelper.int2bitstr(1));*/
 
 
-            for (int x = -10; x < 50; x++)
-                for (int y = -10; y < 50; y++)
+            for (int x = -10; x < 50; x+=2)
+                for (int y = -10; y < 50; y+=3)
             {
                 octree[x, y, 0] = (sbyte)(x * y);
             }
 
             int fail = 0;
-            for (int x = -10; x < 50; x++)
-                for (int y = -10; y < 50; y++)
+            for (int x = -10; x < 50; x+=2)
+                for (int y = -10; y < 50; y+=3)
             {
                 if (octree[x, y, 0] != (sbyte)(x * y))
                 {

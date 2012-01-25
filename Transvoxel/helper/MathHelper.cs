@@ -19,12 +19,28 @@ namespace TransvoxelXna.Helper
             return MASK_LR[i];
         }
 
+        public static int BitIndex(int x, int y, int z, int bit)
+        {
+            return bitAt(x, bit) | (bitAt(y, bit) << 1) | (bitAt(z, bit) << 2);
+        }
+
         public static int min(int a, int b)
         {
             if (a < b)
                 return a;
             else
                 return b;
+        }
+
+        public static int min(params int [] list)
+        {
+            int min = list[0];
+            foreach (int i in list)
+            {
+                if (i < min)
+                    min = i;
+            }
+            return min;
         }
 
         public static uint Mask(int i, int j)
