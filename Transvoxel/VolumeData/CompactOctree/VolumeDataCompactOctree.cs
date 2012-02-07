@@ -2,34 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TransvoxelXna.MathHelper;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
-    public class CompactOctree : VolumeDataBase
+    public class CompactOctree : IVolumeData
     {
-        private OctreeChildNode head;
+        private readonly OctreeChildNode _head;
 
         public CompactOctree()
         {
-            head = new OctreeChildNode(null, 0, 0, 0, sizeof(int) * 8 - VolumeChunk.CHUNKBITS);
+            _head = new OctreeChildNode(null, 0, 0, 0, sizeof(int) * 8 - VolumeChunk.CHUNKBITS);
         }
 
-        public override sbyte this[int x, int y, int z]
+        public sbyte this[int x, int y, int z]
         {
             get
             {
-                return head.Get(x, y, z, 0);
+                return _head.Get(x, y, z, 0);
             }
 
             set
             {
-                head.Set(x, y, z, value, 0);
+                _head.Set(x, y, z, value, 0);
             }
+        }
+
+        public sbyte this[Vector3i v]
+        {
+            get { return this[v.X, v.Y, v.Z]; }
+            set { this[v.X, v.Y, v.Z] = value; }
         }
 
         public override string ToString()
         {
-            return head.ToString(0);
+            return _head.ToString(0);
         }
     }
+
 }

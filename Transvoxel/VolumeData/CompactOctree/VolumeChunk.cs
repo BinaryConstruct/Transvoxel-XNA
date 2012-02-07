@@ -1,7 +1,6 @@
-﻿
+using TransvoxelXna.MathHelper;
 
-using TransvoxelXna.VolumeData.CompactOctree;
-namespace TransvoxelXna.VolumeData
+namespace TransvoxelXna.VolumeData.CompactOctree
 {
     
     /*
@@ -11,7 +10,7 @@ namespace TransvoxelXna.VolumeData
      * VolumeChunk is also the smallest unit for triangulation at level of detail 0
      * 
      */
-    public class VolumeChunk : VolumeDataBase
+    public class VolumeChunk : IVolumeData
     {
         // the used bits of a coordinate to adress a voxel in the chunk
         public static readonly int CHUNKBITS = 4;
@@ -25,7 +24,7 @@ namespace TransvoxelXna.VolumeData
         //signed bit density values
         private readonly sbyte[] values = new sbyte[CHUNKSIZE * CHUNKSIZE * CHUNKSIZE];
 
-        public override sbyte this[int x, int y, int z] 
+        public sbyte this[int x, int y, int z] 
         {
             get
             {
@@ -36,6 +35,12 @@ namespace TransvoxelXna.VolumeData
             {
                 values[Coord2Index(x & CHUNKMASK, y & CHUNKMASK, z & CHUNKMASK)] = value;
             }
+        }
+
+        public sbyte this[Vector3i v]
+        {
+            get { return this[v.X, v.Y, v.Z]; }
+            set { this[v.X, v.Y, v.Z] = value; }
         }
 
         //calculates 1 dimensional index from 3 dimensional

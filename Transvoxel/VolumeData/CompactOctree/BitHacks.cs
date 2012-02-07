@@ -2,7 +2,7 @@
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
-    public class BitHack
+    public static class BitHack
     {
         public static readonly uint[] MASK_LR = new uint[sizeof(int)*8]; //BitMask 1....0
         static BitHack()
