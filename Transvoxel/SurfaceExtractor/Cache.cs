@@ -1,9 +1,8 @@
+using TransvoxelXna.Math;
 
-
-using TransvoxelXna.MathHelper;
-namespace TransvoxelXna
+namespace TransvoxelXna.SurfaceExtractor
 {
-    public class Cell
+    internal class Cell
     {
         public byte CaseIndex;
         public readonly int[] Verts;
@@ -13,14 +12,13 @@ namespace TransvoxelXna
             Verts = new int[size];
         }
     }
-
-    public class RegularCache
+    internal class RegularCache
     {
         private readonly Cell[] _cache;
 
         public RegularCache()
         {
-            const int cacheSize = 2 * Transvoxel.BlockWidth * Transvoxel.BlockWidth;
+            const int cacheSize = 2 * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth;
             _cache = new Cell[cacheSize];
 
             for (int i = 0; i < cacheSize; i++)
@@ -33,11 +31,11 @@ namespace TransvoxelXna
         {
             get
             {
-                return _cache[x + y * Transvoxel.BlockWidth + (z & 1) * Transvoxel.BlockWidth * Transvoxel.BlockWidth];
+                return _cache[x + y * TransvoxelExtractor.BlockWidth + (z & 1) * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth];
             }
             set
             {
-                _cache[x + y * Transvoxel.BlockWidth + (z & 1) * Transvoxel.BlockWidth * Transvoxel.BlockWidth] = value;
+                _cache[x + y * TransvoxelExtractor.BlockWidth + (z & 1) * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth] = value;
             }
         }
 
@@ -48,13 +46,13 @@ namespace TransvoxelXna
         }
     }
 
-    public class TransitionCache
+    internal class TransitionCache
     {
         private readonly Cell[] _cache;
 
         public TransitionCache()
         {
-            const int cacheSize = 2 * Transvoxel.BlockWidth * Transvoxel.BlockWidth;
+            const int cacheSize = 2 * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth;
             _cache = new Cell[cacheSize];
 
             for (int i = 0; i < cacheSize; i++)
@@ -67,12 +65,13 @@ namespace TransvoxelXna
         {
             get
             {
-                return _cache[x + (y & 1) * Transvoxel.BlockWidth];
+                return _cache[x + (y & 1) * TransvoxelExtractor.BlockWidth];
             }
             set
             {
-                _cache[x + (y & 1) * Transvoxel.BlockWidth] = value;
+                _cache[x + (y & 1) * TransvoxelExtractor.BlockWidth] = value;
             }
         }
     }
+
 }

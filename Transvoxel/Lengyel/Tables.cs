@@ -1,5 +1,5 @@
 using System;
-using TransvoxelXna.MathHelper;
+using TransvoxelXna.Math;
 
 namespace TransvoxelXna.Lengyel
 {

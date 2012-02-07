@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna.MathHelper
+namespace TransvoxelXna.Math
 {
     public struct Vector3i
     {

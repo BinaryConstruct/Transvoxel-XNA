@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna
+namespace TransvoxelXna.SurfaceExtractor
 {
     public struct Vertex
     {

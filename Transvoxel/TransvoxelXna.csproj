@@ -107,26 +107,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Geometry\VertexVoxel.cs" />
     <Compile Include="Math\PerlinNoise.cs" />
     <Compile Include="Math\SimplexNoise.cs" />
-    <Compile Include="SurfaceExtractor\Surface.cs" />
+    
+    <Compile Include="SurfaceExtractor\Cache.cs" />
+    <Compile Include="SurfaceExtractor\TransvoxelExtractor.cs" />
+    <Compile Include="SurfaceExtractor\TransvoxelManager.cs" />
+    <Compile Include="SurfaceExtractor\Vertex.cs" />
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
     <Compile Include="Math\Matrix3X3.cs" />
     <Compile Include="Math\Vector3f.cs" />
-    <Compile Include="portedStuffFromGamedev\Implementation.cs" />
     <Compile Include="Math\Vector3i.cs" />
     <Compile Include="Lengyel\Tables.cs" />
-    <Compile Include="portedStuffFromGamedev\Cache.cs" />
-    <Compile Include="portedStuffFromGamedev\Transvoxel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="portedStuffFromGamedev\Vertex.cs" />
-    <Compile Include="portedStuffFromGamedev\VertexVoxel.cs" />
+    <Compile Include="VolumeData\CompactOctree\VolumeChunk.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctree.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeChildNode.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeLeafNode.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeNode.cs" />
-    <Compile Include="VolumeData\VolumeDataBase.cs" />
-    <Compile Include="VolumeData\VolumeChunk.cs" />
+    <Compile Include="VolumeData\IVolumeData.cs" />
+    <Compile Include="VolumeData\RegularChunk\VolumeChunk.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
