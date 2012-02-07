@@ -1,4 +1,4 @@
-using TransvoxelXna.MathHelper;
+using TransvoxelXna.Math;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {

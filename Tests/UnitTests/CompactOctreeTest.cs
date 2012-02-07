@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
+using TransvoxelXna.Math;
+using TransvoxelXna.VolumeData;
 using TransvoxelXna.VolumeData.CompactOctree;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace UnitTests
 {
-    
-    
+
+
     /// <summary>
     ///This is a test class for CompactOctreeTest and is intended
     ///to contain all CompactOctreeTest Unit Tests
@@ -69,39 +71,90 @@ namespace UnitTests
         [TestMethod()]
         public void CompactOctreeConstructorTest()
         {
-            CompactOctree octree = new CompactOctree();
-
-
-
-            for (int x = -10; x < 50; x += 2)
-                for (int y = -10; y < 50; y += 3)
-                {
-                    octree[x, y, 0] = (sbyte)(x * y);
-                }
-
+            IVolumeData octree = new CompactOctree();
+            Stopwatch watch = new Stopwatch();
             int fail = 0;
-            for (int x = -10; x < 50; x += 2)
-                for (int y = -10; y < 50; y += 3)
+
+            //for (int x = -10; x < 50; x += 2)
+            //    for (int y = -10; y < 50; y += 3)
+            //    {
+            //        octree[x, y, 0] = (sbyte)(x * y);
+            //    }
+            //for (int x = -10; x < 50; x += 2)
+            //    for (int y = -10; y < 50; y += 3)
+            //    {
+            //        if (octree[x, y, 0] != (sbyte)(x * y))
+            //        {
+            //            fail++;
+            //        }
+            //    }
+
+            // full test
+            watch.Start();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
                 {
-                    if (octree[x, y, 0] != (sbyte)(x * y))
+                    for (int k = 0; k < 8; k++)
                     {
-                        fail++;
+
+                        for (int x = 0; x < 16; x++)
+                        {
+                            for (int y = 0; y < 16; y++)
+                            {
+                                for (int z = 0; z < 16; z++)
+                                {
+                                    octree[x + i*16, y + j*16, z + k*16] = (sbyte)(x + y + z);
+                                }
+                            }
+                        }
                     }
                 }
+            }
+            watch.Stop();
+            Debug.WriteLine("Write: " + watch.ElapsedMilliseconds);
+
+            watch.Restart();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int k = 0; k < 8; k++)
+                    {
+
+                        for (int x = 0; x < 16; x++)
+                        {
+                            for (int y = 0; y < 16; y++)
+                            {
+                                for (int z = 0; z < 16; z++)
+                                {
+                                    var test = octree[x + i*16, y + j*16, z + k*16];
+                                    if (test != (sbyte)(x + y + z))
+                                        fail++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            watch.Stop();
+            Debug.WriteLine("Read: " + watch.ElapsedMilliseconds);
+
+
 
             Debug.WriteLine(octree.ToString());
             Debug.WriteLine(fail);
-            Random rnd = new Random();
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
+            //Random rnd = new Random();
 
-            for (int i = 0; i < 100000000; i++)
-            {
-                BitHack.bitAt(rnd.Next(), rnd.Next(0, 31));
-            }
+            //watch.Start();
 
-            watch.Stop();
-            Debug.WriteLine(watch.ElapsedMilliseconds);
+            ////for (int i = 0; i < 100000000; i++)
+            //{
+            //    //BitHack.bitAt(rnd.Next(), rnd.Next(0, 31));
+            //}
+
+            //watch.Stop();
+            //Debug.WriteLine(watch.ElapsedMilliseconds);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace TransvoxelXna
+namespace TransvoxelXna.Geometry
 {
     /// <summary>
     /// VertexVoxel is holds the vertex data for the Triplanar project shader (needs to be implemented)

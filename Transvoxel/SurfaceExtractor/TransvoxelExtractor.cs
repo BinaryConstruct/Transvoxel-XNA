@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using TransvoxelXna.Lengyel;
-using TransvoxelXna.MathHelper;
+using TransvoxelXna.Math;
 using TransvoxelXna.VolumeData;
 
-namespace TransvoxelXna
+namespace TransvoxelXna.SurfaceExtractor
 {
-    public static class Transvoxel
+    internal static class TransvoxelExtractor
     {
         public const int BlockWidth = 16;
         public const int Primary = 0;
@@ -176,19 +176,24 @@ namespace TransvoxelXna
                 if (min[i] == last) { near |= (byte)(1 << (i * 2 + 1)); }
             }
 
-            Vector3i[] cornerPositions =
-                new Vector3i[]
-                    {
-                        min + new Vector3i(0, 0, 0)*lodScale,
-                        min + new Vector3i(1, 0, 0)*lodScale,
-                        min + new Vector3i(0, 1, 0)*lodScale,
-                        min + new Vector3i(1, 1, 0)*lodScale,
+            Vector3i[] cornerPositions = Tables.CornerIndex;
+            for (int i = 0; i < cornerPositions.Length; i++)
+            {
+                cornerPositions[i] = min + cornerPositions[i] * lodScale;
+            }
 
-                        min + new Vector3i(0, 0, 1)*lodScale,
-                        min + new Vector3i(1, 0, 1)*lodScale,
-                        min + new Vector3i(0, 1, 1)*lodScale,
-                        min + new Vector3i(1, 1, 1)*lodScale
-                    };
+            //  new Vector3i[]
+            //      {
+            //          min + new Vector3i(0, 0, 0)*lodScale,
+            //          min + new Vector3i(1, 0, 0)*lodScale,
+            //          min + new Vector3i(0, 1, 0)*lodScale,
+            //          min + new Vector3i(1, 1, 0)*lodScale,
+            //
+            //          min + new Vector3i(0, 0, 1)*lodScale,
+            //          min + new Vector3i(1, 0, 1)*lodScale,
+            //          min + new Vector3i(0, 1, 1)*lodScale,
+            //          min + new Vector3i(1, 1, 1)*lodScale
+            //      };
 
             Vector3i dif = cornerPositions[7] - cornerPositions[1];
 
@@ -688,6 +693,4 @@ namespace TransvoxelXna
             return nt;
         }
     }
-
-
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TransvoxelXna.MathHelper;
+using TransvoxelXna.Math;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {

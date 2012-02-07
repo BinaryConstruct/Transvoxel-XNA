@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace TransvoxelXna.MathHelper
+namespace TransvoxelXna.Math
 {
     public struct Matrix3X3
     {
