@@ -15,6 +15,11 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             _head = new OctreeChildNode(null, 0, 0, 0, sizeof(int) * 8 - VolumeChunk.CHUNKBITS);
         }
 
+        public OctreeNode Head()
+        {
+            return _head;
+        }
+
         public sbyte this[int x, int y, int z]
         {
             get

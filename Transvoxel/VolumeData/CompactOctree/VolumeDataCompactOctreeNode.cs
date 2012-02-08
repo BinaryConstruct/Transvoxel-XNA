@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TransvoxelXna.VolumeData.CompactOctree
 {
-    internal abstract class OctreeNode
+    public abstract class OctreeNode
     {
         internal int offsetBitNum = 0;
         internal int xcoord = 0;

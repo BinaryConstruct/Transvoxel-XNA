@@ -107,15 +107,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Geometry\Mesh.cs" />
     <Compile Include="Geometry\VertexVoxel.cs" />
     <Compile Include="Math\PerlinNoise.cs" />
     <Compile Include="Math\SimplexNoise.cs" />
+<<<<<<< HEAD
+    <Compile Include="SurfaceExtractor\Surface.cs" />
+=======
     <Compile Include="SurfaceExtractor\Cache.cs" />
-    <Compile Include="SurfaceExtractor\SurfaceExtractor.cs" />
     <Compile Include="SurfaceExtractor\TransvoxelExtractor.cs" />
     <Compile Include="SurfaceExtractor\TransvoxelManager.cs" />
     <Compile Include="SurfaceExtractor\Vertex.cs" />
+>>>>>>> 2c85b4e7eac696e6c541087d57973381c60b90ae
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
     <Compile Include="Math\Matrix3X3.cs" />
     <Compile Include="Math\Vector3f.cs" />
@@ -128,6 +130,7 @@
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeLeafNode.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeNode.cs" />
     <Compile Include="VolumeData\IVolumeData.cs" />
+    <Compile Include="VolumeData\RegularChunk\VolumeChunk.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

@@ -86,8 +86,8 @@ namespace TransvoxelXna.SurfaceExtractor
 
         private static Vector3 ComputeDelta(Vector3 v, int k, int s)
         {
-            float p2k = (float)System.Math.Pow(2.0, k);
-            float wk = (float)System.Math.Pow(2.0, k - 2.0);
+            float p2k = (float)System.Math.Pow(2.0, k); // 1 << k would do the job much more efficient
+            float wk = (float)System.Math.Pow(2.0, k - 2.0); // 1 << (k-2)
             Vector3 delta = Vector3.Zero;
 
             if (k < 1)
