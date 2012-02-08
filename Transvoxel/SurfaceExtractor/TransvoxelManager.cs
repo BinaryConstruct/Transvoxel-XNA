@@ -12,6 +12,7 @@ namespace TransvoxelXna.SurfaceExtractor
             Vertices = new List<Vertex>();
             Indices = new List<int>();
         }
+
         public List<Vertex> Vertices;
         public List<int> Indices;
     }

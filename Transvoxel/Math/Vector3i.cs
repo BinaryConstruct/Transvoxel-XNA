@@ -90,6 +90,11 @@ namespace TransvoxelXna.Math
             }
         }
 
+        public String ToString()
+        {
+            return "(" + X + "," + Y + "," + Z + ")";
+        }
+
         public static Vector3i UnitX = new Vector3i(1, 0, 0);
         public static Vector3i UnitY = new Vector3i(0, 1, 0);
         public static Vector3i UnitZ = new Vector3i(0, 0, 1);

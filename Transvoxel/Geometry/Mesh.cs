@@ -6,31 +6,29 @@ using TransvoxelXna.Math;
 
 namespace TransvoxelXna.Geometry
 {
-    public struct Vertex
+    /*public struct Vertex
     {
         public Vector3f pos;
-    }
+    }*/
 
     public class Mesh
     {
         List<ushort> indizes;
-        List<Vertex> vertizes;
+        List<Vector3f> vertizes;
 
         public Mesh()
         {
             indizes = new List<ushort>();
-            vertizes = new List<Vertex>();
+            vertizes = new List<Vector3f>();
         }
 
         public void AddIndex(ushort i)
         {
-            Console.WriteLine("a");
             indizes.Add(i);
         }
 
-        public void AddVertex(Vertex v)
+        public void AddVertex(Vector3f v)
         {
-            Console.WriteLine("b");
             vertizes.Add(v);   
         }
 
@@ -39,7 +37,7 @@ namespace TransvoxelXna.Geometry
             return indizes.ToArray();
         }
 
-        public Vertex[] GetVertizes()
+        public Vector3f[] GetVertizes()
         {
             return vertizes.ToArray();
         }

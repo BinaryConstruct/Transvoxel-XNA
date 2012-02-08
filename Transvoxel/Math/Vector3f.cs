@@ -87,6 +87,11 @@ namespace TransvoxelXna.Math
             }
         }
 
+        public string ToString()
+        {
+            return "("+X+","+Y+","+Z+")";
+        }
+
         public static Vector3f UnitX = new Vector3f(1, 0, 0);
         public static Vector3f UnitY = new Vector3f(0, 1, 0);
         public static Vector3f UnitZ = new Vector3f(0, 0, 1);

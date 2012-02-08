@@ -28,7 +28,7 @@ namespace TransvoxelXna.SurfaceExtractor
 		{
 			Mesh mesh = new Mesh();
 
-			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1;x++)
+			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)
 				for (int y = 0; y < VolumeChunk.CHUNKSIZE - 1; y++)
 					for (int z = 0; z < VolumeChunk.CHUNKSIZE - 1; z++)
 					{ 
@@ -48,11 +48,9 @@ namespace TransvoxelXna.SurfaceExtractor
 			}
 
 			byte caseCode = getCaseCode(density);
-            if (caseCode != 0)
-                Console.WriteLine(caseCode);
 
-		//	if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
-		//		return;
+			if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
+				return;
 
 			byte regularCellClass = Tables.RegularCellClass[caseCode];
 			ushort[] vertexLocations = Tables.RegularVertexData[caseCode];
@@ -81,9 +79,7 @@ namespace TransvoxelXna.SurfaceExtractor
 				Vector3i iP1 = (pos + Tables.CornerIndex[v1] * lod);
 				Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
 				Vector3f Q = InterpolateVoxelVector(t, P0, P1);
-				Geometry.Vertex v = new Geometry.Vertex();
-				v.pos = Q;
-				mesh.AddVertex(v);
+				mesh.AddVertex(Q);
 				mapIndizes2Vertice(i, (ushort)(mesh.VertexCount() - 1), mappedIndizes, indexOffset);
 			}
 
