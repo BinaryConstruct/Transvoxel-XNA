@@ -26,11 +26,23 @@ namespace TransvoxelXna.VolumeData.CompactOctree
 
         internal abstract sbyte Get(int x, int y, int z, int bitlevel);
         internal abstract void Set(int x, int y, int z, sbyte val, int bitlevel);
+        internal abstract bool HasChilds();
 
         public virtual string ToString(int lz)
         {
             string lzstr = new string(' ', lz);
-            return lzstr + "< " + this.GetType().ToString() + " > offsetBitNum:" + offsetBitNum+" lvl:"+level;
+            return lzstr + "< " + this.GetType().ToString() + " > offsetBitNum:" + offsetBitNum+" lvl:"+GetLevel();
+        }
+
+        private int GetLevel()
+        {
+            return ((parent==null?0:parent.GetLevel()+1)+offsetBitNum);
+        }
+
+        // from 1 to infinity
+        public int GetLevelOfDetail()
+        {
+            return sizeof(int) * 8 - VolumeChunk.CHUNKBITS - GetLevel()+1;
         }
 
         // calculates the num of equal bits between bitlevel and offsetBitNum

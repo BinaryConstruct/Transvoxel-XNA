@@ -60,6 +60,11 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             chunk[x, y, z] = val;
         }
 
+        internal override bool HasChilds()
+        {
+            return false;
+        }
+
         public override string ToString(int lz)
         {
             string lzstr = new string(' ', lz);

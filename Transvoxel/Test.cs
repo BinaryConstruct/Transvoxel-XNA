@@ -71,6 +71,7 @@ namespace TransvoxelXna
             Console.WriteLine("Read: " + watch.ElapsedMilliseconds);*/
 
             octree[0, 0, 0] = 10;
+            Console.WriteLine(octree.ToString());
             octree[0, 20, 0] = 10;
 
             Console.WriteLine(octree.ToString());

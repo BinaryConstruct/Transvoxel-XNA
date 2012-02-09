@@ -45,8 +45,8 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             n.parent = this;
         }
 
-        internal override sbyte Get(int x, int y, int z, int bitlevel)
-        {
+        public OctreeNode GetNode(int x, int y, int z, int bitlevel)
+        { 
             int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
 
             if (equalOffsetNum == offsetBitNum)
@@ -55,17 +55,22 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             }
             else
             {
-                return 0;
+                return null;
             }
 
             int bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
 
             if (nodes[bitIndex] == null)
             {
-                return 0;
+                return null;
             }
 
-            return nodes[bitIndex].Get(x, y, z, bitlevel + 1);
+            return nodes[bitIndex];
+        }
+
+        internal override sbyte Get(int x, int y, int z, int bitlevel)
+        {
+            return GetNode(x,y,z,bitlevel).Get(x, y, z, bitlevel + 1);
         }
 
         internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
@@ -94,7 +99,6 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 int currentChildIndex = parent.GetChildIndex(this);
                 OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
                 newc.offsetBitNum = equalOffsetNum;
-                newc.level = bitlevel;
                 bitlevel += equalOffsetNum;
                 int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, bitlevel);
                 newc.ReferChild(this, bitIndex);
@@ -106,6 +110,11 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             }
 
             return;
+        }
+
+        internal override bool HasChilds()
+        {
+            return (nodes[0] != null || nodes[1] != null || nodes[2] != null || nodes[3] != null || nodes[4] != null || nodes[5] != null || nodes[6] != null || nodes[7] != null);
         }
 
         public override string ToString(int lz)
