@@ -26,7 +26,7 @@ namespace TransvoxelXna.SurfaceExtractor
 
 		public Mesh GenLodCell(OctreeNode n)
 		{
-			int lod = n.level;
+            int lod = 1;
 			Mesh mesh = new Mesh();
 
 			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)

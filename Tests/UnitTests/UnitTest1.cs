@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using TransvoxelXna.VolumeData;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using TransvoxelXna.VolumeData;
 using TransvoxelXna.VolumeData.CompactOctree;
 
-namespace TransvoxelXna
+namespace UnitTests
 {
-    public class Test
+    [TestClass]
+    public class UnitTest1
     {
-        static void Main(string[] args)
+        [TestMethod]
+        public void TestMethod1()
         {
             IVolumeData octree = new CompactOctree();
             Stopwatch watch = new Stopwatch();
             int fail = 0;
-            /*watch.Start();
+            // full test
+            watch.Start();
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -37,11 +41,9 @@ namespace TransvoxelXna
                 }
             }
             watch.Stop();
-            Console.WriteLine("Write: " + watch.ElapsedMilliseconds);
+            Debug.WriteLine("Write: " + watch.ElapsedMilliseconds);
 
             watch.Restart();
-
-
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -64,18 +66,12 @@ namespace TransvoxelXna
                     }
                 }
             }
-
             watch.Stop();
-
-
-            Console.WriteLine("Read: " + watch.ElapsedMilliseconds);*/
-
-            octree[0, 0, 0] = 10;
-            octree[0, 20, 0] = 10;
-
-            Console.WriteLine(octree.ToString());
-            Console.WriteLine(fail);
-            Console.ReadLine();
+            Debug.WriteLine("Read: " + watch.ElapsedMilliseconds);
+            Debug.WriteLine(octree.ToString());
+            Debug.WriteLine(fail);
+            Assert.IsTrue(fail != 0, "Failed");
+            Assert.Inconclusive("Verify Correctness");
         }
     }
 }

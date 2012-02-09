@@ -32,6 +32,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
                 //set the offsetBitNum of the new node to the num of leading equal bits
                 newc.offsetBitNum = equalOffsetNum;
+                newc.level = bitlevel;
                 //increase the bitlevel by the offsetbitnum of the created parent
                 bitlevel += equalOffsetNum;
 
@@ -43,6 +44,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 //a sibling for this node, or child for the parent node is generated, to hold the new value
                 bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
                 OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z, bitlevel);
+                leaf.level = bitlevel;
                 leaf.offsetBitNum -= 1; //bitIndex adressing consumes 1bit
                 leaf.chunk[x, y, z] = val;
             }

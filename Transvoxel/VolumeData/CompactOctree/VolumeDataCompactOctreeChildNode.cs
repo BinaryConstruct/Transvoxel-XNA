@@ -70,7 +70,6 @@ namespace TransvoxelXna.VolumeData.CompactOctree
 
         internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
         {
-            Console.WriteLine(bitlevel+" "+(parent==null?0:parent.level));
             int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
 
             if (equalOffsetNum == offsetBitNum)
@@ -82,6 +81,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 if (nodes[bitIndex] == null)
                 {
                     OctreeLeafNode leaf = initLeaf(bitIndex, x, y, z, bitlevel + 1);
+                    leaf.level = bitlevel + 1;
                     leaf.setChunkVal(x, y, z, val);
                 }
                 else
@@ -94,6 +94,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
                 int currentChildIndex = parent.GetChildIndex(this);
                 OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
                 newc.offsetBitNum = equalOffsetNum;
+                newc.level = bitlevel;
                 bitlevel += equalOffsetNum;
                 int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, bitlevel);
                 newc.ReferChild(this, bitIndex);

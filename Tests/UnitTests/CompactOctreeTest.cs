@@ -73,22 +73,6 @@ namespace UnitTests
             IVolumeData octree = new CompactOctree();
             Stopwatch watch = new Stopwatch();
             int fail = 0;
-
-            //for (int x = -10; x < 50; x += 2)
-            //    for (int y = -10; y < 50; y += 3)
-            //    {
-            //        octree[x, y, 0] = (sbyte)(x * y);
-            //    }
-            //for (int x = -10; x < 50; x += 2)
-            //    for (int y = -10; y < 50; y += 3)
-            //    {
-            //        if (octree[x, y, 0] != (sbyte)(x * y))
-            //        {
-            //            fail++;
-            //        }
-            //    }
-
-            // full test
             watch.Start();
             for (int i = 0; i < 8; i++)
             {
@@ -138,22 +122,9 @@ namespace UnitTests
             }
             watch.Stop();
             Debug.WriteLine("Read: " + watch.ElapsedMilliseconds);
-
-
-
             Debug.WriteLine(octree.ToString());
             Debug.WriteLine(fail);
-            //Random rnd = new Random();
-
-            //watch.Start();
-
-            ////for (int i = 0; i < 100000000; i++)
-            //{
-            //    //BitHack.bitAt(rnd.Next(), rnd.Next(0, 31));
-            //}
-
-            //watch.Stop();
-            //Debug.WriteLine(watch.ElapsedMilliseconds);
+            Assert.IsTrue(fail == 0);
         }
 
         /// <summary>
@@ -171,7 +142,7 @@ namespace UnitTests
             target[x, y, z] = expected;
             actual = target[x, y, z];
             Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            //Assert.Inconclusive("Verify the correctness of this test method.");
         }
     }
 }
