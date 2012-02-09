@@ -7,8 +7,6 @@ using System;
 
 namespace UnitTests
 {
-
-
     /// <summary>
     ///This is a test class for CompactOctreeTest and is intended
     ///to contain all CompactOctreeTest Unit Tests
@@ -16,6 +14,7 @@ namespace UnitTests
     [TestClass()]
     public class CompactOctreeTest
     {
+
         private TestContext testContextInstance;
 
         /// <summary>

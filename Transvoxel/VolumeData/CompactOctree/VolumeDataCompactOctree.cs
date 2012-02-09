@@ -13,6 +13,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
         public CompactOctree()
         {
             _head = new OctreeChildNode(null, 0, 0, 0, sizeof(int) * 8 - VolumeChunk.CHUNKBITS);
+            _head.level = 0;
         }
 
         public OctreeNode Head()
@@ -24,12 +25,12 @@ namespace TransvoxelXna.VolumeData.CompactOctree
         {
             get
             {
-                return _head.Get(x, y, z, 0);
+                return _head.Get(x, y, z,0);
             }
 
             set
             {
-                _head.Set(x, y, z, value, 0);
+                _head.Set(x, y, z, value,0);
             }
         }
 

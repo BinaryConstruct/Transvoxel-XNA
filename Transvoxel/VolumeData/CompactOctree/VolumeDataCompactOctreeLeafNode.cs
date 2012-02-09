@@ -8,7 +8,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
     internal class OctreeLeafNode : OctreeNode
     {
         private VolumeChunk chunk = new VolumeChunk();
-  
+
         public OctreeLeafNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
             : base(parent, x, y, z, bitlevel)
         { }

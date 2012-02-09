@@ -12,7 +12,7 @@ namespace TransvoxelXna.SurfaceExtractor
 {
 	public interface SurfaceExtractor
 	{
-		Mesh GenLodCell(int lod);
+		Mesh GenLodCell(OctreeNode n);
 	}
 
 	public class TransvoxelExtract : SurfaceExtractor
@@ -24,8 +24,9 @@ namespace TransvoxelXna.SurfaceExtractor
 			volume = data;
 		}
 
-		public Mesh GenLodCell(int lod)
+		public Mesh GenLodCell(OctreeNode n)
 		{
+			int lod = n.level;
 			Mesh mesh = new Mesh();
 
 			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)

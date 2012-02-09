@@ -12,6 +12,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
         internal int ycoord = 0;
         internal int zcoord = 0;
         internal OctreeChildNode parent;
+        internal int level = 0;
 
         internal OctreeNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
         {
@@ -20,6 +21,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             ycoord = y;
             zcoord = z;
             offsetBitNum = sizeof(int) * 8 - bitlevel - VolumeChunk.CHUNKBITS;
+            level = bitlevel;
         }
 
         internal abstract sbyte Get(int x, int y, int z, int bitlevel);
@@ -44,6 +46,11 @@ namespace TransvoxelXna.VolumeData.CompactOctree
             int equalZ = BitHack.cmpBit(zcoord, z, bitlevel, offsetBitNum);
 
             return BitHack.min(equalX, equalY, equalZ);
+        }
+
+        internal int GetLevel()
+        {
+            return level;
         }
     }
 }

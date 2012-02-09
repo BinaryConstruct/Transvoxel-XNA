@@ -70,6 +70,7 @@ namespace TransvoxelXna.VolumeData.CompactOctree
 
         internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
         {
+            Console.WriteLine(bitlevel+" "+(parent==null?0:parent.level));
             int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
 
             if (equalOffsetNum == offsetBitNum)
