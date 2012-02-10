@@ -6,6 +6,8 @@ using Transvoxel.Math;
 
 namespace Transvoxel.Geometry
 {
+    //for later stuff we use a custom vertex structure struct Vertex
+    //for now keep it simple as Vector3f
     /*public struct Vertex
     {
         public Vector3f pos;
