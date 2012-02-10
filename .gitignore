@@ -28,6 +28,8 @@ Index.dat
 *.vsp
 [Bb]in
 [Dd]ebug*/
+Binaries/
+Binaries/*
 *.lib
 *.sbr
 obj/
