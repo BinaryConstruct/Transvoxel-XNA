@@ -7,25 +7,25 @@ namespace Transvoxel.VolumeData.CompactOctree
 {
     public abstract class OctreeNode
     {
-        internal int offsetBitNum = 0;
+        internal int offsetBitNum = 0;  //equal bits for all subnodes
+        internal int level = 0;         //octree depth (before the offset bits)
         internal int xcoord = 0;
         internal int ycoord = 0;
         internal int zcoord = 0;
         internal OctreeChildNode parent;
-        internal int level = 0;
 
-
-        internal OctreeNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
+        internal OctreeNode(OctreeChildNode parent, int x, int y, int z)
         {
             this.parent = parent;
             xcoord = x;
             ycoord = y;
             zcoord = z;
-            offsetBitNum = sizeof(int) * 8 - bitlevel - VolumeChunk.CHUNKBITS;
+            offsetBitNum = 0;
+            level = 0;
         }
 
-        internal abstract sbyte Get(int x, int y, int z, int bitlevel);
-        internal abstract void Set(int x, int y, int z, sbyte val, int bitlevel);
+        internal abstract sbyte Get(int x, int y, int z);
+        internal abstract void Set(int x, int y, int z, sbyte val);
         internal abstract bool HasChilds();
 
         public virtual string ToString(int lz)
@@ -36,7 +36,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         private int GetLevel()
         {
-            return ((parent==null?0:parent.GetLevel()+1)+offsetBitNum);
+            return level;//((parent==null?0:parent.GetLevel()+1)+offsetBitNum);
         }
 
         // from 1 to infinity

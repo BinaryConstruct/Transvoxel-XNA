@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
@@ -9,20 +10,20 @@ namespace Transvoxel.VolumeData.CompactOctree
     {
         private OctreeNode[] nodes = new OctreeNode[8]; //index: x+y*2+z*4 | x,y,z elementof {0,1}
 
-        public OctreeChildNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
-            : base(parent, x, y, z, bitlevel)
+        public OctreeChildNode(OctreeChildNode parent, int x, int y, int z)
+            : base(parent, x, y, z)
         { }
 
-        public OctreeChildNode initChild(int place, int x, int y, int z, int bitlevel)
+        public OctreeChildNode initChild(int place, int x, int y, int z)
         {
-            OctreeChildNode newChild = new OctreeChildNode(this, x, y, z, bitlevel);
+            OctreeChildNode newChild = new OctreeChildNode(this, x, y, z);
             nodes[place] = newChild;
             return newChild;
         }
 
-        public OctreeLeafNode initLeaf(int place, int x, int y, int z, int bitlevel)
+        public OctreeLeafNode initLeaf(int place, int x, int y, int z)
         {
-            OctreeLeafNode leaf = new OctreeLeafNode(this, x, y, z, bitlevel);
+            OctreeLeafNode leaf = new OctreeLeafNode(this, x, y, z);
             nodes[place] = leaf;
             return leaf;
         }
@@ -45,20 +46,22 @@ namespace Transvoxel.VolumeData.CompactOctree
             n.parent = this;
         }
 
-        public OctreeNode GetNode(int x, int y, int z, int bitlevel)
-        { 
-            int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
+        public OctreeNode GetNode(int x, int y, int z)
+        {
+            //Console.WriteLine("GetNode");
+            int equalOffsetNum = EqualOffsetNum(x, y, z, level);
+            int l = level;
 
             if (equalOffsetNum == offsetBitNum)
             {
-                bitlevel += offsetBitNum;
+                l += offsetBitNum;
             }
             else
             {
                 return null;
             }
 
-            int bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
+            int bitIndex = BitHack.BitIndex(x, y, z,l);
 
             if (nodes[bitIndex] == null)
             {
@@ -68,45 +71,64 @@ namespace Transvoxel.VolumeData.CompactOctree
             return nodes[bitIndex];
         }
 
-        internal override sbyte Get(int x, int y, int z, int bitlevel)
+        internal override sbyte Get(int x, int y, int z)
         {
-            return GetNode(x,y,z,bitlevel).Get(x, y, z, bitlevel + 1);
+            OctreeNode n = GetNode(x,y,z);
+            return (n==null?(sbyte)0:n.Get(x, y, z));
         }
 
-        internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
+        internal override void Set(int x, int y, int z, sbyte val)
         {
-            int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
+            //Console.WriteLine("SetChild");
+            int equalOffsetNum = EqualOffsetNum(x, y, z, level);
 
             if (equalOffsetNum == offsetBitNum)
             {
-                bitlevel += offsetBitNum;
+                int l = level+offsetBitNum;
 
-                int bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
+                int bitIndex = BitHack.BitIndex(x, y, z, l);
 
                 if (nodes[bitIndex] == null)
                 {
-                    OctreeLeafNode leaf = initLeaf(bitIndex, x, y, z, bitlevel + 1);
-                    leaf.level = bitlevel + 1;
+                    //Node doesn't exist - create it
+                    OctreeLeafNode leaf = initLeaf(bitIndex, x, y, z);
+                    leaf.level = l + 1;
+                    leaf.offsetBitNum = 29 - leaf.level;
                     leaf.setChunkVal(x, y, z, val);
+
+                    Debug.Assert(leaf.level + leaf.offsetBitNum <= 29,"f1");
                 }
                 else
                 {
-                    nodes[bitIndex].Set(x, y, z, val, bitlevel + 1);
+                    //Node exists - refer Set call
+                    nodes[bitIndex].Set(x, y, z, val);
                 }
+
+                Debug.Assert(level + offsetBitNum <= 29,"f2");                
             }
             else
             {
-                int currentChildIndex = parent.GetChildIndex(this);
-                OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
+                //Create Node
+                OctreeChildNode newc = parent.initChild(parent.GetChildIndex(this), x, y, z);
                 newc.offsetBitNum = equalOffsetNum;
-                bitlevel += equalOffsetNum;
-                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, bitlevel);
+                newc.level = level;
+
+                //Add this as child to the new Node
+                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, newc.level+newc.offsetBitNum);
                 newc.ReferChild(this, bitIndex);
                 offsetBitNum -= (equalOffsetNum + 1);
-                bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
-                OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z, bitlevel);
-                leaf.offsetBitNum -= 1;
+                level = newc.level + newc.offsetBitNum + 1;
+
+                bitIndex = BitHack.BitIndex(x, y, z, newc.level + newc.offsetBitNum);
+                OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z);
+                leaf.level = level;
+                leaf.offsetBitNum = offsetBitNum;
                 leaf.setChunkVal(x, y, z, val);
+
+
+                Debug.Assert(level + offsetBitNum <= 29,"f3");
+                Debug.Assert(newc.level + newc.offsetBitNum <= 29,"f4");
+                Debug.Assert(leaf.level + leaf.offsetBitNum <= 29,"f5");
             }
 
             return;

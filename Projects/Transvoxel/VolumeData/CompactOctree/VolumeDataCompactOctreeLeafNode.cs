@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
@@ -9,13 +10,14 @@ namespace Transvoxel.VolumeData.CompactOctree
     {
         private VolumeChunk chunk = new VolumeChunk();
 
-        public OctreeLeafNode(OctreeChildNode parent, int x, int y, int z, int bitlevel)
-            : base(parent, x, y, z, bitlevel)
+        public OctreeLeafNode(OctreeChildNode parent, int x, int y, int z)
+            : base(parent, x, y, z)
         { }
 
-        internal override void Set(int x, int y, int z, sbyte val, int bitlevel)
+        internal override void Set(int x, int y, int z, sbyte val)
         {
-            int equalOffsetNum = EqualOffsetNum(x, y, z, bitlevel);
+            //Console.WriteLine("SetLeaf "+level+" "+offsetBitNum);
+            int equalOffsetNum = EqualOffsetNum(x, y, z, level);
 
             if (equalOffsetNum == offsetBitNum)
             {
@@ -24,33 +26,31 @@ namespace Transvoxel.VolumeData.CompactOctree
             }
             else
             {
-                //between this node and it's parent, a new node is created
-                //on this new node another new leaf node is attached
-
-                //Create the Node at the childIndex of the current node
-                int currentChildIndex = parent.GetChildIndex(this);
-                OctreeChildNode newc = parent.initChild(currentChildIndex, x, y, z, bitlevel);
-                //set the offsetBitNum of the new node to the num of leading equal bits
+                //Create Node
+                OctreeChildNode newc = parent.initChild(parent.GetChildIndex(this), x, y, z);
                 newc.offsetBitNum = equalOffsetNum;
-                newc.level = bitlevel;
-                //increase the bitlevel by the offsetbitnum of the created parent
-                bitlevel += equalOffsetNum;
+                newc.level = parent.level+parent.offsetBitNum+1;
 
-                //the current node get's attached to it's newly generated parent node
-                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, bitlevel);
+                //Add this as child to the new Node
+                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, newc.level + newc.offsetBitNum);
                 newc.ReferChild(this, bitIndex);
                 offsetBitNum -= (equalOffsetNum + 1);
+                level = newc.level + newc.offsetBitNum + 1;
 
-                //a sibling for this node, or child for the parent node is generated, to hold the new value
-                bitIndex = BitHack.BitIndex(x, y, z, bitlevel);
-                OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z, bitlevel);
-                leaf.level = bitlevel;
-                leaf.offsetBitNum -= 1; //bitIndex adressing consumes 1bit
+                bitIndex = BitHack.BitIndex(x, y, z, newc.level + newc.offsetBitNum);
+                OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z);
+                leaf.level = level;
+                leaf.offsetBitNum = offsetBitNum;
+                leaf.setChunkVal(x, y, z, val);
                 leaf.chunk[x, y, z] = val;
+
+                Debug.Assert(level + offsetBitNum <= 29);
+                Debug.Assert(newc.level + newc.offsetBitNum <= 29);
+                Debug.Assert(leaf.level + offsetBitNum <= 29);
             }
         }
 
-        internal override sbyte Get(int x, int y, int z, int bitlevel)
+        internal override sbyte Get(int x, int y, int z)
         {
             return chunk[x, y, z];
         }
