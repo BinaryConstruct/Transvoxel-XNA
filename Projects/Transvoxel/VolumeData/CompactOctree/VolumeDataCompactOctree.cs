@@ -13,6 +13,18 @@ namespace Transvoxel.VolumeData.CompactOctree
         public CompactOctree()
         {
             _head = new OctreeChildNode(null, 0, 0, 0);
+            
+            /*int size = 50;
+            for (int x = 5; x < size - 5; x++)
+                for (int y = 5; y < size - 5; y++)
+                    for (int z = 5; z < size - 5; z++)
+                    {
+                        float div = 128.0f;
+
+                        double val = SimplexNoise.noise(x / div, y / div, z / div);
+                        val *= 1 << 7;
+                        this[x, y, z] = (sbyte)(val);
+                    }*/
         }
 
         public OctreeNode Head()

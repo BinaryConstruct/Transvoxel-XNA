@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Transvoxel.Math;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
@@ -24,6 +25,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             level = 0;
         }
 
+        public abstract OctreeNode GetNode(int x, int y, int z);
         internal abstract sbyte Get(int x, int y, int z);
         internal abstract void Set(int x, int y, int z, sbyte val);
         internal abstract bool HasChilds();
@@ -31,19 +33,30 @@ namespace Transvoxel.VolumeData.CompactOctree
         public virtual string ToString(int lz)
         {
             string lzstr = new string(' ', lz);
-            return lzstr + "< " + this.GetType().ToString() + " > offsetBitNum:" + offsetBitNum+" lvl:"+GetLevel();
+            return lzstr + "< " + this.GetType().ToString() + " > offsetBitNum:" + offsetBitNum+" lvl:"+GetLevel()+" lod:"+GetLevelOfDetail();
         }
 
         private int GetLevel()
         {
-            return level;//((parent==null?0:parent.GetLevel()+1)+offsetBitNum);
+            return level+offsetBitNum;//((parent==null?0:parent.GetLevel()+1)+offsetBitNum);
         }
 
         // from 1 to infinity
         public int GetLevelOfDetail()
         {
-            return sizeof(int) * 8 - VolumeChunk.CHUNKBITS - GetLevel()+1;
+            return 30 - GetLevel();
         }
+
+        public Vector3i GetPos()
+        {
+            int mask = (int)BitHack.Mask(0, level + offsetBitNum);
+            int x = xcoord & mask;
+            int y = ycoord & mask;
+            int z = zcoord & mask;
+            return new Vector3i(x,y,z);
+        }
+
+        
 
         // calculates the num of equal bits between bitlevel and offsetBitNum
         // Example:
@@ -52,11 +65,11 @@ namespace Transvoxel.VolumeData.CompactOctree
         // from left to right the number of equal bits is 5
         // this is done for x,y and z coordinate, minimum of those 3 is returned
         
-        internal int EqualOffsetNum(int x, int y, int z, int bitlevel)
+        internal int EqualOffsetNum(int x, int y, int z)
         {
-            int equalX = BitHack.cmpBit(xcoord, x, bitlevel, offsetBitNum);
-            int equalY = BitHack.cmpBit(ycoord, y, bitlevel, offsetBitNum);
-            int equalZ = BitHack.cmpBit(zcoord, z, bitlevel, offsetBitNum);
+            int equalX = BitHack.cmpBit(xcoord, x, level, offsetBitNum);
+            int equalY = BitHack.cmpBit(ycoord, y, level, offsetBitNum);
+            int equalZ = BitHack.cmpBit(zcoord, z, level, offsetBitNum);
 
             return BitHack.min(equalX, equalY, equalZ);
         }

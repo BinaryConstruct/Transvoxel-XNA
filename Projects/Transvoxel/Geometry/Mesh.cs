@@ -44,6 +44,20 @@ namespace Transvoxel.Geometry
             return vertizes.ToArray();
         }
 
+        public float[] GetVertizesFloatArray()
+        {
+            float[] arr = new float[vertizes.Count * 3];
+            int i = 0;
+            foreach (Vector3f v in vertizes)
+            {
+                arr[i + 0] = v.X;
+                arr[i + 1] = v.Y;
+                arr[i + 2] = v.Z;
+                i++;
+            }
+            return arr;
+        }
+
         internal int VertexCount()
         {
             return vertizes.Count;

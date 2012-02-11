@@ -14,18 +14,34 @@ namespace Transvoxel.VolumeData.CompactOctree
             : base(parent, x, y, z)
         { }
 
+        public override OctreeNode GetNode(int x, int y, int z)
+        {
+            return this;
+        }
+
         internal override void Set(int x, int y, int z, sbyte val)
         {
             //Console.WriteLine("SetLeaf "+level+" "+offsetBitNum);
-            int equalOffsetNum = EqualOffsetNum(x, y, z, level);
+            int equalOffsetNum = EqualOffsetNum(x, y, z);
 
             if (equalOffsetNum == offsetBitNum)
             {
-                //existing leaf - set the value on this node
-                chunk[x, y, z] = val;
+                //existing leaf - set the value on this node                
+
+                if (val == 0 && chunk.ContainsOnlyZero())
+                {
+                    //Destroy this node
+                }
+                else
+                {
+                    setChunkVal(x, y, z, val);
+                }
             }
             else
             {
+                if (val == 0)   //don't save zeros
+                    return;
+
                 //Create Node
                 OctreeChildNode newc = parent.initChild(parent.GetChildIndex(this), x, y, z);
                 newc.offsetBitNum = equalOffsetNum;
@@ -41,8 +57,10 @@ namespace Transvoxel.VolumeData.CompactOctree
                 OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z);
                 leaf.level = level;
                 leaf.offsetBitNum = offsetBitNum;
+                
+                
                 leaf.setChunkVal(x, y, z, val);
-                leaf.chunk[x, y, z] = val;
+                //leaf.chunk[x, y, z] = val;
 
                 Debug.Assert(level + offsetBitNum <= 29);
                 Debug.Assert(newc.level + newc.offsetBitNum <= 29);

@@ -48,10 +48,9 @@ namespace Transvoxel.VolumeData.CompactOctree
             n.parent = this;
         }
 
-        public OctreeNode GetNode(int x, int y, int z)
+        public override OctreeNode GetNode(int x, int y, int z)
         {
-            //Console.WriteLine("GetNode");
-            int equalOffsetNum = EqualOffsetNum(x, y, z, level);
+            int equalOffsetNum = EqualOffsetNum(x, y, z);
             int l = level;
 
             if (equalOffsetNum == offsetBitNum)
@@ -65,11 +64,6 @@ namespace Transvoxel.VolumeData.CompactOctree
 
             int bitIndex = BitHack.BitIndex(x, y, z,l);
 
-            if (nodes[bitIndex] == null)
-            {
-                return null;
-            }
-
             return nodes[bitIndex];
         }
 
@@ -81,7 +75,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         internal override void Set(int x, int y, int z, sbyte val)
         {
-            int equalOffsetNum = EqualOffsetNum(x, y, z, level);
+            int equalOffsetNum = EqualOffsetNum(x, y, z);
 
             if (equalOffsetNum == offsetBitNum)
             {

@@ -26,7 +26,6 @@ namespace Transvoxel.SurfaceExtractor
 
 		public Mesh GenLodCell(OctreeNode n)
 		{
-            int lod = 1;
 			Mesh mesh = new Mesh();
 
 			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)
@@ -34,18 +33,22 @@ namespace Transvoxel.SurfaceExtractor
 					for (int z = 0; z < VolumeChunk.CHUNKSIZE - 1; z++)
 					{ 
 						//PolygonizeCell
-						PolygonizeCell(new Vector3i(x,y,z),ref mesh,lod);
+						PolygonizeCell(n.GetPos()+new Vector3i(x,y,z),ref mesh,n);
 					}
 
 			return mesh;
 		}
 
-		internal void PolygonizeCell(Vector3i pos, ref Mesh mesh,int lod)
+		internal void PolygonizeCell(Vector3i offsetPos, ref Mesh mesh,OctreeNode data)
 		{
+			int lod = data.GetLevelOfDetail() ;
+            Console.WriteLine("lod:" + lod);
+
 			sbyte[] density = new sbyte[8];
+			
 			for (int i = 0; i < density.Length; i++)
 			{
-				density[i] = volume[pos + Tables.CornerIndex[i] * lod];
+				density[i] = volume[offsetPos + Tables.CornerIndex[i] * lod];			
 			}
 
 			byte caseCode = getCaseCode(density);
@@ -75,9 +78,9 @@ namespace Transvoxel.SurfaceExtractor
 
 				long t = (d1 << 8) / (d1 - d0);
 
-				Vector3i iP0 = (pos + Tables.CornerIndex[v0] * lod);
+				Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
 				Vector3f P0 = new Vector3f(iP0.X, iP0.Y, iP0.Z);
-				Vector3i iP1 = (pos + Tables.CornerIndex[v1] * lod);
+				Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
 				Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
 				Vector3f Q = InterpolateVoxelVector(t, P0, P1);
 				mesh.AddVertex(Q);

@@ -11,7 +11,7 @@ namespace ConsoleFunctionalTest
         {
             IVolumeData octree = new CompactOctree();
             Stopwatch watch = new Stopwatch();
-            int fail = 0;
+            /*int fail = 0;
             watch.Start();
             for (int i = 0; i < 8; i++)
             {
@@ -65,7 +65,7 @@ namespace ConsoleFunctionalTest
             watch.Stop();
 
 
-            Console.WriteLine("Read: " + watch.ElapsedMilliseconds);
+            Console.WriteLine("Read: " + watch.ElapsedMilliseconds);*/
 /*
             for (int x = 0; x < 17; x++)
             {
@@ -92,12 +92,12 @@ namespace ConsoleFunctionalTest
             }
             */
 
-           // octree[16, 0, 0] = 1;
-           // octree[0, 8, 1] = 1;
-           // octree[0, -64, 0] = 1;
+            octree[16, 0, 0] = 1;
+            octree[0, 8, 1] = 1;
+            octree[0, -64, 0] = 1;
 
             Console.WriteLine(octree.ToString());
-            Console.WriteLine(fail);
+          //  Console.WriteLine(fail);
             Console.ReadLine();
         }
     }

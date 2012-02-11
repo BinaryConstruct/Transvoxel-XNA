@@ -37,6 +37,17 @@ namespace Transvoxel.VolumeData.CompactOctree
             }
         }
 
+        public bool ContainsOnlyZero()
+        { 
+            int i=0;
+            foreach(sbyte s in values)
+            {
+                i+=s;
+            }
+            
+            return i==0?true:false;
+        }
+
         public sbyte this[Vector3i v]
         {
             get { return this[v.X, v.Y, v.Z]; }
