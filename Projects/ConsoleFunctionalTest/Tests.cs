@@ -13,7 +13,7 @@ namespace ConsoleFunctionalTest
             Stopwatch watch = new Stopwatch();
             int fail = 0;
             watch.Start();
-            /*for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
@@ -65,7 +65,18 @@ namespace ConsoleFunctionalTest
             watch.Stop();
 
 
-            Console.WriteLine("Read: " + watch.ElapsedMilliseconds);*/
+            Console.WriteLine("Read: " + watch.ElapsedMilliseconds);
+/*
+            for (int x = 0; x < 17; x++)
+            {
+                for (int y = 0; y < 16; y++)
+                {
+                    for (int z = 0; z < 16; z++)
+                    {
+                        octree[x,y,z] = (sbyte)(x + y + z);
+                    }
+                }
+            }
 
             for (int x = 0; x < 16; x++)
             {
@@ -73,26 +84,17 @@ namespace ConsoleFunctionalTest
                 {
                     for (int z = 0; z < 16; z++)
                     {
-                        octree[x + 2 * 16, y + 2 * 16, z + 3 * 16] = (sbyte)(x + y + z);
-                    }
-                }
-            }
-
-            for (int x = 0; x < 17; x++)
-            {
-                for (int y = 0; y < 16; y++)
-                {
-                    for (int z = 0; z < 16; z++)
-                    {
-                        var test = octree[x + 2 * 16, y + 2 * 16, z + 3 * 16];
+                        var test = octree[x, y, z];
                         if (test != (sbyte)(x + y + z))
                             fail++;
                     }
                 }
             }
+            */
 
-
-            Console.WriteLine(octree[0, 64, 0]);
+           // octree[16, 0, 0] = 1;
+           // octree[0, 8, 1] = 1;
+           // octree[0, -64, 0] = 1;
 
             Console.WriteLine(octree.ToString());
             Console.WriteLine(fail);

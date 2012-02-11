@@ -25,6 +25,8 @@ namespace Transvoxel.VolumeData.CompactOctree
         {
             OctreeLeafNode leaf = new OctreeLeafNode(this, x, y, z);
             nodes[place] = leaf;
+            leaf.level = level + offsetBitNum + 1;
+            leaf.offsetBitNum = 29 - leaf.level;
             return leaf;
         }
 
@@ -79,32 +81,23 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         internal override void Set(int x, int y, int z, sbyte val)
         {
-            //Console.WriteLine("SetChild");
             int equalOffsetNum = EqualOffsetNum(x, y, z, level);
 
             if (equalOffsetNum == offsetBitNum)
             {
-                int l = level+offsetBitNum;
-
-                int bitIndex = BitHack.BitIndex(x, y, z, l);
+                int bitIndex = BitHack.BitIndex(x, y, z, level + offsetBitNum);
 
                 if (nodes[bitIndex] == null)
                 {
                     //Node doesn't exist - create it
                     OctreeLeafNode leaf = initLeaf(bitIndex, x, y, z);
-                    leaf.level = l + 1;
-                    leaf.offsetBitNum = 29 - leaf.level;
                     leaf.setChunkVal(x, y, z, val);
-
-                    Debug.Assert(leaf.level + leaf.offsetBitNum <= 29,"f1");
                 }
                 else
                 {
                     //Node exists - refer Set call
                     nodes[bitIndex].Set(x, y, z, val);
                 }
-
-                Debug.Assert(level + offsetBitNum <= 29,"f2");                
             }
             else
             {
@@ -121,14 +114,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
                 bitIndex = BitHack.BitIndex(x, y, z, newc.level + newc.offsetBitNum);
                 OctreeLeafNode leaf = newc.initLeaf(bitIndex, x, y, z);
-                leaf.level = level;
-                leaf.offsetBitNum = offsetBitNum;
                 leaf.setChunkVal(x, y, z, val);
-
-
-                Debug.Assert(level + offsetBitNum <= 29,"f3");
-                Debug.Assert(newc.level + newc.offsetBitNum <= 29,"f4");
-                Debug.Assert(leaf.level + leaf.offsetBitNum <= 29,"f5");
             }
 
             return;
