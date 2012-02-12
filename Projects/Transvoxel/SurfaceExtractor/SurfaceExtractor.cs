@@ -13,12 +13,11 @@ namespace Transvoxel.SurfaceExtractor
 	public interface ISurfaceExtractor
 	{
 	    Mesh GenLodCell(Vector3i position, int lod);
+        Mesh GenLodCell(OctreeNode n);
 	}
 
 	public class TransvoxelExtractor : ISurfaceExtractor
 	{
-	    public const int BlockWidth = 16;
-
 		IVolumeData volume;
 
 		public TransvoxelExtractor(IVolumeData data)
@@ -31,9 +30,9 @@ namespace Transvoxel.SurfaceExtractor
 			Mesh mesh = new Mesh();
             //int lod = n.GetLevelOfDetail();
             Console.WriteLine(lod);
-			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)
-				for (int y = 0; y < VolumeChunk.CHUNKSIZE - 1; y++)
-					for (int z = 0; z < VolumeChunk.CHUNKSIZE - 1; z++)
+			for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
+				for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+					for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
 					{ 
 						//PolygonizeCell
                         PolygonizeCell(position + new Vector3i(x, y, z) * lod, ref mesh, lod);
@@ -42,10 +41,24 @@ namespace Transvoxel.SurfaceExtractor
 			return mesh;
 		}
 
+        public Mesh GenLodCell(OctreeNode node)
+        {
+            Mesh mesh = new Mesh();
+            int lod = node.GetLevelOfDetail();
+            Console.WriteLine(lod);
+            for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
+                for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+                    for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+                    {
+                        //PolygonizeCell
+                        PolygonizeCell(node.GetPos() + new Vector3i(x, y, z) * lod, ref mesh, lod);
+                    }
+
+            return mesh;
+        }
+
 		internal void PolygonizeCell(Vector3i offsetPos, ref Mesh mesh,int lod)
 		{
-			//int lod = data.GetLevelOfDetail() ;
-
 			sbyte[] density = new sbyte[8];
 			
 			for (int i = 0; i < density.Length; i++)
@@ -56,8 +69,7 @@ namespace Transvoxel.SurfaceExtractor
 			byte caseCode = getCaseCode(density);
 
 
-			//if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
-			if(caseCode == 0 || caseCode == 255)
+			if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
                 return;
 
 			byte regularCellClass = Tables.RegularCellClass[caseCode];
@@ -96,9 +108,7 @@ namespace Transvoxel.SurfaceExtractor
 				ushort i1 = mappedIndizes[i * 3 + 0];
 				ushort i2 = mappedIndizes[i * 3 + 1];
 				ushort i3 = mappedIndizes[i * 3 + 2];
-
-
-				mesh.AddIndex(i1);
+                mesh.AddIndex(i1);
 				mesh.AddIndex(i2);
 				mesh.AddIndex(i3);
 			}

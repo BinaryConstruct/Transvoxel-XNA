@@ -49,43 +49,66 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             get { return _chunks; }
         }
 
-        public void ExtractMesh(Vector3 position, int lod)
+        public IVolumeData getVolume()
         {
-            _logger.Log(_logSend, string.Format("Extracting Mesh [Lod - {1}]: {0}", position,lod));
-            var m = _surfaceExtractor.GenLodCell(Converters.Vector3ToVector3i(position), 1);
-            var v = Converters.ConvertMeshToXna(m);
-            var i = m.GetIndices();
-            var chunk = new Chunk
-                            {
-                                BoundingBox = new BoundingBox(position, position + new Vector3(TransvoxelExtractor.BlockWidth, TransvoxelExtractor.BlockWidth, TransvoxelExtractor.BlockWidth)),
-                                Position = position
-                            };
+            return _volumeData;
+        }
 
-            if (i.Length > 0)
+        public void ExtractMesh(OctreeNode n)
+        {
+            if (n != null && n.GetLevelOfDetail() <= 1)
             {
-                chunk.VertexBuffer = new VertexBuffer(_gd, typeof (VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
-                chunk.VertexBuffer.SetData(v);
-                chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
-                chunk.IndexBuffer.SetData(i);
+                Vector3i position = n.GetPos();
+                Vector3 posXna = Converters.Vector3iToVector3(position);
+                int lod = n.GetLevelOfDetail();
+
+                //_logger.Log(_logSend, string.Format("Extracting Mesh [Lod - {1}]: {0}", position, lod));
+                var m = _surfaceExtractor.GenLodCell(n);
+                var v = Converters.ConvertMeshToXna(m);
+                var i = m.GetIndices();
+                var chunk = new Chunk
+                {
+                    BoundingBox = new BoundingBox(posXna, posXna + new Vector3(VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE)),
+                    Position = posXna
+                };
+
+                if (i.Length > 0)
+                {
+                    chunk.VertexBuffer = new VertexBuffer(_gd, typeof(VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
+                    chunk.VertexBuffer.SetData(v);
+                    chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
+                    chunk.IndexBuffer.SetData(i);
+                }
+                if (_chunks.ContainsKey(posXna))
+                {
+                    Chunk removed;
+                    _chunks.TryRemove(posXna, out removed);
+                }
+                _chunks.TryAdd(posXna, chunk);
             }
-            if (_chunks.ContainsKey(position))
+            else 
             {
-                Chunk removed;
-                _chunks.TryRemove(position, out removed);
+                if(n is OctreeChildNode)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        OctreeChildNode node = (OctreeChildNode)n;
+                        ExtractMesh(node.GetChilds()[i]);
+                    }
+                }
             }
-            _chunks.TryAdd(position, chunk);
         }
 
         public void GenerateVolumeData(Vector3 position)
         {
             _logger.Log(_logSend, string.Format("Generating Volume Data: {0}",position));
-            for (int x = 0; x < TransvoxelExtractor.BlockWidth; x++)
+            for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
             {
                 int localX = (int)position.X + x;
-                for (int y = 0; y < TransvoxelExtractor.BlockWidth; y++)
+                for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
                 {
                     int localY = (int)position.Y + y;
-                    for (int z = 0; z < TransvoxelExtractor.BlockWidth; z++)
+                    for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
                     {
                         int localZ = (int)position.Z + z;
                         double div = 31.0;

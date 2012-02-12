@@ -18,7 +18,7 @@ namespace Transvoxel.SurfaceExtractor
 
         public RegularCache()
         {
-            const int cacheSize = 2 * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth;
+            const int cacheSize = 0;//2 * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth;
             _cache = new Cell[cacheSize];
 
             for (int i = 0; i < cacheSize; i++)
@@ -31,11 +31,11 @@ namespace Transvoxel.SurfaceExtractor
         {
             get
             {
-                return _cache[x + y * TransvoxelExtractor.BlockWidth + (z & 1) * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth];
+                return null;//_cache[x + y * TransvoxelExtractor.BlockWidth + (z & 1) * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth];
             }
             set
             {
-                _cache[x + y * TransvoxelExtractor.BlockWidth + (z & 1) * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth] = value;
+                //_cache[x + y * TransvoxelExtractor.BlockWidth + (z & 1) * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth] = value;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Transvoxel.SurfaceExtractor
 
         public TransitionCache()
         {
-            const int cacheSize = 2 * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth;
+            const int cacheSize = 0;// 2 * TransvoxelExtractor.BlockWidth * TransvoxelExtractor.BlockWidth;
             _cache = new Cell[cacheSize];
 
             for (int i = 0; i < cacheSize; i++)
@@ -65,11 +65,11 @@ namespace Transvoxel.SurfaceExtractor
         {
             get
             {
-                return _cache[x + (y & 1) * TransvoxelExtractor.BlockWidth];
+                return null;//_cache[x + (y & 1) * TransvoxelExtractor.BlockWidth];
             }
             set
             {
-                _cache[x + (y & 1) * TransvoxelExtractor.BlockWidth] = value;
+                //_cache[x + (y & 1) * TransvoxelExtractor.BlockWidth] = value;
             }
         }
     }

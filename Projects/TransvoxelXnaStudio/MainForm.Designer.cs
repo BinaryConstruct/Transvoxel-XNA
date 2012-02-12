@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.toolArea = new System.Windows.Forms.Panel();
-            this.extractMeshBtn = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.genVolBtn = new System.Windows.Forms.Button();
+            this.extractMeshBtn = new System.Windows.Forms.Button();
             this.mainStatusBar = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusExpander = new System.Windows.Forms.ToolStripStatusLabel();
@@ -46,14 +47,13 @@
             this.outputTextbox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.editorArea = new System.Windows.Forms.Panel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.previewWindow1 = new TransvoxelXnaStudio.GameWindow.PreviewWindow();
             this.toolArea.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.mainStatusBar.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.logArea.SuspendLayout();
             this.editorArea.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolArea
@@ -65,15 +65,16 @@
             this.toolArea.Size = new System.Drawing.Size(250, 492);
             this.toolArea.TabIndex = 0;
             // 
-            // extractMeshBtn
+            // groupBox1
             // 
-            this.extractMeshBtn.Location = new System.Drawing.Point(6, 48);
-            this.extractMeshBtn.Name = "extractMeshBtn";
-            this.extractMeshBtn.Size = new System.Drawing.Size(220, 23);
-            this.extractMeshBtn.TabIndex = 1;
-            this.extractMeshBtn.Text = "Extract Mesh";
-            this.extractMeshBtn.UseVisualStyleBackColor = true;
-            this.extractMeshBtn.Click += new System.EventHandler(this.extractMeshBtn_Click);
+            this.groupBox1.Controls.Add(this.genVolBtn);
+            this.groupBox1.Controls.Add(this.extractMeshBtn);
+            this.groupBox1.Location = new System.Drawing.Point(12, 16);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(232, 100);
+            this.groupBox1.TabIndex = 2;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Initialization";
             // 
             // genVolBtn
             // 
@@ -84,6 +85,16 @@
             this.genVolBtn.Text = "Gen Volume Data";
             this.genVolBtn.UseVisualStyleBackColor = true;
             this.genVolBtn.Click += new System.EventHandler(this.genVolBtn_Click);
+            // 
+            // extractMeshBtn
+            // 
+            this.extractMeshBtn.Location = new System.Drawing.Point(6, 48);
+            this.extractMeshBtn.Name = "extractMeshBtn";
+            this.extractMeshBtn.Size = new System.Drawing.Size(220, 23);
+            this.extractMeshBtn.TabIndex = 1;
+            this.extractMeshBtn.Text = "Extract Mesh";
+            this.extractMeshBtn.UseVisualStyleBackColor = true;
+            this.extractMeshBtn.Click += new System.EventHandler(this.extractMeshBtn_Click);
             // 
             // mainStatusBar
             // 
@@ -214,17 +225,6 @@
             this.editorArea.Size = new System.Drawing.Size(864, 592);
             this.editorArea.TabIndex = 4;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.genVolBtn);
-            this.groupBox1.Controls.Add(this.extractMeshBtn);
-            this.groupBox1.Location = new System.Drawing.Point(12, 16);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(232, 100);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Initialization";
-            // 
             // previewWindow1
             // 
             this.previewWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -246,6 +246,7 @@
             this.Name = "MainForm";
             this.Text = "Transvoxel Xna Studio";
             this.toolArea.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
             this.mainStatusBar.ResumeLayout(false);
             this.mainStatusBar.PerformLayout();
             this.mainMenu.ResumeLayout(false);
@@ -253,7 +254,6 @@
             this.logArea.ResumeLayout(false);
             this.logArea.PerformLayout();
             this.editorArea.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

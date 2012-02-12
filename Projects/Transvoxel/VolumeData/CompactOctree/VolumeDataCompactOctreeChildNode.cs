@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
-    internal class OctreeChildNode : OctreeNode
+    public class OctreeChildNode : OctreeNode
     {
         private OctreeNode[] nodes = new OctreeNode[8]; //index: x+y*2+z*4 | x,y,z elementof {0,1}
 
@@ -48,6 +48,11 @@ namespace Transvoxel.VolumeData.CompactOctree
             n.parent = this;
         }
 
+        public OctreeNode[] GetChilds()
+        {
+            return nodes;
+        }
+
         public override OctreeNode GetNode(int x, int y, int z)
         {
             int equalOffsetNum = EqualOffsetNum(x, y, z);
@@ -64,7 +69,10 @@ namespace Transvoxel.VolumeData.CompactOctree
 
             int bitIndex = BitHack.BitIndex(x, y, z,l);
 
-            return nodes[bitIndex];
+            if (nodes[bitIndex] == null)
+                return null;
+
+            return nodes[bitIndex].GetNode(x,y,z);
         }
 
         internal override sbyte Get(int x, int y, int z)

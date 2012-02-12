@@ -9,20 +9,23 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using TransvoxelXnaStudio.Framework;
+using Transvoxel.VolumeData;
+using Transvoxel.VolumeData.CompactOctree;
+using System.Threading;
 
 namespace TransvoxelXnaStudio
 {
     public partial class MainForm : Form
     {
         private Logger _logger;
-        private Timer _updateTimer;
+        private System.Windows.Forms.Timer _updateTimer;
 
         public MainForm()
         {
             InitializeComponent();
             _logger = Logger.GetLogger();
             _logger.Logged += OnLogged;
-            _updateTimer = new Timer();
+            _updateTimer = new System.Windows.Forms.Timer();
             _updateTimer.Interval = 500;
             _updateTimer.Tick += _updateTimer_Tick;
             _updateTimer.Start();
@@ -62,7 +65,7 @@ namespace TransvoxelXnaStudio
             toolStripProgressBar.Value = pct;
         }
 
-        int size = 3;
+        int size = 5;
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {
@@ -87,25 +90,20 @@ namespace TransvoxelXnaStudio
                 );
         }
 
+        private void threaded(object dummy)
+        {
+             
+        }
+
         private void extractMeshBtn_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = -size; i <= size; i++)
-                    {
-                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((i+2) / 4f) * 100.0f), "Extracting Meshes..."));
-                        for (int j = -size; j <= size; j++)
-                        {
-                            for (int k = -size; k <= size; k++)
-                            {
-                                Vector3 position = new Vector3(i * 8, j * 8, k * 8);
-                                previewWindow1.TransvoxelManager.ExtractMesh(position, 1);
-                            }
-                        }
-                        OnProgressChanged(null, new ProgressChangedEventArgs(100, "Extracting Meshes..."));
-                    }
-                    OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
+                    
+                    IVolumeData v = previewWindow1.TransvoxelManager.getVolume();
+                    CompactOctree o = (CompactOctree)v;
+                    previewWindow1.TransvoxelManager.ExtractMesh(o.Head());           
                 }
                 );
         }

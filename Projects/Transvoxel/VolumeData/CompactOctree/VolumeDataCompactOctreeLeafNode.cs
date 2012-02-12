@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
-    internal class OctreeLeafNode : OctreeNode
+    public class OctreeLeafNode : OctreeNode
     {
         private VolumeChunk chunk = new VolumeChunk();
 
