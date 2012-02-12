@@ -29,7 +29,7 @@ namespace TransvoxelXnaStudio.Host
     /// interface, which provides notification events for when the device is reset
     /// or disposed.
     /// </summary>
-    class GraphicsDeviceService : IGraphicsDeviceService
+    public class GraphicsDeviceService : IGraphicsDeviceService
     {
         #region Fields
 

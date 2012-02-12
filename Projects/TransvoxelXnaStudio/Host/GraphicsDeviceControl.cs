@@ -34,7 +34,7 @@ namespace TransvoxelXnaStudio.Host
 
         // However many GraphicsDeviceControl instances you have, they all share
         // the same underlying GraphicsDevice, managed by this helper service.
-        GraphicsDeviceService graphicsDeviceService;
+        protected GraphicsDeviceService graphicsDeviceService;
 
 
         #endregion
@@ -176,6 +176,7 @@ namespace TransvoxelXnaStudio.Host
         }
 
 
+
         /// <summary>
         /// Ends drawing the control. This is called after derived classes
         /// have finished their Draw method, and is responsible for presenting
@@ -280,6 +281,33 @@ namespace TransvoxelXnaStudio.Host
         {
         }
 
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+
+            if (graphicsDeviceService != null)
+            {
+                if (GraphicsDevice != null)
+                {
+
+                    Viewport viewport = new Viewport();
+
+                    viewport.X = 0;
+                    viewport.Y = 0;
+
+                    viewport.Width = ClientSize.Width;
+                    viewport.Height = ClientSize.Height;
+
+                    viewport.MinDepth = 0;
+                    viewport.MaxDepth = 1;
+
+                    GraphicsDevice.Viewport = viewport;
+                    GraphicsDevice.PresentationParameters.BackBufferHeight = viewport.Height;
+                    GraphicsDevice.PresentationParameters.BackBufferWidth = viewport.Width;
+                    GraphicsDevice.Reset();
+                }
+            }
+        }
 
         #endregion
 

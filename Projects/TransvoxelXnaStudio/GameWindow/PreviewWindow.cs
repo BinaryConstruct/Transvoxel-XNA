@@ -27,16 +27,13 @@ namespace TransvoxelXnaStudio.GameWindow
 
         protected override void Initialize()
         {
-
-
-
             _logger = Logger.GetLogger();
             _logSender = "PreviewWindow";
             _logger.Log(_logSender, "Initializing...");
 
-            _cam = new Camera();
+            _cam = new Camera(GraphicsDevice.Viewport);
             _cam.currentCameraMode = Camera.CameraMode.free;
-            _cam.ResetCamera();
+            _cam.ResetCamera(GraphicsDevice.Viewport);
 
             _tvm = new TransvoxelManager(GraphicsDevice);
             // Create our effect.
@@ -62,14 +59,19 @@ namespace TransvoxelXnaStudio.GameWindow
 
         protected override void Draw()
         {
-            
-
             GraphicsDevice.Clear(Color.Black);
 
             // Spin the triangle according to how much time has passed.
             float time = (float)timer.Elapsed.TotalSeconds;
             float aspect = GraphicsDevice.Viewport.AspectRatio;
             DrawSolids(time);
+        }
+
+        protected override void OnSizeChanged(System.EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (graphicsDeviceService != null && GraphicsDevice != null)
+            _cam.ResetCamera(GraphicsDevice.Viewport);
         }
 
         public Camera Camera
@@ -89,22 +91,15 @@ namespace TransvoxelXnaStudio.GameWindow
             float rotation = time * 0.2f;
             Matrix world = Matrix.CreateRotationY(rotation);
             Matrix view = Matrix.CreateLookAt(new Vector3(100,25,100), Vector3.Zero, Vector3.Up);
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(1, GraphicsDevice.Viewport.AspectRatio,
-                                                                0.01f, 1000f);
-
-            //_effect.World = Matrix.Identity;
-            //_effect.View = _cam.ViewMatrix;
-            //_effect.Projection = _cam.ProjectionMatrix;
-
-            //Matrix viewProj = _cam.ViewMatrix * _cam.ProjectionMatrix;
+            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), GraphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);
 
             Update(null, null);
             _effect.World = world;
             _effect.View = _cam.ViewMatrix;
-            _effect.Projection = _cam.ProjectionMatrix;
+            _effect.Projection = projection;
             _effect.EnableDefaultLighting();
 
-            Matrix viewProj = view * projection;
+            Matrix viewProj = _effect.View * projection;
             var viewFastFrustrum = new FastFrustum(ref viewProj);
 
             GraphicsDevice.BlendState = BlendState.Opaque;

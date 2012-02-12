@@ -70,6 +70,7 @@ namespace TransvoxelXnaStudio
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {
+            _logger.Log("MAIN", "Generating Volume Data...");
             Task.Factory.StartNew(
                 () =>
                 {
@@ -90,6 +91,7 @@ namespace TransvoxelXnaStudio
                         //OnProgressChanged(null, new ProgressChangedEventArgs(100, "Generating Volume Data..."));
                     }
                     //OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
+                    _logger.Log("MAIN", "Volume Data Generation Complete.");
                 }
                 );
         }
@@ -101,14 +103,17 @@ namespace TransvoxelXnaStudio
 
         private void extractMeshBtn_Click(object sender, EventArgs e)
         {
+            _logger.Log("MAIN", "Extracting Mesh...");
             Task.Factory.StartNew(
                 () =>
                 {
                     
-                    IVolumeData v = previewWindow1.TransvoxelManager.getVolume();
+                    IVolumeData v = previewWindow1.TransvoxelManager.VolumeData;
                     CompactOctree o = (CompactOctree)v;
-                    previewWindow1.TransvoxelManager.ExtractMesh(o.Head());           
+                    previewWindow1.TransvoxelManager.ExtractMesh(o.Head());
+                    _logger.Log("MAIN", "Mesh Extraction Complete.");
                 }
+
                 );
         }
 
