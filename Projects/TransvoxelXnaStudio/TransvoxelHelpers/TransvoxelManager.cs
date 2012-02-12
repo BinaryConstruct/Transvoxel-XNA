@@ -88,7 +88,8 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     for (int z = 0; z < TransvoxelExtractor.BlockWidth; z++)
                     {
                         int localZ = (int)position.Z + z;
-                        double val = (SimplexNoise.noise(localX * 1.1f, localY * 1.1f, localZ * 1.1f)) * 2;
+                        double div = 31.0;
+                        double val = (SimplexNoise.noise(localX / div, localY / div, localZ /div)) * 128.0;
                         _volumeData[localX, localY, localZ] = (sbyte)val;
                     }
                 }

@@ -62,19 +62,21 @@ namespace TransvoxelXnaStudio
             toolStripProgressBar.Value = pct;
         }
 
+        int size = 3;
+
         private void genVolBtn_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = -2; i <= 2; i++)
+                    for (int i = -size; i <= size; i++)
                     {
                         OnProgressChanged(null, new ProgressChangedEventArgs((int)(((i+2) / 4f) * 100.0f), "Generating Volume Data..."));
-                        for (int j = -2; j <= 2; j++)
+                        for (int j = -size; j <= size; j++)
                         {
-                            for (int k = -2; k <= 2; k++)
+                            for (int k = -size; k <= size; k++)
                             {
-                                Vector3 position = new Vector3(i * 16, j * 16, k * 16);
+                                Vector3 position = new Vector3(i * 8, j * 8, k * 8);
                                 previewWindow1.TransvoxelManager.GenerateVolumeData(position);
                             }
                         }
@@ -90,14 +92,14 @@ namespace TransvoxelXnaStudio
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = -2; i <= 2; i++)
+                    for (int i = -size; i <= size; i++)
                     {
                         OnProgressChanged(null, new ProgressChangedEventArgs((int)(((i+2) / 4f) * 100.0f), "Extracting Meshes..."));
-                        for (int j = -2; j <= 2; j++)
+                        for (int j = -size; j <= size; j++)
                         {
-                            for (int k = -2; k <= 2; k++)
+                            for (int k = -size; k <= size; k++)
                             {
-                                Vector3 position = new Vector3(i * 16, j * 16, k * 16);
+                                Vector3 position = new Vector3(i * 8, j * 8, k * 8);
                                 previewWindow1.TransvoxelManager.ExtractMesh(position, 1);
                             }
                         }
