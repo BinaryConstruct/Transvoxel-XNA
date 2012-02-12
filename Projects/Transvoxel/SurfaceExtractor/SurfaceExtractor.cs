@@ -27,13 +27,14 @@ namespace Transvoxel.SurfaceExtractor
 		public Mesh GenLodCell(OctreeNode n)
 		{
 			Mesh mesh = new Mesh();
-
+            int lod = n.GetLevelOfDetail();
+            Console.WriteLine(lod);
 			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)
 				for (int y = 0; y < VolumeChunk.CHUNKSIZE - 1; y++)
 					for (int z = 0; z < VolumeChunk.CHUNKSIZE - 1; z++)
 					{ 
 						//PolygonizeCell
-						PolygonizeCell(n.GetPos()+new Vector3i(x,y,z),ref mesh,n);
+						PolygonizeCell(n.GetPos()+new Vector3i(x,y,z)*lod,ref mesh,n);
 					}
 
 			return mesh;
@@ -42,7 +43,6 @@ namespace Transvoxel.SurfaceExtractor
 		internal void PolygonizeCell(Vector3i offsetPos, ref Mesh mesh,OctreeNode data)
 		{
 			int lod = data.GetLevelOfDetail() ;
-            Console.WriteLine("lod:" + lod);
 
 			sbyte[] density = new sbyte[8];
 			
@@ -53,8 +53,10 @@ namespace Transvoxel.SurfaceExtractor
 
 			byte caseCode = getCaseCode(density);
 
-			if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
-				return;
+
+			//if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
+			if(caseCode == 0 || caseCode == 255)
+                return;
 
 			byte regularCellClass = Tables.RegularCellClass[caseCode];
 			ushort[] vertexLocations = Tables.RegularVertexData[caseCode];
@@ -92,6 +94,7 @@ namespace Transvoxel.SurfaceExtractor
 				ushort i1 = mappedIndizes[i * 3 + 0];
 				ushort i2 = mappedIndizes[i * 3 + 1];
 				ushort i3 = mappedIndizes[i * 3 + 2];
+
 
 				mesh.AddIndex(i1);
 				mesh.AddIndex(i2);
