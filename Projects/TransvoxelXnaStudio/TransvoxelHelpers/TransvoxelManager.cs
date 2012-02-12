@@ -49,10 +49,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             get { return _chunks; }
         }
 
-        public IVolumeData getVolume()
-        {
-            return _volumeData;
-        }
+
 
         public void ExtractMesh(OctreeNode n)
         {
@@ -73,7 +70,6 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 Vector3 posXna = Converters.Vector3iToVector3(position);
                 //int lod = n.GetLevelOfDetail();
 
-                //_logger.Log(_logSend, string.Format("Extracting Mesh [Lod - {1}]: {0}", position, lod));
                 var m = _surfaceExtractor.GenLodCell(n);
                 var v = Converters.ConvertMeshToXna(m);
                 var i = m.GetIndices();
@@ -114,7 +110,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
         
         public void GenerateVolumeData(Vector3 position)
         {
-            _logger.Log(_logSend, string.Format("Generating Volume Data: {0}",position));
+           
             for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
             {
                 int localX = (int)position.X + x;

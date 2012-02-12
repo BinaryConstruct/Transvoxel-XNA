@@ -90,7 +90,7 @@
             // 
             this.extractMeshBtn.Location = new System.Drawing.Point(6, 48);
             this.extractMeshBtn.Name = "extractMeshBtn";
-            this.extractMeshBtn.Size = new System.Drawing.Size(220, 23);
+            this.extractMeshBtn.Size = new System.Drawing.Size(119, 23);
             this.extractMeshBtn.TabIndex = 1;
             this.extractMeshBtn.Text = "Extract Mesh";
             this.extractMeshBtn.UseVisualStyleBackColor = true;

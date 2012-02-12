@@ -89,7 +89,7 @@ namespace TransvoxelXnaStudio.GameWindow
             float rotation = time * 0.2f;
             Matrix world = Matrix.CreateRotationY(rotation);
             Matrix view = Matrix.CreateLookAt(new Vector3(100,25,100), Vector3.Zero, Vector3.Up);
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(1, GraphicsDevice.Viewport.AspectRatio,
+            Matrix projection = Matrix.CreatePerspectiveFieldOfView(1, (float)(GraphicsDevice.Viewport.Width / GraphicsDevice.Viewport.Height),
                                                                 0.01f, 1000f);
 
             //_effect.World = Matrix.Identity;
