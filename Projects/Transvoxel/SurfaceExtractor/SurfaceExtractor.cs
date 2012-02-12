@@ -12,7 +12,7 @@ namespace Transvoxel.SurfaceExtractor
 {
 	public interface ISurfaceExtractor
 	{
-	    Mesh GenLodCell(Vector3i position, int lod);
+	   // Mesh GenLodCell(Vector3i position, int lod);
         Mesh GenLodCell(OctreeNode n);
 	}
 
@@ -25,7 +25,7 @@ namespace Transvoxel.SurfaceExtractor
 			volume = data;
 		}
 
-		public Mesh GenLodCell(Vector3i position, int lod)
+		/*public Mesh GenLodCell(Vector3i position, int lod)
 		{
 			Mesh mesh = new Mesh();
             //int lod = n.GetLevelOfDetail();
@@ -39,16 +39,16 @@ namespace Transvoxel.SurfaceExtractor
 					}
 
 			return mesh;
-		}
+		}*/
 
         public Mesh GenLodCell(OctreeNode node)
         {
             Mesh mesh = new Mesh();
             int lod = node.GetLevelOfDetail();
             Console.WriteLine(lod);
-            for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
-                for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
-                    for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+            for (int x = -1; x < VolumeChunk.CHUNKSIZE; x++)
+                for (int y = -1; y < VolumeChunk.CHUNKSIZE; y++)
+                    for (int z = -1; z < VolumeChunk.CHUNKSIZE; z++)
                     {
                         //PolygonizeCell
                         PolygonizeCell(node.GetPos() + new Vector3i(x, y, z) * lod, ref mesh, lod);

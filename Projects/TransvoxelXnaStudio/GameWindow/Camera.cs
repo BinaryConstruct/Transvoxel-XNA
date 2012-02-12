@@ -53,7 +53,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
             cameraRotation = Matrix.Identity;
             ViewMatrix = Matrix.Identity;
-            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), viewport.AspectRatio, .5f, 500f);       
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), viewport.AspectRatio, 0.1f, 1500f);       
         }
 
         public void Update(Matrix chasedObjectsWorld)
