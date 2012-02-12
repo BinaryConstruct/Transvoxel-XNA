@@ -10,39 +10,41 @@ using Transvoxel.Lengyel;
 
 namespace Transvoxel.SurfaceExtractor
 {
-	public interface SurfaceExtractor
+	public interface ISurfaceExtractor
 	{
-		Mesh GenLodCell(OctreeNode n);
+	    Mesh GenLodCell(Vector3i position, int lod);
 	}
 
-	public class TransvoxelExtract : SurfaceExtractor
+	public class TransvoxelExtractor : ISurfaceExtractor
 	{
+	    public const int BlockWidth = 16;
+
 		IVolumeData volume;
 
-		public TransvoxelExtract(IVolumeData data)
+		public TransvoxelExtractor(IVolumeData data)
 		{
 			volume = data;
 		}
 
-		public Mesh GenLodCell(OctreeNode n)
+		public Mesh GenLodCell(Vector3i position, int lod)
 		{
 			Mesh mesh = new Mesh();
-            int lod = n.GetLevelOfDetail();
+            //int lod = n.GetLevelOfDetail();
             Console.WriteLine(lod);
 			for (int x = 0; x < VolumeChunk.CHUNKSIZE - 1; x++)
 				for (int y = 0; y < VolumeChunk.CHUNKSIZE - 1; y++)
 					for (int z = 0; z < VolumeChunk.CHUNKSIZE - 1; z++)
 					{ 
 						//PolygonizeCell
-						PolygonizeCell(n.GetPos()+new Vector3i(x,y,z)*lod,ref mesh,n);
+                        PolygonizeCell(position + new Vector3i(x, y, z) * lod, ref mesh, lod);
 					}
 
 			return mesh;
 		}
 
-		internal void PolygonizeCell(Vector3i offsetPos, ref Mesh mesh,OctreeNode data)
+		internal void PolygonizeCell(Vector3i offsetPos, ref Mesh mesh,int lod)
 		{
-			int lod = data.GetLevelOfDetail() ;
+			//int lod = data.GetLevelOfDetail() ;
 
 			sbyte[] density = new sbyte[8];
 			

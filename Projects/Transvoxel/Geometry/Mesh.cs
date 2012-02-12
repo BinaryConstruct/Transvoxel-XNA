@@ -15,40 +15,50 @@ namespace Transvoxel.Geometry
 
     public class Mesh
     {
-        List<ushort> indizes;
-        List<Vector3f> vertizes;
+        List<ushort> indices;
+        List<Vector3f> vertices;
 
         public Mesh()
         {
-            indizes = new List<ushort>();
-            vertizes = new List<Vector3f>();
+            indices = new List<ushort>();
+            vertices = new List<Vector3f>();
         }
 
         public void AddIndex(ushort i)
         {
-            indizes.Add(i);
+            indices.Add(i);
         }
 
         public void AddVertex(Vector3f v)
         {
-            vertizes.Add(v);   
+            vertices.Add(v);   
         }
 
-        public ushort[] GetIndizes()
+        public ushort[] GetIndices()
         {
-            return indizes.ToArray();
+            return indices.ToArray();
         }
 
-        public Vector3f[] GetVertizes()
+        public Vector3f[] GetVertices()
         {
-            return vertizes.ToArray();
+            return vertices.ToArray();
         }
 
-        public float[] GetVertizesFloatArray()
+        public List<Vector3f> Vertices
         {
-            float[] arr = new float[vertizes.Count * 3];
+            get { return vertices; }
+        }
+
+        public List<ushort> Indices
+        {
+            get { return indices; }
+        }
+
+        public float[] GetVerticesFloatArray()
+        {
+            float[] arr = new float[vertices.Count * 3];
             int i = 0;
-            foreach (Vector3f v in vertizes)
+            foreach (Vector3f v in vertices)
             {
                 arr[i + 0] = v.X;
                 arr[i + 1] = v.Y;
@@ -60,7 +70,7 @@ namespace Transvoxel.Geometry
 
         internal int VertexCount()
         {
-            return vertizes.Count;
+            return vertices.Count;
         }
     }
 }

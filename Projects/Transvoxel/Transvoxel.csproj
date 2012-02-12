@@ -12,6 +12,7 @@
     <AssemblyName>Transvoxel</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -65,9 +65,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SurfaceExtractor\ported\Cache.cs" />
     <Compile Include="SurfaceExtractor\SurfaceExtractor.cs" />
-    <Compile Include="SurfaceExtractor\ported\TransvoxelExtractor.cs" />
-    <Compile Include="SurfaceExtractor\ported\TransvoxelManager.cs" />
-    <Compile Include="SurfaceExtractor\ported\Vertex.cs" />
+    <None Include="SurfaceExtractor\ported\TransvoxelExtractor.cs" />
+    <None Include="SurfaceExtractor\ported\TransvoxelManager.cs" />
+    <None Include="SurfaceExtractor\ported\Vertex.cs" />
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeChunk.cs" />
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctree.cs" />
