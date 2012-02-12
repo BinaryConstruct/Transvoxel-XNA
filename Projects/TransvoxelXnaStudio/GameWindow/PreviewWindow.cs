@@ -62,14 +62,13 @@ namespace TransvoxelXnaStudio.GameWindow
 
         protected override void Draw()
         {
+            
 
             GraphicsDevice.Clear(Color.Black);
 
             // Spin the triangle according to how much time has passed.
             float time = (float)timer.Elapsed.TotalSeconds;
             float aspect = GraphicsDevice.Viewport.AspectRatio;
-            
-
             DrawSolids(time);
         }
 
@@ -99,9 +98,10 @@ namespace TransvoxelXnaStudio.GameWindow
 
             //Matrix viewProj = _cam.ViewMatrix * _cam.ProjectionMatrix;
 
+            Update(null, null);
             _effect.World = world;
-            _effect.View = view;
-            _effect.Projection = projection;
+            _effect.View = _cam.ViewMatrix;
+            _effect.Projection = _cam.ProjectionMatrix;
             _effect.EnableDefaultLighting();
 
             Matrix viewProj = view * projection;
