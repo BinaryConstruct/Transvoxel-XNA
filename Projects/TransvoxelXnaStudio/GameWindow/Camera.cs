@@ -31,12 +31,12 @@ namespace TransvoxelXnaStudio.GameWindow
         public float Roll { get { return roll; } }
         public Vector3 Position { get { return position; } }
 
-        public Camera()
+        public Camera(Viewport viewport)
         {
-            ResetCamera();
+            ResetCamera(viewport);
         }
 
-        public void ResetCamera()
+        public void ResetCamera(Viewport viewport)
         {
             position = new Vector3(0, 0, 50);
             desiredPosition = position;
@@ -53,7 +53,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
             cameraRotation = Matrix.Identity;
             ViewMatrix = Matrix.Identity;
-            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), 16 / 9, .5f, 500f);       
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), viewport.AspectRatio, .5f, 500f);       
         }
 
         public void Update(Matrix chasedObjectsWorld)
@@ -223,9 +223,9 @@ namespace TransvoxelXnaStudio.GameWindow
         }
 
         //This cycles through the different camera modes.
-        public void SwitchCameraMode()
+        public void SwitchCameraMode(Viewport viewport)
         {
-            ResetCamera();
+            ResetCamera(viewport);
 
             currentCameraMode++;
 
