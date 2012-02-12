@@ -14,10 +14,10 @@ namespace Transvoxel.VolumeData.CompactOctree
             : base(parent, x, y, z)
         { }
 
-        public override OctreeNode GetNode(int x, int y, int z)
+        /*public override OctreeNode GetNode(int x, int y, int z)
         {
             return this;
-        }
+        }*/
 
         internal override void Set(int x, int y, int z, sbyte val)
         {

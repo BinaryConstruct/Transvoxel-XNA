@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Transvoxel.Math;
+using System.Diagnostics;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
@@ -25,7 +26,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             level = 0;
         }
 
-        public abstract OctreeNode GetNode(int x, int y, int z);
+        //public abstract OctreeNode GetNode(int x, int y, int z);
         internal abstract sbyte Get(int x, int y, int z);
         internal abstract void Set(int x, int y, int z, sbyte val);
         internal abstract bool HasChilds();
@@ -38,7 +39,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         private int GetLevel()
         {
-            return level+offsetBitNum;//((parent==null?0:parent.GetLevel()+1)+offsetBitNum);
+            return level + offsetBitNum;
         }
 
         // from 1 to infinity
@@ -81,6 +82,19 @@ namespace Transvoxel.VolumeData.CompactOctree
             int equalZ = BitHack.cmpBit(zcoord, z, level, offsetBitNum);
 
             return BitHack.min(equalX, equalY, equalZ);
+        }
+
+        //Iteration methods, for fast relativ adressing
+        //x,y,z relative coordiantes
+        public OctreeNode IterateZ(int z)
+        {
+            uint mask = BitHack.Mask(level-1);
+            if ((zcoord & mask) == 0)
+            { 
+                //return parent.chi
+            }
+
+            return null;
         }
     }
 }

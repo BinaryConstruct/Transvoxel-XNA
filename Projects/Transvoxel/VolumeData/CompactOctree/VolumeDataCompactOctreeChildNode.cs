@@ -53,7 +53,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             return nodes;
         }
 
-        public override OctreeNode GetNode(int x, int y, int z)
+        private OctreeNode GetNode(int x, int y, int z)
         {
             int equalOffsetNum = EqualOffsetNum(x, y, z);
             int l = level;
@@ -72,7 +72,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             if (nodes[bitIndex] == null)
                 return null;
 
-            return nodes[bitIndex].GetNode(x,y,z);
+            return nodes[bitIndex];
         }
 
         internal override sbyte Get(int x, int y, int z)

@@ -111,6 +111,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             }
         }
 
+        
         public void GenerateVolumeData(Vector3 position)
         {
             _logger.Log(_logSend, string.Format("Generating Volume Data: {0}",position));

@@ -90,7 +90,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                  vertices[indices[i * 3 + 2]].Tangent += tangent;
 
                  // Calculate handedness (here maybe you need to switch >= with <= depend on the geometry winding order)  
-                 float tangentdir = (Vector3.Dot(Vector3.Cross(normal, sdir), tdir) >= 0.0f) ? 1.0f : -1.0f;
+                 float tangentdir = (Vector3.Dot(Vector3.Cross(normal, sdir), tdir) <= 0.0f) ? 1.0f : -1.0f;
                  Vector3 binormal = Vector3.Cross(normal, tangent) * tangentdir;
                  vertices[indices[i * 3]].Binormal += binormal;
                  vertices[indices[i * 3 + 1]].Binormal += binormal;
