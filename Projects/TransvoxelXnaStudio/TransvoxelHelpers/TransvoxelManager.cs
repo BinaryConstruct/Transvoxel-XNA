@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -50,6 +51,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
         public void ExtractMesh(Vector3 position, int lod)
         {
+            _logger.Log(_logSend, string.Format("Extracting Mesh [Lod - {1}]: {0}", position,lod));
             var m = _surfaceExtractor.GenLodCell(Converters.Vector3ToVector3i(position), 1);
             var v = Converters.ConvertMeshToXna(m);
             var i = m.GetIndices();
@@ -59,11 +61,13 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                                 Position = position
                             };
 
-            chunk.VertexBuffer = new VertexBuffer(_gd, typeof(VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
-            chunk.VertexBuffer.SetData(v);
-            chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
-            chunk.IndexBuffer.SetData(i);
-
+            if (i.Length > 0)
+            {
+                chunk.VertexBuffer = new VertexBuffer(_gd, typeof (VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
+                chunk.VertexBuffer.SetData(v);
+                chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
+                chunk.IndexBuffer.SetData(i);
+            }
             if (_chunks.ContainsKey(position))
             {
                 Chunk removed;
@@ -74,6 +78,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
         public void GenerateVolumeData(Vector3 position)
         {
+            _logger.Log(_logSend, string.Format("Generating Volume Data: {0}",position));
             for (int x = 0; x < TransvoxelExtractor.BlockWidth; x++)
             {
                 int localX = (int)position.X + x;
@@ -83,8 +88,8 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     for (int z = 0; z < TransvoxelExtractor.BlockWidth; z++)
                     {
                         int localZ = (int)position.Z + z;
-                        var val = (sbyte) (SimplexNoise.noise(localX, localY, localZ)*2);
-                        _volumeData[localX, localY, localZ] = val;
+                        double val = (SimplexNoise.noise(localX * 1.1f, localY * 1.1f, localZ * 1.1f)) * 2;
+                        _volumeData[localX, localY, localZ] = (sbyte)val;
                     }
                 }
             }

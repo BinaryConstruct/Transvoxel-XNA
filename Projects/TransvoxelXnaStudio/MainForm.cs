@@ -67,12 +67,12 @@ namespace TransvoxelXnaStudio
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = 0; i < 4; i++)
+                    for (int i = -2; i <= 2; i++)
                     {
-                        OnProgressChanged(null, new ProgressChangedEventArgs((int)((i / 4f) * 100.0f), "Generating Volume Data..."));
-                        for (int j = 0; j < 4; j++)
+                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((i+2) / 4f) * 100.0f), "Generating Volume Data..."));
+                        for (int j = -2; j <= 2; j++)
                         {
-                            for (int k = 0; k < 4; k++)
+                            for (int k = -2; k <= 2; k++)
                             {
                                 Vector3 position = new Vector3(i * 16, j * 16, k * 16);
                                 previewWindow1.TransvoxelManager.GenerateVolumeData(position);
@@ -90,12 +90,12 @@ namespace TransvoxelXnaStudio
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = 0; i < 4; i++)
+                    for (int i = -2; i <= 2; i++)
                     {
-                        OnProgressChanged(null, new ProgressChangedEventArgs((int)((i / 4f) * 100.0f), "Extracting Meshes..."));
-                        for (int j = 0; j < 4; j++)
+                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((i+2) / 4f) * 100.0f), "Extracting Meshes..."));
+                        for (int j = -2; j <= 2; j++)
                         {
-                            for (int k = 0; k < 4; k++)
+                            for (int k = -2; k <= 2; k++)
                             {
                                 Vector3 position = new Vector3(i * 16, j * 16, k * 16);
                                 previewWindow1.TransvoxelManager.ExtractMesh(position, 1);
