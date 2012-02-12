@@ -113,7 +113,7 @@ namespace TransvoxelXnaStudio.GameWindow
                     Chunk chunk;
                     _tvm.Chunks.TryGetValue(key, out chunk);
                     if (chunk == null) continue;
-                    if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
+                    //if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
                     //if (chunk.IndexBuffer != null)
                     {
                         //todo: can this be here?

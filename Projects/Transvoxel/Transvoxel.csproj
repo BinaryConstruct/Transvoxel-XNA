@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Geometry\Mesh.cs" />
     <Compile Include="Lengyel\Tables.cs" />
+    <Compile Include="Math\AxisAlignedBoundingBox.cs" />
     <Compile Include="Math\Matrix3X3.cs" />
     <Compile Include="Math\PerlinNoise.cs" />
     <Compile Include="Math\SimplexNoise.cs" />
