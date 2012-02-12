@@ -56,11 +56,22 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
         public void ExtractMesh(OctreeNode n)
         {
-            if (n != null && n.GetLevelOfDetail() <= 1)
+            if (n == null)
+                return;
+
+            int dst = 0;
+            dst += n.GetCenter().X;
+            dst += n.GetCenter().Y;
+            dst += n.GetCenter().Z;
+            dst = Math.Abs(dst);
+
+            int lod = n.GetLevelOfDetail();
+
+            if (lod == 1)
             {
                 Vector3i position = n.GetPos();
                 Vector3 posXna = Converters.Vector3iToVector3(position);
-                int lod = n.GetLevelOfDetail();
+                //int lod = n.GetLevelOfDetail();
 
                 //_logger.Log(_logSend, string.Format("Extracting Mesh [Lod - {1}]: {0}", position, lod));
                 var m = _surfaceExtractor.GenLodCell(n);
@@ -79,6 +90,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
                     chunk.IndexBuffer.SetData(i);
                 }
+                
                 if (_chunks.ContainsKey(posXna))
                 {
                     Chunk removed;

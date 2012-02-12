@@ -65,7 +65,7 @@ namespace TransvoxelXnaStudio
             toolStripProgressBar.Value = pct;
         }
 
-        int size = 5;
+        int size = 8;
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {

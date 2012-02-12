@@ -56,7 +56,16 @@ namespace Transvoxel.VolumeData.CompactOctree
             return new Vector3i(x,y,z);
         }
 
-        
+        public int Size()
+        { 
+            return GetLevelOfDetail()*VolumeChunk.CHUNKSIZE;
+        }
+
+        public Vector3i GetCenter()
+        { 
+            int szh = Size()/2;
+            return GetPos() + new Vector3i(szh, szh, szh);
+        }
 
         // calculates the num of equal bits between bitlevel and offsetBitNum
         // Example:
