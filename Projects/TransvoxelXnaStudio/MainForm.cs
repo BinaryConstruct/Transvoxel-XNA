@@ -12,6 +12,7 @@ using TransvoxelXnaStudio.Framework;
 using Transvoxel.VolumeData;
 using Transvoxel.VolumeData.CompactOctree;
 using System.Threading;
+using Transvoxel.Math;
 
 namespace TransvoxelXnaStudio
 {
@@ -65,27 +66,30 @@ namespace TransvoxelXnaStudio
             toolStripProgressBar.Value = pct;
         }
 
-        int size = 4;
+        int size = 120;
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = -size; i <= size; i++)
+                    for (int i = 0; i <= size; i++)
                     {
-                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((i+2) / 4f) * 100.0f), "Generating Volume Data..."));
-                        for (int j = -size; j <= size; j++)
+                        Logger.GetLogger().Log(null, i+"/"+size);
+                        //OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)size) * 100.0f), "Generating Volume Data..."));
+                        for (int j = 0; j <= size; j++)
                         {
-                            for (int k = -size; k <= size; k++)
+                            for (int k = 0; k <= size; k++)
                             {
-                                Vector3 position = new Vector3(i * 8, j * 8, k * 8);
-                                previewWindow1.TransvoxelManager.GenerateVolumeData(position);
+                                //Vector3 position = new Vector3(i * VolumeChunk.CHUNKSIZE, j * VolumeChunk.CHUNKSIZE, k * VolumeChunk.CHUNKSIZE);
+                                double div = 31.0;
+                                double val = (SimplexNoise.noise(i / div, j / div, k / div)) * 128.0;
+                                previewWindow1.TransvoxelManager.VolumeData[i,j,k] = (sbyte)val;
                             }
                         }
-                        OnProgressChanged(null, new ProgressChangedEventArgs(100, "Generating Volume Data..."));
+                        //OnProgressChanged(null, new ProgressChangedEventArgs(100, "Generating Volume Data..."));
                     }
-                    OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
+                    //OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
                 }
                 );
         }

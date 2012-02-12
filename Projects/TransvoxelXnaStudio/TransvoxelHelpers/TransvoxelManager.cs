@@ -59,16 +59,15 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             if (n == null)
                 return;
 
-            int dst = 0;
-            dst += n.GetCenter().X;
-            dst += n.GetCenter().Y;
-            dst += n.GetCenter().Z;
-            dst = Math.Abs(dst);
+            Vector3i center = n.GetCenter();
+
+            float dst = (float)Math.Sqrt(center.X * center.X + center.Y * center.Y + center.Z * center.Z);
 
             int lod = n.GetLevelOfDetail();
 
-            if (lod == 1)
+            if ((dst > 100 && lod == 3) || (dst > 50 && lod == 2) || (lod == 1))
             {
+                Logger.GetLogger().Log(null, "Distance: " + dst);
                 Vector3i position = n.GetPos();
                 Vector3 posXna = Converters.Vector3iToVector3(position);
                 //int lod = n.GetLevelOfDetail();
@@ -112,7 +111,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
         }
 
         
-        public void GenerateVolumeData(Vector3 position)
+        /*public void GenerateVolumeData(Vector3 position)
         {
             _logger.Log(_logSend, string.Format("Generating Volume Data: {0}",position));
             for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
@@ -130,6 +129,6 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     }
                 }
             }
-        }
+        }*/
     }
 }
