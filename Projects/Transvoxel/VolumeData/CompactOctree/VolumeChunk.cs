@@ -21,6 +21,11 @@ namespace Transvoxel.VolumeData.CompactOctree
         //For a 3 ChunkBits the Mask would be 0x7
         public static readonly int CHUNKMASK = (int)BitHack.Mask(sizeof(int)*8-CHUNKBITS,sizeof(int)*8-1);
 
+        public int ChunkSize
+        {
+            get { return CHUNKSIZE; }
+        }
+
         //signed bit density values
         private readonly sbyte[] values = new sbyte[CHUNKSIZE * CHUNKSIZE * CHUNKSIZE];
 

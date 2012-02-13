@@ -92,7 +92,6 @@ namespace TransvoxelXnaStudio
                         {
                             for (int k = 0; k <= sizez; k++)
                             {
-                                //Vector3 position = new Vector3(i * VolumeChunk.CHUNKSIZE, j * VolumeChunk.CHUNKSIZE, k * VolumeChunk.CHUNKSIZE);
                                 double div = 31.0;
                                 double val = (SimplexNoise.noise(i / div, j / div, k / div)) * 128.0;
                                 previewWindow1.TransvoxelManager.VolumeData[i,j,k] = (sbyte)val;

@@ -20,6 +20,11 @@ namespace Transvoxel.VolumeData.CompactOctree
             return _head;
         }
 
+        public int ChunkSize
+        {
+            get { return VolumeChunk.CHUNKSIZE; }
+        }
+
         // Very expensive method, has to traverse the complete octree
         public sbyte this[int x, int y, int z]
         {

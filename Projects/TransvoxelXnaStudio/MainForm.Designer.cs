@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.toolArea = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.genVolBtn = new System.Windows.Forms.Button();
             this.extractMeshBtn = new System.Windows.Forms.Button();
@@ -48,7 +49,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.editorArea = new System.Windows.Forms.Panel();
             this.previewWindow1 = new TransvoxelXnaStudio.GameWindow.PreviewWindow();
-            this.label2 = new System.Windows.Forms.Label();
             this.toolArea.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.mainStatusBar.SuspendLayout();
@@ -66,6 +66,16 @@
             this.toolArea.Name = "toolArea";
             this.toolArea.Size = new System.Drawing.Size(250, 492);
             this.toolArea.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 457);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(126, 26);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Q,W,E,A,S,D: Movement\r\nU,I,O,J,K,L: Rotation";
             // 
             // groupBox1
             // 
@@ -235,16 +245,6 @@
             this.previewWindow1.Size = new System.Drawing.Size(614, 492);
             this.previewWindow1.TabIndex = 1;
             this.previewWindow1.Text = "previewWindow1";
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 457);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 26);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Q,W,E,A,S,D: Movement\r\nU,I,O,J,K,L: Rotation";
             // 
             // MainForm
             // 

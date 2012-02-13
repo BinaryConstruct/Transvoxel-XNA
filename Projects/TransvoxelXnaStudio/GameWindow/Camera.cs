@@ -30,7 +30,7 @@ namespace TransvoxelXnaStudio.GameWindow
         private Matrix cameraRotation;
         public Matrix ViewMatrix, ProjectionMatrix;
 
-        public float Yaw {get { return yaw; }}
+        public float Yaw { get { return yaw; } }
         public float Pitch { get { return pitch; } }
         public float Roll { get { return roll; } }
         public Vector3 Position { get { return position; } }
@@ -41,14 +41,22 @@ namespace TransvoxelXnaStudio.GameWindow
             ResetCamera();
         }
 
+        public void ResetCamera(bool resetPosition)
+        {
+            if (resetPosition)
+            {
+
+                position = new Vector3(0, 0, 50);
+                desiredPosition = position;
+                target = new Vector3();
+                desiredTarget = target;
+
+                offsetDistance = new Vector3(0, 0, 50);
+            }
+            ResetCamera();
+        }
         public void ResetCamera()
         {
-            position = new Vector3(0, 0, 50);
-            desiredPosition = position;
-            target = new Vector3();
-            desiredTarget = target;
-
-            offsetDistance = new Vector3(0, 0, 50);
 
             yaw = 0.0f;
             pitch = 0.0f;
@@ -58,7 +66,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
             cameraRotation = Matrix.Identity;
             ViewMatrix = Matrix.Identity;
-            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), _graphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);    
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), _graphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);
         }
 
         public void Update(Matrix chasedObjectsWorld)
@@ -69,7 +77,11 @@ namespace TransvoxelXnaStudio.GameWindow
 
         private void HandleInput()
         {
-            //MouseKeyboard MouseKeyboard = Keyboard.GetState();
+            // Don't handle input if we don't have focus
+            if (!MouseKeyboard.ApplicationIsActivated())
+            {
+                return;
+            }
 
             //Rotate Camera
             float rotationSpeed = 0.05f;
@@ -163,12 +175,31 @@ namespace TransvoxelXnaStudio.GameWindow
                 {
                     MoveCamera(-cameraRotation.Up * movementSpeed);
                 }
-            }            
+            }
         }
 
         private void MoveCamera(Vector3 addedVector)
         {
             position += speed * addedVector;
+        }
+
+        public void SetFreeCamPosition(Vector3 pos, Quaternion rotation)
+        {
+            cameraRotation = Matrix.CreateFromQuaternion(rotation);
+
+            cameraRotation.Forward.Normalize();
+            cameraRotation.Up.Normalize();
+            cameraRotation.Right.Normalize();
+
+            SetFreeCamPosition(pos);
+        }
+        public void SetFreeCamPosition(Vector3 pos)
+        {
+            position = pos;
+            desiredPosition = position;
+            target = position + cameraRotation.Forward;
+            desiredTarget = target;
+            ViewMatrix = Matrix.CreateLookAt(position, target, cameraRotation.Up);
         }
 
         private void UpdateViewMatrix(Matrix chasedObjectsWorld)
@@ -190,7 +221,7 @@ namespace TransvoxelXnaStudio.GameWindow
                     roll = 0.0f;
 
                     target = position + cameraRotation.Forward;
-                    
+
                     break;
 
                 case CameraMode.chase:
@@ -200,16 +231,16 @@ namespace TransvoxelXnaStudio.GameWindow
                     chasedObjectsWorld.Up.Normalize();
 
                     cameraRotation = Matrix.CreateFromAxisAngle(cameraRotation.Forward, roll);
-                    
+
                     desiredTarget = chasedObjectsWorld.Translation;
                     target = desiredTarget;
 
                     target += chasedObjectsWorld.Right * yaw;
                     target += chasedObjectsWorld.Up * pitch;
-                    
+
                     desiredPosition = Vector3.Transform(offsetDistance, chasedObjectsWorld);
                     position = Vector3.SmoothStep(position, desiredPosition, .15f);
-                    
+
                     yaw = MathHelper.SmoothStep(yaw, 0f, .1f);
                     pitch = MathHelper.SmoothStep(pitch, 0f, .1f);
                     roll = MathHelper.SmoothStep(roll, 0f, .2f);
@@ -219,7 +250,7 @@ namespace TransvoxelXnaStudio.GameWindow
                 case CameraMode.orbit:
 
                     cameraRotation.Forward.Normalize();
-                    
+
                     cameraRotation = Matrix.CreateRotationX(pitch) * Matrix.CreateRotationY(yaw) * Matrix.CreateFromAxisAngle(cameraRotation.Forward, roll);
 
                     desiredPosition = Vector3.Transform(offsetDistance, cameraRotation);
@@ -228,7 +259,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
                     target = chasedObjectsWorld.Translation;
 
-                    roll = MathHelper.SmoothStep(roll, 0f, .2f);                                                         
+                    roll = MathHelper.SmoothStep(roll, 0f, .2f);
 
                     break;
             }

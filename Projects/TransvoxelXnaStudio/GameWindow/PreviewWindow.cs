@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Timers;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -37,6 +38,7 @@ namespace TransvoxelXnaStudio.GameWindow
             _cam = new Camera(GraphicsDevice);
             _cam.currentCameraMode = Camera.CameraMode.free;
             _cam.ResetCamera();
+            _cam.SetFreeCamPosition(new Vector3(64, 50, 150));
 
             _tvm = new TransvoxelManager(GraphicsDevice);
             // Create our effect.
