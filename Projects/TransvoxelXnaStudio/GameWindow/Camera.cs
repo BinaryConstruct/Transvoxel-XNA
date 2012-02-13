@@ -72,8 +72,8 @@ namespace TransvoxelXnaStudio.GameWindow
             //MouseKeyboard MouseKeyboard = Keyboard.GetState();
 
             //Rotate Camera
-            float rotationSpeed = 0.002f;
-            float movementSpeed = 0.2f;
+            float rotationSpeed = 0.05f;
+            float movementSpeed = 1.5f;
 
             if (MouseKeyboard.IsKeyToggled(Keys.Shift))
             {

@@ -48,23 +48,25 @@ namespace TransvoxelXnaStudio.GameWindow
             Application.Idle += delegate { Invalidate(); };
             _logger.Log(_logSender, "Initialization Complete.");
 
-            //updateTimer = new System.Timers.Timer(1 / 30f);
-            //updateTimer.AutoReset = true;
-            //updateTimer.Elapsed += Update;
-            //updateTimer.Start();
+            updateTimer = new System.Timers.Timer(1 / 30f);
+            updateTimer.AutoReset = true;
+            updateTimer.Elapsed += Update;
+            updateTimer.Start();
             verts = new VertexPositionTextureNormalColor[24];
+        }
+
+        private void Update(object sender, ElapsedEventArgs e)
+        {
+            _cam.Update(Matrix.Identity);
         }
 
         protected override void Draw()
         {
             GraphicsDevice.Clear(Color.Black);
-            _cam.Update(Matrix.Identity);
 
             // Spin the triangle according to how much time has passed.
             float time = (float)timer.Elapsed.TotalSeconds;
             float aspect = GraphicsDevice.Viewport.AspectRatio;
-
-
 
             DrawSolids(time);
         }
