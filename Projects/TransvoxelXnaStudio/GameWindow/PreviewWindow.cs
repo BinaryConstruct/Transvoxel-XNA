@@ -16,6 +16,7 @@ namespace TransvoxelXnaStudio.GameWindow
     {
         private System.Timers.Timer updateTimer;
         BasicEffect _effect;
+        BasicEffect mBoundingBoxEffect;
         Stopwatch timer;
         private Camera _cam;
         private Logger _logger;
@@ -23,7 +24,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
         private TransvoxelManager _tvm;
 
-        VertexPositionTextureNormalColor[] verts;
+        VertexPositionColor[] verts;
 
         #region Overrides of GraphicsDeviceControl
 
@@ -40,6 +41,11 @@ namespace TransvoxelXnaStudio.GameWindow
             _tvm = new TransvoxelManager(GraphicsDevice);
             // Create our effect.
             _effect = new BasicEffect(GraphicsDevice);
+
+            mBoundingBoxEffect = new BasicEffect(GraphicsDevice);
+            mBoundingBoxEffect.LightingEnabled = false;
+            mBoundingBoxEffect.VertexColorEnabled = true;
+
             _effect.VertexColorEnabled = true;
 
             // Start the animation timer.
@@ -52,7 +58,7 @@ namespace TransvoxelXnaStudio.GameWindow
             updateTimer.AutoReset = true;
             updateTimer.Elapsed += Update;
             updateTimer.Start();
-            verts = new VertexPositionTextureNormalColor[24];
+            verts = new VertexPositionColor[24];
         }
 
         private void Update(object sender, ElapsedEventArgs e)
@@ -109,7 +115,7 @@ namespace TransvoxelXnaStudio.GameWindow
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             var raster = GraphicsDevice.RasterizerState;
-            
+
 
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
@@ -137,7 +143,11 @@ namespace TransvoxelXnaStudio.GameWindow
 
             GraphicsDevice.RasterizerState = new RasterizerState { FillMode = FillMode.WireFrame };
 
-            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
+
+            mBoundingBoxEffect.World = Matrix.Identity;
+            mBoundingBoxEffect.View = _cam.ViewMatrix;
+            mBoundingBoxEffect.Projection = _cam.ProjectionMatrix;
+            foreach (EffectPass pass in mBoundingBoxEffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 foreach (Vector3 key in _tvm.Chunks.Keys)
@@ -145,8 +155,6 @@ namespace TransvoxelXnaStudio.GameWindow
                     Chunk chunk;
                     _tvm.Chunks.TryGetValue(key, out chunk);
                     if (chunk == null) continue;
-
-
 
                     SetupBoundingBox(chunk.BoundingBox, TransvoxelManager.LodColors[chunk.Lod - 1]);
                     //if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
@@ -157,7 +165,8 @@ namespace TransvoxelXnaStudio.GameWindow
 
                         if (chunk.IndexBuffer.IndexCount > 0)
                         {
-                            GraphicsDevice.DrawUserPrimitives<VertexPositionTextureNormalColor>(PrimitiveType.LineList, verts, 0, 12);
+
+                            GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, 12);
                         }
                     }
                 }
@@ -198,7 +207,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
             for (int i = 0; i < 24; i++)
             {
-                verts[i].Color = color.ToVector4();
+                verts[i].Color = color;
             }
 
         }

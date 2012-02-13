@@ -48,6 +48,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.editorArea = new System.Windows.Forms.Panel();
             this.previewWindow1 = new TransvoxelXnaStudio.GameWindow.PreviewWindow();
+            this.label2 = new System.Windows.Forms.Label();
             this.toolArea.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.mainStatusBar.SuspendLayout();
@@ -58,6 +59,7 @@
             // 
             // toolArea
             // 
+            this.toolArea.Controls.Add(this.label2);
             this.toolArea.Controls.Add(this.groupBox1);
             this.toolArea.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolArea.Location = new System.Drawing.Point(0, 0);
@@ -234,6 +236,16 @@
             this.previewWindow1.TabIndex = 1;
             this.previewWindow1.Text = "previewWindow1";
             // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 457);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(126, 26);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Q,W,E,A,S,D: Movement\r\nU,I,O,J,K,L: Rotation";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -246,6 +258,7 @@
             this.Name = "MainForm";
             this.Text = "Transvoxel Xna Studio";
             this.toolArea.ResumeLayout(false);
+            this.toolArea.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.mainStatusBar.ResumeLayout(false);
             this.mainStatusBar.PerformLayout();
@@ -281,6 +294,7 @@
         private System.Windows.Forms.Button extractMeshBtn;
         private System.Windows.Forms.Button genVolBtn;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label2;
 
     }
 }
