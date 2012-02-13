@@ -78,9 +78,11 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 var m = _surfaceExtractor.GenLodCell(n);
                 var v = Converters.ConvertMeshToXna(m, LodColors[lod-1]);
                 var i = m.GetIndices();
+
+                int size = 1 << (lod-1);
                 var chunk = new Chunk
                 {
-                    BoundingBox = new BoundingBox(posXna, posXna + new Vector3(VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE)),
+                    BoundingBox = new BoundingBox(posXna, posXna + new Vector3(8, 8, 8) * size),
                     Position = posXna,
                     Lod = lod
                 };

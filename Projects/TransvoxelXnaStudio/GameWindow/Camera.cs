@@ -1,11 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Windows.Forms;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+//using Microsoft.Xna.Framework.Input;
+using TransvoxelXnaStudio.Framework;
 
 namespace TransvoxelXnaStudio.GameWindow
 {
     public class Camera
     {
+        private readonly GraphicsDevice _graphicsDevice;
+
         public enum CameraMode
         {
             free = 0,
@@ -31,12 +35,13 @@ namespace TransvoxelXnaStudio.GameWindow
         public float Roll { get { return roll; } }
         public Vector3 Position { get { return position; } }
 
-        public Camera(Viewport viewport)
+        public Camera(GraphicsDevice graphicsDevice)
         {
-            ResetCamera(viewport);
+            _graphicsDevice = graphicsDevice;
+            ResetCamera();
         }
 
-        public void ResetCamera(Viewport viewport)
+        public void ResetCamera()
         {
             position = new Vector3(0, 0, 50);
             desiredPosition = position;
@@ -53,7 +58,7 @@ namespace TransvoxelXnaStudio.GameWindow
 
             cameraRotation = Matrix.Identity;
             ViewMatrix = Matrix.Identity;
-            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), viewport.AspectRatio, 0.1f, 1500f);       
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), _graphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);    
         }
 
         public void Update(Matrix chasedObjectsWorld)
@@ -64,89 +69,99 @@ namespace TransvoxelXnaStudio.GameWindow
 
         private void HandleInput()
         {
-            KeyboardState keyboardState = Keyboard.GetState();
+            //MouseKeyboard MouseKeyboard = Keyboard.GetState();
 
             //Rotate Camera
-            if (keyboardState.IsKeyDown(Keys.J))
+            float rotationSpeed = 0.002f;
+            float movementSpeed = 0.2f;
+
+            if (MouseKeyboard.IsKeyToggled(Keys.Shift))
+            {
+                movementSpeed *= 5;
+                rotationSpeed *= 5;
+
+            }
+
+            if (MouseKeyboard.IsKeyDown(Keys.J))
             {
                 if (currentCameraMode != CameraMode.chase)
                 {
-                    yaw += .02f;
+                    yaw += rotationSpeed;
                 }
                 else
                 {
                     //This is to make the panning more prominent in the Chase Camera.
-                    yaw += .2f;
+                    yaw += rotationSpeed;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.L))
+            if (MouseKeyboard.IsKeyDown(Keys.L))
             {
                 if (currentCameraMode != CameraMode.chase)
                 {
-                    yaw += -.02f;
+                    yaw += -rotationSpeed;
                 }
                 else
                 {
-                    yaw += -.2f;
+                    yaw += -rotationSpeed;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.I))
+            if (MouseKeyboard.IsKeyDown(Keys.I))
             {
                 if (currentCameraMode != CameraMode.chase)
                 {
-                    pitch += -.02f;
+                    pitch += -rotationSpeed;
                 }
                 else
                 {
-                    pitch += .2f;
+                    pitch += rotationSpeed;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.K))
+            if (MouseKeyboard.IsKeyDown(Keys.K))
             {
                 if (currentCameraMode != CameraMode.chase)
                 {
-                    pitch += .02f;
+                    pitch += rotationSpeed;
                 }
                 else
                 {
-                    pitch += -.2f;
+                    pitch += -rotationSpeed;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.U))
+            if (MouseKeyboard.IsKeyDown(Keys.U))
             {
-                roll += -.02f;
+                roll += -rotationSpeed;
             }
-            if (keyboardState.IsKeyDown(Keys.O))
+            if (MouseKeyboard.IsKeyDown(Keys.O))
             {
-                roll += .02f;
+                roll += rotationSpeed;
             }
 
             //Move Camera
             if (currentCameraMode == CameraMode.free)
             {
-                if (keyboardState.IsKeyDown(Keys.W))
+                if (MouseKeyboard.IsKeyDown(Keys.W))
                 {
-                    MoveCamera(cameraRotation.Forward);
+                    MoveCamera(cameraRotation.Forward * movementSpeed);
                 }
-                if (keyboardState.IsKeyDown(Keys.S))
+                if (MouseKeyboard.IsKeyDown(Keys.S))
                 {
-                    MoveCamera(-cameraRotation.Forward);
+                    MoveCamera(-cameraRotation.Forward * movementSpeed);
                 }
-                if (keyboardState.IsKeyDown(Keys.A))
+                if (MouseKeyboard.IsKeyDown(Keys.A))
                 {
-                    MoveCamera(-cameraRotation.Right);
+                    MoveCamera(-cameraRotation.Right * movementSpeed);
                 }
-                if (keyboardState.IsKeyDown(Keys.D))
+                if (MouseKeyboard.IsKeyDown(Keys.D))
                 {
-                    MoveCamera(cameraRotation.Right);
+                    MoveCamera(cameraRotation.Right * movementSpeed);
                 }
-                if (keyboardState.IsKeyDown(Keys.E))
+                if (MouseKeyboard.IsKeyDown(Keys.E))
                 {
-                    MoveCamera(cameraRotation.Up);
+                    MoveCamera(cameraRotation.Up * movementSpeed);
                 }
-                if (keyboardState.IsKeyDown(Keys.Q))
+                if (MouseKeyboard.IsKeyDown(Keys.Q))
                 {
-                    MoveCamera(-cameraRotation.Up);
+                    MoveCamera(-cameraRotation.Up * movementSpeed);
                 }
             }            
         }
@@ -223,9 +238,9 @@ namespace TransvoxelXnaStudio.GameWindow
         }
 
         //This cycles through the different camera modes.
-        public void SwitchCameraMode(Viewport viewport)
+        public void SwitchCameraMode()
         {
-            ResetCamera(viewport);
+            ResetCamera();
 
             currentCameraMode++;
 

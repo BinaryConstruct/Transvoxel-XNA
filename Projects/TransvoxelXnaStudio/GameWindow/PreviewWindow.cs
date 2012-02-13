@@ -33,9 +33,9 @@ namespace TransvoxelXnaStudio.GameWindow
             _logSender = "PreviewWindow";
             _logger.Log(_logSender, "Initializing...");
 
-            _cam = new Camera(GraphicsDevice.Viewport);
+            _cam = new Camera(GraphicsDevice);
             _cam.currentCameraMode = Camera.CameraMode.free;
-            _cam.ResetCamera(GraphicsDevice.Viewport);
+            _cam.ResetCamera();
 
             _tvm = new TransvoxelManager(GraphicsDevice);
             // Create our effect.
@@ -48,25 +48,24 @@ namespace TransvoxelXnaStudio.GameWindow
             Application.Idle += delegate { Invalidate(); };
             _logger.Log(_logSender, "Initialization Complete.");
 
-            updateTimer = new System.Timers.Timer(1 / 30f);
-            updateTimer.AutoReset = true;
-            updateTimer.Elapsed += Update;
-            updateTimer.Start();
+            //updateTimer = new System.Timers.Timer(1 / 30f);
+            //updateTimer.AutoReset = true;
+            //updateTimer.Elapsed += Update;
+            //updateTimer.Start();
             verts = new VertexPositionTextureNormalColor[24];
-        }
-
-        protected void Update(object sender, ElapsedEventArgs e)
-        {
-            _cam.Update(Matrix.Identity);
         }
 
         protected override void Draw()
         {
             GraphicsDevice.Clear(Color.Black);
+            _cam.Update(Matrix.Identity);
 
             // Spin the triangle according to how much time has passed.
             float time = (float)timer.Elapsed.TotalSeconds;
             float aspect = GraphicsDevice.Viewport.AspectRatio;
+
+
+
             DrawSolids(time);
         }
 
@@ -74,7 +73,7 @@ namespace TransvoxelXnaStudio.GameWindow
         {
             base.OnSizeChanged(e);
             if (graphicsDeviceService != null && GraphicsDevice != null)
-                _cam.ResetCamera(GraphicsDevice.Viewport);
+                _cam.ResetCamera();
         }
 
         public Camera Camera
@@ -91,18 +90,18 @@ namespace TransvoxelXnaStudio.GameWindow
 
         private void DrawSolids(float time)
         {
-            float rotation = time * 0.2f;
-            Matrix world = Matrix.CreateRotationY(rotation);
-            Matrix view = Matrix.CreateLookAt(new Vector3(100, 25, 100), Vector3.Zero, Vector3.Up);
-            Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), GraphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);
+            //float rotation = time * 0.2f;
+            //Matrix world = Matrix.CreateRotationY(rotation);
+            //Matrix view = Matrix.CreateLookAt(new Vector3(100, 25, 100), Vector3.Zero, Vector3.Up);
+            //Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), GraphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);
 
-            Update(null, null);
-            _effect.World = world;
+            _effect.World = Matrix.Identity;
             _effect.View = _cam.ViewMatrix;
-            _effect.Projection = projection;
+            _effect.Projection = _cam.ProjectionMatrix;
             _effect.EnableDefaultLighting();
 
-            Matrix viewProj = _effect.View * projection;
+            Matrix viewProj = _cam.ViewMatrix * _cam.ProjectionMatrix;
+
             var viewFastFrustrum = new FastFrustum(ref viewProj);
 
             GraphicsDevice.BlendState = BlendState.Opaque;

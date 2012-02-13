@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework\Events.cs" />
+    <Compile Include="Framework\MouseKeyboardState.cs" />
     <Compile Include="GameWindow\Camera.cs" />
     <Compile Include="GameWindow\PreviewWindow.cs">
       <SubType>Component</SubType>
