@@ -8,6 +8,7 @@ using Transvoxel.SurfaceExtractor;
 using Transvoxel.VolumeData;
 using System.Linq;
 using Transvoxel.VolumeData.CompactOctree;
+using System.Diagnostics;
 
 namespace TransvoxelXnaStudio.TransvoxelHelpers
 {
@@ -70,9 +71,10 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             if ((dst >= 128 && lod == 3) || (dst < 128 && dst >= 64 && lod == 2) || (dst < 64 && lod == 1))
             {
-                Logger.GetLogger().Log(null, "Distance: " + dst);
                 Vector3i position = n.GetPos();
                 Vector3 posXna = Converters.Vector3iToVector3(position);
+
+                Logger.GetLogger().Log(null, "" + dst);
 
                 var m = _surfaceExtractor.GenLodCell(n);
                 var v = Converters.ConvertMeshToXna(m, LodColors[lod-1]);
@@ -91,14 +93,14 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     chunk.VertexBuffer.SetData(v);
                     chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
                     chunk.IndexBuffer.SetData(i);
+
+                    if (_chunks.ContainsKey(posXna))
+                    {
+                        Chunk removed;
+                        _chunks.TryRemove(posXna, out removed);
+                    }
+                    _chunks.TryAdd(posXna, chunk);
                 }
-                
-                if (_chunks.ContainsKey(posXna))
-                {
-                    Chunk removed;
-                    _chunks.TryRemove(posXna, out removed);
-                }
-                _chunks.TryAdd(posXna, chunk);
             }
             else 
             {
