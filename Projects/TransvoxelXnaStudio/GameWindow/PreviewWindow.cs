@@ -23,6 +23,8 @@ namespace TransvoxelXnaStudio.GameWindow
 
         private TransvoxelManager _tvm;
 
+        VertexPositionTextureNormalColor[] verts;
+
         #region Overrides of GraphicsDeviceControl
 
         protected override void Initialize()
@@ -50,6 +52,7 @@ namespace TransvoxelXnaStudio.GameWindow
             updateTimer.AutoReset = true;
             updateTimer.Elapsed += Update;
             updateTimer.Start();
+            verts = new VertexPositionTextureNormalColor[24];
         }
 
         protected void Update(object sender, ElapsedEventArgs e)
@@ -71,7 +74,7 @@ namespace TransvoxelXnaStudio.GameWindow
         {
             base.OnSizeChanged(e);
             if (graphicsDeviceService != null && GraphicsDevice != null)
-            _cam.ResetCamera(GraphicsDevice.Viewport);
+                _cam.ResetCamera(GraphicsDevice.Viewport);
         }
 
         public Camera Camera
@@ -90,7 +93,7 @@ namespace TransvoxelXnaStudio.GameWindow
         {
             float rotation = time * 0.2f;
             Matrix world = Matrix.CreateRotationY(rotation);
-            Matrix view = Matrix.CreateLookAt(new Vector3(100,25,100), Vector3.Zero, Vector3.Up);
+            Matrix view = Matrix.CreateLookAt(new Vector3(100, 25, 100), Vector3.Zero, Vector3.Up);
             Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), GraphicsDevice.Viewport.AspectRatio, 0.01f, 1000f);
 
             Update(null, null);
@@ -104,6 +107,8 @@ namespace TransvoxelXnaStudio.GameWindow
 
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            var raster = GraphicsDevice.RasterizerState;
+            
 
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
@@ -126,9 +131,75 @@ namespace TransvoxelXnaStudio.GameWindow
                             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, chunk.VertexBuffer.VertexCount, 0, chunk.IndexBuffer.IndexCount / 3);
                         }
                     }
-
                 }
             }
+
+            GraphicsDevice.RasterizerState = new RasterizerState { FillMode = FillMode.WireFrame };
+
+            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                foreach (Vector3 key in _tvm.Chunks.Keys)
+                {
+                    Chunk chunk;
+                    _tvm.Chunks.TryGetValue(key, out chunk);
+                    if (chunk == null) continue;
+
+
+
+                    SetupBoundingBox(chunk.BoundingBox, TransvoxelManager.LodColors[chunk.Lod - 1]);
+                    //if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
+                    //if (chunk.IndexBuffer != null)
+                    {
+                        //todo: can this be here?
+                        //if (chunk.State != ChunkState.Ready) RebuildChunk(chunk);
+
+                        if (chunk.IndexBuffer.IndexCount > 0)
+                        {
+                            GraphicsDevice.DrawUserPrimitives<VertexPositionTextureNormalColor>(PrimitiveType.LineList, verts, 0, 12);
+                        }
+                    }
+                }
+            }
+
+            GraphicsDevice.RasterizerState = raster;
+        }
+
+        public void SetupBoundingBox(BoundingBox box, Color color)
+        {
+            Vector3 min = box.Min;
+            Vector3 max = box.Max;
+
+            verts[0].Position = new Vector3(min.X, min.Y, min.Z);
+            verts[1].Position = new Vector3(max.X, min.Y, min.Z);
+            verts[2].Position = new Vector3(min.X, min.Y, max.Z);
+            verts[3].Position = new Vector3(max.X, min.Y, max.Z);
+            verts[4].Position = new Vector3(min.X, min.Y, min.Z);
+            verts[5].Position = new Vector3(min.X, min.Y, max.Z);
+            verts[6].Position = new Vector3(max.X, min.Y, min.Z);
+            verts[7].Position = new Vector3(max.X, min.Y, max.Z);
+            verts[8].Position = new Vector3(min.X, max.Y, min.Z);
+            verts[9].Position = new Vector3(max.X, max.Y, min.Z);
+            verts[10].Position = new Vector3(min.X, max.Y, max.Z);
+            verts[11].Position = new Vector3(max.X, max.Y, max.Z);
+            verts[12].Position = new Vector3(min.X, max.Y, min.Z);
+            verts[13].Position = new Vector3(min.X, max.Y, max.Z);
+            verts[14].Position = new Vector3(max.X, max.Y, min.Z);
+            verts[15].Position = new Vector3(max.X, max.Y, max.Z);
+            verts[16].Position = new Vector3(min.X, min.Y, min.Z);
+            verts[17].Position = new Vector3(min.X, max.Y, min.Z);
+            verts[18].Position = new Vector3(max.X, min.Y, min.Z);
+            verts[19].Position = new Vector3(max.X, max.Y, min.Z);
+            verts[20].Position = new Vector3(min.X, min.Y, max.Z);
+            verts[21].Position = new Vector3(min.X, max.Y, max.Z);
+            verts[22].Position = new Vector3(max.X, min.Y, max.Z);
+            verts[23].Position = new Vector3(max.X, max.Y, max.Z);
+
+            for (int i = 0; i < 24; i++)
+            {
+                verts[i].Color = color.ToVector4();
+            }
+
         }
 
 

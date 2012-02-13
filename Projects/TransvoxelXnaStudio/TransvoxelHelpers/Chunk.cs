@@ -9,5 +9,6 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
         public IndexBuffer IndexBuffer;
         public Vector3 Position;
         public BoundingBox BoundingBox;
+        public int Lod;
     }
 }

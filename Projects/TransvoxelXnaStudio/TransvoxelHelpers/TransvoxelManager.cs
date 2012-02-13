@@ -49,7 +49,12 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             get { return _chunks; }
         }
 
-
+        public static Color[] LodColors = new Color[]
+                                             {
+                                                 Color.Green,
+                                                 Color.Yellow,
+                                                 Color.Red
+                                             };
 
         public void ExtractMesh(OctreeNode n)
         {
@@ -62,13 +67,8 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             int lod = n.GetLevelOfDetail();
 
-            Color color = Color.Green;
-            if (lod == 3)
-                color = Color.Red;
-            if (lod == 2)
-                color = Color.Yellow;
 
-            if ((dst > 100 && lod == 3) || (dst <= 100 && dst > 50 && lod == 2) || (dst <= 50 && lod == 1))
+            if ((dst >= 128 && lod == 3) || (dst < 128 && dst >= 64 && lod == 2) || (dst < 64 && lod == 1))
             {
                 Logger.GetLogger().Log(null, "Distance: " + dst);
                 Vector3i position = n.GetPos();
@@ -76,12 +76,13 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 //int lod = n.GetLevelOfDetail();
 
                 var m = _surfaceExtractor.GenLodCell(n);
-                var v = Converters.ConvertMeshToXna(m, color);
+                var v = Converters.ConvertMeshToXna(m, LodColors[lod-1]);
                 var i = m.GetIndices();
                 var chunk = new Chunk
                 {
                     BoundingBox = new BoundingBox(posXna, posXna + new Vector3(VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE)),
-                    Position = posXna
+                    Position = posXna,
+                    Lod = lod
                 };
 
                 if (i.Length > 0)
