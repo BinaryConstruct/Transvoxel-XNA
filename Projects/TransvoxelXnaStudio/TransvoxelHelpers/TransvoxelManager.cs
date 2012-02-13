@@ -62,7 +62,13 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             int lod = n.GetLevelOfDetail();
 
-            if ((dst > 100 && lod == 3) || (dst > 50 && lod == 2) || (lod == 1))
+            Color color = Color.Green;
+            if (lod == 3)
+                color = Color.Red;
+            if (lod == 2)
+                color = Color.Yellow;
+
+            if ((dst > 100 && lod == 3) || (dst <= 100 && dst > 50 && lod == 2) || (dst <= 50 && lod == 1))
             {
                 Logger.GetLogger().Log(null, "Distance: " + dst);
                 Vector3i position = n.GetPos();
@@ -70,7 +76,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 //int lod = n.GetLevelOfDetail();
 
                 var m = _surfaceExtractor.GenLodCell(n);
-                var v = Converters.ConvertMeshToXna(m);
+                var v = Converters.ConvertMeshToXna(m, color);
                 var i = m.GetIndices();
                 var chunk = new Chunk
                 {

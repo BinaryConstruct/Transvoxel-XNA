@@ -23,7 +23,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             return new Vector3i((int)v.X, (int)v.Y, (int)v.Z);
         }
 
-        public static VertexPositionTextureNormalColor[] ConvertMeshToXna(Mesh m)
+        public static VertexPositionTextureNormalColor[] ConvertMeshToXna(Mesh m, Color color)
          {
              var i = m.GetIndices();
              VertexPositionTextureNormalColor[] vertices = new VertexPositionTextureNormalColor[m.Vertices.Count];
@@ -34,7 +34,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                  // project texture coord using x/y
                  var uv = new Vector2(m.Vertices[vert].X, m.Vertices[vert].Y);
 
-                 vertices[vert] = new VertexPositionTextureNormalColor(Vector3fToVector3(m.Vertices[vert]), uv, Color.Green.ToVector4());
+                 vertices[vert] = new VertexPositionTextureNormalColor(Vector3fToVector3(m.Vertices[vert]), uv, color.ToVector4());
              }
 
              CalculateNormals(ref vertices, ref i);

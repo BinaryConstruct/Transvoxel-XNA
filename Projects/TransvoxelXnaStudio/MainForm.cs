@@ -20,10 +20,14 @@ namespace TransvoxelXnaStudio
     {
         private Logger _logger;
         private System.Windows.Forms.Timer _updateTimer;
+        private TaskFactory _uiFactory;
+        private readonly TaskScheduler uiScheduler;
 
         public MainForm()
         {
             InitializeComponent();
+            uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _uiFactory = new TaskFactory(uiScheduler);
             _logger = Logger.GetLogger();
             _logger.Logged += OnLogged;
             _updateTimer = new System.Windows.Forms.Timer();
@@ -41,7 +45,8 @@ namespace TransvoxelXnaStudio
         {
             if (outputTextbox.InvokeRequired)
             {
-                outputTextbox.BeginInvoke(new Action(() => OnLogged(sender, e)));
+                _uiFactory.StartNew(() => OnLogged(sender, e));
+                //outputTextbox.BeginInvoke(new Action(() => OnLogged(sender, e)));
                 return;
             }
 
@@ -55,7 +60,9 @@ namespace TransvoxelXnaStudio
         {
             if (mainStatusBar.InvokeRequired)
             {
-                mainStatusBar.BeginInvoke(new Action(() => OnProgressChanged(sender, e)));
+                _uiFactory.StartNew(() => OnProgressChanged(sender, e));
+                
+                //mainStatusBar.BeginInvoke(new Action(() => OnProgressChanged(sender, e)));
                 return;
             }
 
@@ -76,8 +83,8 @@ namespace TransvoxelXnaStudio
                 {
                     for (int i = 0; i <= size; i++)
                     {
-                        Logger.GetLogger().Log(null, i+"/"+size);
-                        //OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)size) * 100.0f), "Generating Volume Data..."));
+                        _logger.Log("MAIN", i+"/"+size);
+                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)size) * 100.0f), "Generating Volume Data..."));
                         for (int j = 0; j <= size; j++)
                         {
                             for (int k = 0; k <= size; k++)
@@ -90,7 +97,7 @@ namespace TransvoxelXnaStudio
                         }
                         //OnProgressChanged(null, new ProgressChangedEventArgs(100, "Generating Volume Data..."));
                     }
-                    //OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
+                    OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
                     _logger.Log("MAIN", "Volume Data Generation Complete.");
                 }
                 );
