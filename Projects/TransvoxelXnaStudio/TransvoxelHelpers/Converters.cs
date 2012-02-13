@@ -6,19 +6,19 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 {
     public static class Converters
     {
-        public static Vector3 Vector3fToVector3(Vector3f v)
+        public static Vector3 ToVector3(this Vector3f v)
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
-        public static Vector3f Vector3ToVector3f(Vector3 v)
+        public static Vector3f ToVector3F(this Vector3 v)
         {
             return new Vector3f(v.X, v.Y, v.Z);
         }
-        public static Vector3 Vector3iToVector3(Vector3i v)
+        public static Vector3 ToVector3(this Vector3i v)
         {
             return new Vector3(v.X, v.Y, v.Z);
         }
-        public static Vector3i Vector3ToVector3i(Vector3 v)
+        public static Vector3i ToVector3I(this Vector3 v)
         {
             return new Vector3i((int)v.X, (int)v.Y, (int)v.Z);
         }
@@ -34,7 +34,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 // project texture coord using x/y
                 var uv = new Vector2(m.Vertices[vert].X, m.Vertices[vert].Y);
 
-                vertices[vert] = new VertexPositionTextureNormalColor(Vector3fToVector3(m.Vertices[vert]), uv, color.ToVector4());
+                vertices[vert] = new VertexPositionTextureNormalColor(m.Vertices[vert].ToVector3(), uv, color.ToVector4());
             }
 
             BuildTangentSpaceDataForTriangleList(ref vertices, ref i);

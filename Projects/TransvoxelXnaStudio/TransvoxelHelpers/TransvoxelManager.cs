@@ -72,7 +72,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             if ((dst >= 128 && lod == 3) || (dst < 128 && dst >= 64 && lod == 2) || (dst < 64 && lod == 1))
             {
                 Vector3i position = n.GetPos();
-                Vector3 posXna = Converters.Vector3iToVector3(position);
+                Vector3 posXna = position.ToVector3();
 
                 Logger.GetLogger().Log(null, "" + dst);
 
