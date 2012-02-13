@@ -12,50 +12,40 @@ namespace Transvoxel.SurfaceExtractor
 {
 	public interface ISurfaceExtractor
 	{
-	   // Mesh GenLodCell(Vector3i position, int lod);
-        Mesh GenLodCell(OctreeNode n);
+		Mesh GenLodCell(OctreeNode n);
 	}
 
 	public class TransvoxelExtractor : ISurfaceExtractor
 	{
 		IVolumeData volume;
+        CellCache cache;
 
 		public TransvoxelExtractor(IVolumeData data)
 		{
 			volume = data;
+            cache = new CellCache();
 		}
 
-		/*public Mesh GenLodCell(Vector3i position, int lod)
+		public Mesh GenLodCell(OctreeNode node)
 		{
 			Mesh mesh = new Mesh();
-            //int lod = n.GetLevelOfDetail();
-            Console.WriteLine(lod);
-			for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
-				for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
-					for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
-					{ 
-						//PolygonizeCell
-                        PolygonizeCell(position + new Vector3i(x, y, z) * lod, ref mesh, lod);
-					}
-
-			return mesh;
-		}*/
-
-        public Mesh GenLodCell(OctreeNode node)
-        {
-            Mesh mesh = new Mesh();
-            int lod = 1 << (node.GetLevelOfDetail()-1);
-            Console.WriteLine(lod);
-            for (int x = -1; x < VolumeChunk.CHUNKSIZE-1; x++)
-                for (int y = -1; y < VolumeChunk.CHUNKSIZE-1; y++)
-                    for (int z = -1; z < VolumeChunk.CHUNKSIZE-1; z++)
+			int lod = 1 << (node.GetLevelOfDetail()-1);
+			Console.WriteLine(lod);
+            
+            for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
+            {
+                for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+                {
+                    for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
                     {
-                        //PolygonizeCell
                         PolygonizeCell(node.GetPos() + new Vector3i(x, y, z) * lod, ref mesh, lod);
                     }
+                }
 
-            return mesh;
-        }
+            }
+
+			return mesh;
+		}
 
 		internal void PolygonizeCell(Vector3i offsetPos, ref Mesh mesh,int lod)
 		{
@@ -70,7 +60,7 @@ namespace Transvoxel.SurfaceExtractor
 
 
 			if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
-                return;
+				return;
 
 			byte regularCellClass = Tables.RegularCellClass[caseCode];
 			ushort[] vertexLocations = Tables.RegularVertexData[caseCode];
@@ -94,13 +84,22 @@ namespace Transvoxel.SurfaceExtractor
 
 				long t = (d1 << 8) / (d1 - d0);
 
-				Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
-				Vector3f P0 = new Vector3f(iP0.X, iP0.Y, iP0.Z);
-				Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
-				Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
-				Vector3f Q = InterpolateVoxelVector(t, P0, P1);
-				mesh.AddVertex(Q);
-				mapIndizes2Vertice(i, (ushort)(mesh.VertexCount() - 1), mappedIndizes, indexOffset);
+                byte rDir = (byte)(edge >> 4); //the direction to go to reach a previous cell for reusing 
+
+                if (true || v1 == 7) //maximum corner, always create vertex
+                {
+                    Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
+                    Vector3f P0 = new Vector3f(iP0.X, iP0.Y, iP0.Z);
+                    Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
+                    Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
+                    Vector3f Q = InterpolateVoxelVector(t, P0, P1);
+                    mesh.AddVertex(Q);
+                    mapIndizes2Vertice(i, (ushort)(mesh.VertexCount() - 1), mappedIndizes, indexOffset);
+                }
+                else 
+                {
+                    
+                }
 			}
 
 			for (int i = 0; i < triangleCount; i++)
@@ -108,7 +107,7 @@ namespace Transvoxel.SurfaceExtractor
 				ushort i1 = mappedIndizes[i * 3 + 0];
 				ushort i2 = mappedIndizes[i * 3 + 1];
 				ushort i3 = mappedIndizes[i * 3 + 2];
-                mesh.AddIndex(i1);
+				mesh.AddIndex(i1);
 				mesh.AddIndex(i2);
 				mesh.AddIndex(i3);
 			}
