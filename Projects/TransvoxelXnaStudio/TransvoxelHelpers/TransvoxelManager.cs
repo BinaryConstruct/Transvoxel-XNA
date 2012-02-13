@@ -73,16 +73,14 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 Logger.GetLogger().Log(null, "Distance: " + dst);
                 Vector3i position = n.GetPos();
                 Vector3 posXna = Converters.Vector3iToVector3(position);
-                //int lod = n.GetLevelOfDetail();
 
                 var m = _surfaceExtractor.GenLodCell(n);
                 var v = Converters.ConvertMeshToXna(m, LodColors[lod-1]);
                 var i = m.GetIndices();
 
-                int size = 1 << (lod-1);
                 var chunk = new Chunk
                 {
-                    BoundingBox = new BoundingBox(posXna, posXna + new Vector3(8, 8, 8) * size),
+                    BoundingBox = new BoundingBox(posXna, posXna + new Vector3(n.Size(), n.Size(), n.Size())),
                     Position = posXna,
                     Lod = lod
                 };

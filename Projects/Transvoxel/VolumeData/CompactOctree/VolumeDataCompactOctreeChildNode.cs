@@ -26,7 +26,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             OctreeLeafNode leaf = new OctreeLeafNode(this, x, y, z);
             nodes[place] = leaf;
             leaf.level = level + offsetBitNum + 1;
-            leaf.offsetBitNum = 29 - leaf.level;
+            leaf.offsetBitNum = 32- VolumeChunk.CHUNKBITS - leaf.level;
             return leaf;
         }
 

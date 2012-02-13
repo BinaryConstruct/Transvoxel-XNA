@@ -45,12 +45,12 @@ namespace Transvoxel.VolumeData.CompactOctree
         // from 1 to infinity
         public int GetLevelOfDetail()
         {
-            return 30 - GetLevel();
+            return (32+1-VolumeChunk.CHUNKBITS) - GetLevel();
         }
 
         public Vector3i GetPos()
         {
-            int mask = (int)BitHack.Mask(0, level + offsetBitNum);
+            int mask = (int)BitHack.Mask(0, level-1);
             int x = xcoord & mask;
             int y = ycoord & mask;
             int z = zcoord & mask;
@@ -59,7 +59,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         public int Size()
         { 
-            return GetLevelOfDetail()*VolumeChunk.CHUNKSIZE;
+            return (1<<(GetLevelOfDetail()-1))*VolumeChunk.CHUNKSIZE;
         }
 
         public Vector3i GetCenter()

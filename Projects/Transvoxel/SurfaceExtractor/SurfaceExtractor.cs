@@ -44,11 +44,11 @@ namespace Transvoxel.SurfaceExtractor
         public Mesh GenLodCell(OctreeNode node)
         {
             Mesh mesh = new Mesh();
-            int lod = node.GetLevelOfDetail();
+            int lod = 1 << (node.GetLevelOfDetail()-1);
             Console.WriteLine(lod);
-            for (int x = -1; x < VolumeChunk.CHUNKSIZE; x++)
-                for (int y = -1; y < VolumeChunk.CHUNKSIZE; y++)
-                    for (int z = -1; z < VolumeChunk.CHUNKSIZE; z++)
+            for (int x = -1; x < VolumeChunk.CHUNKSIZE-1; x++)
+                for (int y = -1; y < VolumeChunk.CHUNKSIZE-1; y++)
+                    for (int z = -1; z < VolumeChunk.CHUNKSIZE-1; z++)
                     {
                         //PolygonizeCell
                         PolygonizeCell(node.GetPos() + new Vector3i(x, y, z) * lod, ref mesh, lod);

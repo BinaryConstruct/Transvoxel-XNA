@@ -62,9 +62,6 @@ namespace Transvoxel.VolumeData.CompactOctree
                 leaf.setChunkVal(x, y, z, val);
                 //leaf.chunk[x, y, z] = val;
 
-                Debug.Assert(level + offsetBitNum <= 29);
-                Debug.Assert(newc.level + newc.offsetBitNum <= 29);
-                Debug.Assert(leaf.level + offsetBitNum <= 29);
             }
         }
 
