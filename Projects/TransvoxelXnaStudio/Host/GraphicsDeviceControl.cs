@@ -47,7 +47,11 @@ namespace TransvoxelXnaStudio.Host
         /// </summary>
         public GraphicsDevice GraphicsDevice
         {
-            get { return graphicsDeviceService.GraphicsDevice; }
+            get
+            {
+                if (graphicsDeviceService == null) return null;
+                return graphicsDeviceService.GraphicsDevice;
+            }
         }
 
 
@@ -226,8 +230,8 @@ namespace TransvoxelXnaStudio.Host
                     // If the device state is ok, check whether it is big enough.
                     PresentationParameters pp = GraphicsDevice.PresentationParameters;
 
-                    deviceNeedsReset = (ClientSize.Width > pp.BackBufferWidth) ||
-                                       (ClientSize.Height > pp.BackBufferHeight);
+                    deviceNeedsReset = (ClientSize.Width != pp.BackBufferWidth) ||
+                                       (ClientSize.Height != pp.BackBufferHeight);
                     break;
             }
 
@@ -279,34 +283,6 @@ namespace TransvoxelXnaStudio.Host
         /// </summary>
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            base.OnSizeChanged(e);
-
-            if (graphicsDeviceService != null)
-            {
-                if (GraphicsDevice != null)
-                {
-
-                    Viewport viewport = new Viewport();
-
-                    viewport.X = 0;
-                    viewport.Y = 0;
-
-                    viewport.Width = ClientSize.Width;
-                    viewport.Height = ClientSize.Height;
-
-                    viewport.MinDepth = 0;
-                    viewport.MaxDepth = 1;
-
-                    GraphicsDevice.Viewport = viewport;
-                    GraphicsDevice.PresentationParameters.BackBufferHeight = viewport.Height;
-                    GraphicsDevice.PresentationParameters.BackBufferWidth = viewport.Width;
-                    GraphicsDevice.Reset();
-                }
-            }
         }
 
         #endregion

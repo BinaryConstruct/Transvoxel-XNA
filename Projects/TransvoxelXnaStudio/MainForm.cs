@@ -21,19 +21,27 @@ namespace TransvoxelXnaStudio
         private Logger _logger;
         private System.Windows.Forms.Timer _updateTimer;
         private TaskFactory _uiFactory;
-        private readonly TaskScheduler uiScheduler;
+        private readonly TaskScheduler _uiScheduler;
 
         public MainForm()
         {
             InitializeComponent();
-            uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-            _uiFactory = new TaskFactory(uiScheduler);
+
+            // Create UI taskscheduler and factory
+            _uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _uiFactory = new TaskFactory(_uiScheduler);
+
+            // Get the logger
             _logger = Logger.GetLogger();
             _logger.Logged += OnLogged;
+
+            // create an update timer
             _updateTimer = new System.Windows.Forms.Timer();
             _updateTimer.Interval = 500;
             _updateTimer.Tick += _updateTimer_Tick;
             _updateTimer.Start();
+
+            propertyGrid1.SelectedObject = previewWindow1.Settings;
         }
 
         void _updateTimer_Tick(object sender, EventArgs e)
@@ -129,6 +137,11 @@ namespace TransvoxelXnaStudio
         private void UpdateStatusText()
         {
             toolStripStatusLabel1.Text = string.Format("Yaw: {0} Pitch: {1} Roll:{2} Position: {3}", previewWindow1.Camera.Yaw, previewWindow1.Camera.Position, previewWindow1.Camera.Roll, previewWindow1.Camera.Position);
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            //propertyGrid1.SelectedObject = e.Node.n
         }
     }
 }

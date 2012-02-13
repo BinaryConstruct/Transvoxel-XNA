@@ -13,6 +13,17 @@ using TransvoxelXnaStudio.TransvoxelHelpers;
 
 namespace TransvoxelXnaStudio.GameWindow
 {
+    public class PreviewSettings
+    {
+        
+        public PreviewSettings()
+        {
+            ShowBoundingBoxes = true;
+        }
+
+
+        public bool ShowBoundingBoxes { get; set; }
+    }
     public class PreviewWindow : GraphicsDeviceControl
     {
         private System.Timers.Timer updateTimer;
@@ -100,6 +111,12 @@ namespace TransvoxelXnaStudio.GameWindow
 
         #endregion
 
+        private PreviewSettings _settings = new PreviewSettings();
+        public PreviewSettings Settings
+        {
+            get { return _settings; }
+            set { _settings = value; }
+        }
 
         private void DrawSolids(float time)
         {
@@ -146,38 +163,41 @@ namespace TransvoxelXnaStudio.GameWindow
                 }
             }
 
-            GraphicsDevice.RasterizerState = new RasterizerState { FillMode = FillMode.WireFrame };
-
-
-            mBoundingBoxEffect.World = Matrix.Identity;
-            mBoundingBoxEffect.View = _cam.ViewMatrix;
-            mBoundingBoxEffect.Projection = _cam.ProjectionMatrix;
-            foreach (EffectPass pass in mBoundingBoxEffect.CurrentTechnique.Passes)
+            if (Settings.ShowBoundingBoxes)
             {
-                pass.Apply();
-                foreach (Vector3 key in _tvm.Chunks.Keys)
+                GraphicsDevice.RasterizerState = new RasterizerState {FillMode = FillMode.WireFrame};
+
+
+                mBoundingBoxEffect.World = Matrix.Identity;
+                mBoundingBoxEffect.View = _cam.ViewMatrix;
+                mBoundingBoxEffect.Projection = _cam.ProjectionMatrix;
+                foreach (EffectPass pass in mBoundingBoxEffect.CurrentTechnique.Passes)
                 {
-                    Chunk chunk;
-                    _tvm.Chunks.TryGetValue(key, out chunk);
-                    if (chunk == null) continue;
-
-                    SetupBoundingBox(chunk.BoundingBox, TransvoxelManager.LodColors[chunk.Lod - 1]);
-                    //if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
-                    //if (chunk.IndexBuffer != null)
+                    pass.Apply();
+                    foreach (Vector3 key in _tvm.Chunks.Keys)
                     {
-                        //todo: can this be here?
-                        //if (chunk.State != ChunkState.Ready) RebuildChunk(chunk);
+                        Chunk chunk;
+                        _tvm.Chunks.TryGetValue(key, out chunk);
+                        if (chunk == null) continue;
 
-                        if (chunk.IndexBuffer.IndexCount > 0)
+                        SetupBoundingBox(chunk.BoundingBox, TransvoxelManager.LodColors[chunk.Lod - 1]);
+                        //if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
+                        //if (chunk.IndexBuffer != null)
                         {
+                            //todo: can this be here?
+                            //if (chunk.State != ChunkState.Ready) RebuildChunk(chunk);
 
-                            GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, 12);
+                            if (chunk.IndexBuffer.IndexCount > 0)
+                            {
+
+                                GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, verts, 0, 12);
+                            }
                         }
                     }
                 }
-            }
 
-            GraphicsDevice.RasterizerState = raster;
+                GraphicsDevice.RasterizerState = raster;
+            }
         }
 
         public void SetupBoundingBox(BoundingBox box, Color color)

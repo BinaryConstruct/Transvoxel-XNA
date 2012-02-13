@@ -49,29 +49,38 @@
             this.label1 = new System.Windows.Forms.Label();
             this.editorArea = new System.Windows.Forms.Panel();
             this.previewWindow1 = new TransvoxelXnaStudio.GameWindow.PreviewWindow();
+            this.propertiesContainer = new System.Windows.Forms.SplitContainer();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.toolArea.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.mainStatusBar.SuspendLayout();
             this.mainMenu.SuspendLayout();
             this.logArea.SuspendLayout();
             this.editorArea.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.propertiesContainer)).BeginInit();
+            this.propertiesContainer.Panel1.SuspendLayout();
+            this.propertiesContainer.Panel2.SuspendLayout();
+            this.propertiesContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolArea
             // 
+            this.toolArea.Controls.Add(this.propertiesContainer);
             this.toolArea.Controls.Add(this.label2);
             this.toolArea.Controls.Add(this.groupBox1);
             this.toolArea.Dock = System.Windows.Forms.DockStyle.Left;
             this.toolArea.Location = new System.Drawing.Point(0, 0);
             this.toolArea.Name = "toolArea";
+            this.toolArea.Padding = new System.Windows.Forms.Padding(3);
             this.toolArea.Size = new System.Drawing.Size(250, 492);
             this.toolArea.TabIndex = 0;
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 457);
+            this.label2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.label2.Location = new System.Drawing.Point(3, 463);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(126, 26);
             this.label2.TabIndex = 3;
@@ -81,9 +90,10 @@
             // 
             this.groupBox1.Controls.Add(this.genVolBtn);
             this.groupBox1.Controls.Add(this.extractMeshBtn);
-            this.groupBox1.Location = new System.Drawing.Point(12, 16);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(232, 100);
+            this.groupBox1.Size = new System.Drawing.Size(244, 78);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Initialization";
@@ -246,6 +256,41 @@
             this.previewWindow1.TabIndex = 1;
             this.previewWindow1.Text = "previewWindow1";
             // 
+            // propertiesContainer
+            // 
+            this.propertiesContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertiesContainer.Location = new System.Drawing.Point(3, 81);
+            this.propertiesContainer.Name = "propertiesContainer";
+            this.propertiesContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // propertiesContainer.Panel1
+            // 
+            this.propertiesContainer.Panel1.Controls.Add(this.treeView1);
+            // 
+            // propertiesContainer.Panel2
+            // 
+            this.propertiesContainer.Panel2.Controls.Add(this.propertyGrid1);
+            this.propertiesContainer.Size = new System.Drawing.Size(244, 382);
+            this.propertiesContainer.SplitterDistance = 168;
+            this.propertiesContainer.TabIndex = 4;
+            // 
+            // treeView1
+            // 
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(244, 168);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(244, 210);
+            this.propertyGrid1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,6 +312,10 @@
             this.logArea.ResumeLayout(false);
             this.logArea.PerformLayout();
             this.editorArea.ResumeLayout(false);
+            this.propertiesContainer.Panel1.ResumeLayout(false);
+            this.propertiesContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.propertiesContainer)).EndInit();
+            this.propertiesContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -295,6 +344,9 @@
         private System.Windows.Forms.Button genVolBtn;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.SplitContainer propertiesContainer;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
 
     }
 }
