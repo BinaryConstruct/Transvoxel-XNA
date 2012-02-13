@@ -35,12 +35,15 @@ namespace TransvoxelXnaStudio.GameWindow
             _logSender = "PreviewWindow";
             _logger.Log(_logSender, "Initializing...");
 
+            
+
             _cam = new Camera(GraphicsDevice);
             _cam.currentCameraMode = Camera.CameraMode.free;
             _cam.ResetCamera();
             _cam.SetFreeCamPosition(new Vector3(64, 50, 150));
 
             _tvm = new TransvoxelManager(GraphicsDevice);
+            
             // Create our effect.
             _effect = new BasicEffect(GraphicsDevice);
 

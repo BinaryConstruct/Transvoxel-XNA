@@ -6,9 +6,9 @@ using Transvoxel.VolumeData.CompactOctree;
 
 namespace Transvoxel.SurfaceExtractor
 {
-    class CellData
+    public class CellData
     {
-        public uint[] index = new uint[4];
+        public ushort[] index = new ushort[4];
     }
 
     // For Vertex reusing we need access to 2 cell slices of the current polygonized cube
@@ -17,35 +17,51 @@ namespace Transvoxel.SurfaceExtractor
     
     public class CellCache
     {
-        public const uint NOINDEX = 0xFFFFFFFF;
+        public const ushort NOINDEX = 0xFFFF;
         private readonly CellData[, ,] slices = new CellData[2, VolumeChunk.CHUNKSIZE, VolumeChunk.CHUNKSIZE];
 
         public CellCache()
         {
+            for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+            {
+                for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+                {
+                    for (int x = 0; x < 2; x++)
+                    {
+                        slices[x, y, z] = new CellData();
+                    }
+                }
+            }
+
             ClearSlice(0);
             ClearSlice(1);
         }        
         
-        public void setReuseIndex(int x,int y,int z,int rind,uint val)
+        public void setReuseIndex(int x,int y,int z,int rind,ushort val)
         {
             CellData cachePlace = slices[x%2,y,z];
             cachePlace.index[rind] = val;
         }
 
-        public uint getReuseIndex(int x, int y, int z,int rind)
+        public ushort getReuseIndex(int x, int y, int z,int rind)
         {
             CellData cachePlace = slices[x % 2, y, z];
             return cachePlace.index[rind];
         }
 
         public void ClearSlice(int x)
-        { 
-            for(int y=0;y<VolumeChunk.CHUNKSIZE;y++)
+        {
+            for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+            {
                 for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+                {
                     for (int a = 0; a < 4; a++)
                     {
-                        slices[x%2, y, z].index[a] = NOINDEX;
+                        CellData data = slices[x % 2, y, z];
+                        data.index[a] = NOINDEX;
                     }
+                }
+            }
         }
     }
 }
