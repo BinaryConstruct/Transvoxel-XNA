@@ -42,10 +42,14 @@ namespace Transvoxel.SurfaceExtractor
         { 
             for(int y=0;y<VolumeChunk.CHUNKSIZE;y++)
                 for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+                {
+                    if (slices[x % 2, y, z] == null)
+                        slices[x % 2, y, z] = new CellData();
                     for (int a = 0; a < 4; a++)
                     {
-                        slices[x%2, y, z].index[a] = NOINDEX;
+                        slices[x % 2, y, z].index[a] = NOINDEX;
                     }
+                }
         }
     }
 }
