@@ -77,7 +77,11 @@ namespace TransvoxelXnaStudio.GameWindow
 
         private void HandleInput()
         {
-            //MouseKeyboard MouseKeyboard = Keyboard.GetState();
+            // Don't handle input if we don't have focus
+            if (!MouseKeyboard.ApplicationIsActivated())
+            {
+                return;
+            }
 
             //Rotate Camera
             float rotationSpeed = 0.05f;

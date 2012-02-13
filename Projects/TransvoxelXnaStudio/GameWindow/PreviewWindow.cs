@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Timers;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +15,7 @@ namespace TransvoxelXnaStudio.GameWindow
 {
     public class PreviewWindow : GraphicsDeviceControl
     {
-        private Timer updateTimer;
+        private System.Timers.Timer updateTimer;
         BasicEffect _effect;
         BasicEffect mBoundingBoxEffect;
         Stopwatch timer;
@@ -55,17 +56,16 @@ namespace TransvoxelXnaStudio.GameWindow
             Application.Idle += delegate { Invalidate(); };
             _logger.Log(_logSender, "Initialization Complete.");
 
-            updateTimer = new Timer();
-            updateTimer.Interval = 500;
-            updateTimer.Tick += Update;
+            updateTimer = new System.Timers.Timer(1 / 30f);
+            updateTimer.AutoReset = true;
+            updateTimer.Elapsed += Update;
             updateTimer.Start();
             verts = new VertexPositionColor[24];
         }
 
-        private void Update(object sender, EventArgs e)
+        private void Update(object sender, ElapsedEventArgs e)
         {
-            if (this.Focused)
-                _cam.Update(Matrix.Identity);
+            _cam.Update(Matrix.Identity);
         }
 
         protected override void Draw()
