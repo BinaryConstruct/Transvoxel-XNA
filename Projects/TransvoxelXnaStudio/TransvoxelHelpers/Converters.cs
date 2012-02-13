@@ -60,7 +60,6 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 Vector3 firstvec = vertices[index_vert1].Position - vertices[index_vert0].Position;
                 Vector3 secondvec = vertices[index_vert0].Position - vertices[index_vert2].Position;
                 Vector3 normal = Vector3.Cross(firstvec, secondvec);
-                normal.Normalize();
                 vertices[index_vert0].Normal += normal;
                 vertices[index_vert1].Normal += normal;
                 vertices[index_vert2].Normal += normal;
@@ -113,6 +112,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             for (int i = 0; i < vertices.Length; i++)
             {
+                vertices[i].Normal.Normalize();
                 vertices[i].Tangent.Normalize();
                 vertices[i].Binormal.Normalize();
             }
