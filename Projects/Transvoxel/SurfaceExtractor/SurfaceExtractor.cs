@@ -14,10 +14,12 @@ namespace Transvoxel.SurfaceExtractor
 	{
 	   // Mesh GenLodCell(Vector3i position, int lod);
         Mesh GenLodCell(OctreeNode n);
+	    int ChunkSize { get; }
 	}
 
 	public class TransvoxelExtractor : ISurfaceExtractor
 	{
+        
 		IVolumeData volume;
 
 		public TransvoxelExtractor(IVolumeData data)
@@ -40,6 +42,11 @@ namespace Transvoxel.SurfaceExtractor
 
 			return mesh;
 		}*/
+
+	    public int ChunkSize
+	    {
+            get { return volume.ChunkSize; }
+	    }
 
         public Mesh GenLodCell(OctreeNode node)
         {
