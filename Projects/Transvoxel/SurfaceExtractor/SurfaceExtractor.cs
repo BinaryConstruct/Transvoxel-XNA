@@ -18,7 +18,7 @@ namespace Transvoxel.SurfaceExtractor
 
 	public class TransvoxelExtractor : ISurfaceExtractor
 	{
-        
+        public bool UseCache { get; set; }
 		IVolumeData volume;
         CellCache cache;
 
@@ -26,6 +26,7 @@ namespace Transvoxel.SurfaceExtractor
 		{
 			volume = data;
             cache = new CellCache();
+            UseCache = false;
 		}
 
 		public Mesh GenLodCell(OctreeNode node)
@@ -98,7 +99,7 @@ namespace Transvoxel.SurfaceExtractor
 
                 byte rDir = (byte)(edge >> 4); //the direction to go to reach a previous cell for reusing 
 
-                if (v1 != 7) //maximum corner, always create vertex
+                if (v1 != 7 && UseCache) //maximum corner, always create vertex
                 {
                     int rx = rDir & 0x01;
                     int rz = (rDir >> 1) & 0x01;
