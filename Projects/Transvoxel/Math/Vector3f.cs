@@ -318,7 +318,7 @@ namespace Transvoxel.Math
 
         public bool Equals(Vector3f other)
         {
-            return other.Y == Y && other.Z == Z && other.X == X;
+            return other.Y.Equals(Y) && other.Z.Equals(Z) && other.X.Equals(X);
         }
 
         public override bool Equals(object obj)

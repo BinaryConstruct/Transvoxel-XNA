@@ -7,60 +7,72 @@ using Transvoxel.Geometry;
 using Transvoxel.VolumeData;
 using Transvoxel.Math;
 using Transvoxel.Lengyel;
+using System.Diagnostics;
 
 namespace Transvoxel.SurfaceExtractor
 {
 	public interface ISurfaceExtractor
 	{
 		Mesh GenLodCell(OctreeNode n);
-	    int ChunkSize { get; }
+		int ChunkSize { get; }
 	}
 
 	public class TransvoxelExtractor : ISurfaceExtractor
 	{
-        public bool UseCache { get; set; }
+		public bool UseCache { get; set; }
 		IVolumeData volume;
-        CellCache cache;
+		RegularCellCache cache;
 
 		public TransvoxelExtractor(IVolumeData data)
 		{
 			volume = data;
-            cache = new CellCache();
-            UseCache = false;
+            cache = new RegularCellCache();
+			UseCache = true;
 		}
 
 		public Mesh GenLodCell(OctreeNode node)
 		{
 			Mesh mesh = new Mesh();
 			int lod = 1 << (node.GetLevelOfDetail()-1);
-			Console.WriteLine(lod);
-            
-            for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
-            {
-                for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
-                {
-                    for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
-                    {
-                        PolygonizeCell(node.GetPos(),new Vector3i(x, y, z), ref mesh, lod);
-                    }
-                }
 
-                cache.ClearSlice((x + 1) % 2);
+            cache = new RegularCellCache(); //delete me??
+
+			for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
+			{
+				for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+				{
+					for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+					{
+						PolygonizeCell(node.GetPos(),new Vector3i(x, y, z), ref mesh, lod);
+
+					}
+				}
+
+                
+                //cache.ClearSlice((x + 1) & 1);
+                //cache.ClearSlice((x) & 1);
+                //cache.Clear(x + 1);
             }
 
-            return mesh;
-        }
+			return mesh;
+		}
 
 
-	    public int ChunkSize
-	    {
-            get { return volume.ChunkSize; }
-	    }
+		public int ChunkSize
+		{
+			get { return volume.ChunkSize; }
+		}
 
 
 		internal void PolygonizeCell(Vector3i offsetPos,Vector3i pos, ref Mesh mesh,int lod)
 		{
-            offsetPos += pos * lod;
+            Debug.Assert(lod >= 1);
+
+			offsetPos += pos * lod;
+
+
+
+			byte directionMask = (byte)((pos.X > 0 ? 1 : 0) | ((pos.Z > 0 ? 1 : 0) << 1) | ((pos.Y > 0 ? 1 : 0) << 2));
 
 			sbyte[] density = new sbyte[8];
 			
@@ -84,10 +96,16 @@ namespace Transvoxel.SurfaceExtractor
 			byte[] indexOffset = c.Indizes(); //index offsets for current cell
 			ushort[] mappedIndizes = new ushort[indexOffset.Length]; //array with real indizes for current cell
 
+            for (int asdf = 0; asdf < mappedIndizes.Length;asdf++ )
+            {
+                mappedIndizes[asdf] = 65535;
+            }
+
 			for (int i = 0; i < vertexCount; i++)
 			{
 				byte edge = (byte)(vertexLocations[i] >> 8);
 				byte reuseIndex = (byte)(edge & 0xF); //Vertex id which should be created or reused 1,2 or 3
+				byte rDir = (byte)(edge >> 4); //the direction to go to reach a previous cell for reusing 
 
 				byte v1 = (byte)((vertexLocations[i]) & 0x0F); //Second Corner Index
 				byte v0 = (byte)((vertexLocations[i] >> 4) & 0x0F); //First Corner Index
@@ -95,12 +113,19 @@ namespace Transvoxel.SurfaceExtractor
 				sbyte d0 = density[v0];
 				sbyte d1 = density[v1];
 
+				Debug.Assert(v1 > v0);
+
 				long t = (d1 << 8) / (d1 - d0);
 
-                byte rDir = (byte)(edge >> 4); //the direction to go to reach a previous cell for reusing 
+               // int ind = -1;
+                int index = -1;
 
-                if (v1 != 7 && UseCache) //maximum corner, always create vertex
-                {
+                string outp = "";
+
+				if (UseCache && v1 != 7 && (rDir & directionMask) == rDir) 
+				{
+                    Debug.Assert(reuseIndex != 0);
+
                     int rx = rDir & 0x01;
                     int rz = (rDir >> 1) & 0x01;
                     int ry = (rDir >> 2) & 0x01;
@@ -109,44 +134,61 @@ namespace Transvoxel.SurfaceExtractor
                     int dy = pos.Y - ry;
                     int dz = pos.Z - rz;
 
-                    if (dx < 0 || dy < 0 || dz < 0)
+                    //Debug.Assert(dx >= 0 && dy >= 0 && dz >= 0);
+
+                  //  if (dx >= 0 && dy >= 0 && dz >= 0)
                     {
-                        GenerateCell(ref offsetPos, ref pos, mesh, lod, indexOffset, mappedIndizes, i, reuseIndex, v1, v0, t);
+                        ReuseCell cell = cache[dx, dy, dz];
+                        index = cell.Verts[reuseIndex];
                     }
-                    else
-                    {
-                        ushort index = cache.getReuseIndex(dx, dy, dz, reuseIndex);
-                        mapIndizes2Vertice(i, index, mappedIndizes, indexOffset);
-                    }
-                }
-                else 
+
+                   // outp += mesh.Vertices[index].ToString() + " ";
+				}
+
+                
+
+                if (index == -1)
                 {
-                    GenerateCell(ref offsetPos, ref pos, mesh, lod, indexOffset, mappedIndizes, i, reuseIndex, v1, v0, t);
+                    index = GenerateCell(ref offsetPos, ref pos, mesh, lod, t, ref v0, ref v1, ref d0, ref d1);
+                    Debug.Assert(index == mesh.VertexCount() - 1);
+
+                    Console.WriteLine(mesh.Vertices[index].ToString() + " "+outp);
+
+                    ReuseCell cell2 = cache[pos];
+                    cell2.Verts[reuseIndex] = index;
+
                 }
+
+                Debug.Assert(index >= 0 && index < 65535,"Ind = "+index);
+
+				mappedIndizes[i] = (ushort)index;
 			}
 
-			for (int i = 0; i < triangleCount; i++)
+			for (int t = 0; t < triangleCount; t++)
 			{
-				ushort i1 = mappedIndizes[i * 3 + 0];
-				ushort i2 = mappedIndizes[i * 3 + 1];
-				ushort i3 = mappedIndizes[i * 3 + 2];
-				mesh.AddIndex(i1);
-				mesh.AddIndex(i2);
-				mesh.AddIndex(i3);
+				for (int i = 0; i < 3; i++)
+				{
+					mesh.AddIndex(mappedIndizes[c.Indizes()[t*3+i]]);
+				}
 			}
 		}
 
-        private void GenerateCell(ref Vector3i offsetPos, ref Vector3i pos, Mesh mesh, int lod, byte[] indexOffset, ushort[] mappedIndizes, int i, byte reuseIndex, byte v1, byte v0, long t)
-        {
-            Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
-            Vector3f P0 = new Vector3f(iP0.X, iP0.Y, iP0.Z);
-            Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
-            Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
-            Vector3f Q = InterpolateVoxelVector(t, P0, P1);
-            mesh.AddVertex(Q);
-            mapIndizes2Vertice(i, (ushort)(mesh.VertexCount() - 1), mappedIndizes, indexOffset);
-            cache.setReuseIndex(pos.X, pos.Y, pos.Z, reuseIndex, (ushort)(mesh.VertexCount() - 1));
-        }
+		private ushort GenerateCell(ref Vector3i offsetPos, ref Vector3i pos, Mesh mesh, int lod, long t,ref byte v0, ref byte v1, ref sbyte d0, ref sbyte d1)
+		{
+			Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
+			Vector3f P0 = new Vector3f(iP0.X, iP0.Y, iP0.Z);
+			Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
+			Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
+
+		 //   EliminateLodPositionShift(lod, ref d0, ref d1, ref t, ref iP0, ref P0, ref iP1, ref P1);
+			
+			
+			Vector3f Q = InterpolateVoxelVector(t, P0, P1);
+
+			ushort ret = mesh.VertexCount();
+			mesh.AddVertex(Q);
+			return ret;
+		}
 
 		private void EliminateLodPositionShift(int lod, ref sbyte d0, ref sbyte d1, ref long t, ref Vector3i iP0, ref Vector3f P0, ref Vector3i iP1, ref Vector3f P1)
 		{
@@ -173,7 +215,7 @@ namespace Transvoxel.SurfaceExtractor
 			t = (d1 << 8) / (d1 - d0); // recalc
 		}
 
-		private static Cell getReuseCell(Cell[, ,] cells, int lod, byte rDir, Vector3i pos)
+		private static ReuseCell getReuseCell(ReuseCell[, ,] cells, int lod, byte rDir, Vector3i pos)
 		{
 			int rx = rDir & 0x01;
 			int rz = (rDir >> 1) & 0x01;
@@ -183,7 +225,7 @@ namespace Transvoxel.SurfaceExtractor
 			int dy = pos.Y / lod - ry;
 			int dz = pos.Z / lod - rz;
 
-			Cell ccc = cells[dx, dy, dz];
+			ReuseCell ccc = cells[dx, dy, dz];
 			return ccc;
 		}
 
@@ -191,8 +233,9 @@ namespace Transvoxel.SurfaceExtractor
 		{
 			long u = 0x0100 - t; //256 - t
 			float s = 1.0f / 256.0f;
-			Vector3f Q = P0 * t + P1 * u; //Density Interpolation
-			Q *= s; // shift to shader ! 
+			//Vector3f Q = P0 * t + P1 * u; //Density Interpolation
+			//Q *= s; // shift to shader ! 
+            Vector3f Q = P0 * 0.5f + P1 * 0.5f;
 			return Q;
 		}
 

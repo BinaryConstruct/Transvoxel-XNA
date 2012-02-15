@@ -16,7 +16,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
     {
         private readonly GraphicsDevice _gd;
         private ConcurrentDictionary<Vector3, Chunk> _chunks;
-        private ISurfaceExtractor _surfaceExtractor;
+        private TransvoxelExtractor _surfaceExtractor;
         private IVolumeData _volumeData;
         private Logger _logger;
         private string _logSend;
@@ -35,7 +35,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             _surfaceExtractor = new TransvoxelExtractor(_volumeData);
         }
 
-        public ISurfaceExtractor SurfaceExtractor
+        public TransvoxelExtractor SurfaceExtractor
         {
             get { return _surfaceExtractor; }
         }
@@ -57,6 +57,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                                                  Color.Red
                                              };
 
+
         public void ExtractMesh(OctreeNode n)
         {
             if (n == null)
@@ -69,8 +70,9 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             int lod = n.GetLevelOfDetail();
 
 
-            if ((dst >= 128 && lod == 3) || (dst < 128 && dst >= 64 && lod == 2) || (dst < 64 && lod == 1))
-            {
+            if (lod == 1)//(dst >= 128 && lod == 3) || (dst < 128 && dst >= 64 && lod == 2) || (dst < 64 && lod == 1))
+            {               
+
                 Vector3i position = n.GetPos();
                 Vector3 posXna = position.ToVector3();
 
@@ -94,13 +96,15 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
                     chunk.IndexBuffer.SetData(i);
 
+                    Console.WriteLine("Chunk has : " + v.Length + " Vertices " + i.Length + " Indices");
+
                     if (_chunks.ContainsKey(posXna))
                     {
                         Chunk removed;
                         _chunks.TryRemove(posXna, out removed);
                     }
                     _chunks.TryAdd(posXna, chunk);
-                }
+                }               
             }
             else 
             {

@@ -68,9 +68,9 @@ namespace Transvoxel.Geometry
             return arr;
         }
 
-        internal int VertexCount()
+        internal ushort VertexCount()
         {
-            return vertices.Count;
+            return (ushort)vertices.Count;
         }
     }
 }

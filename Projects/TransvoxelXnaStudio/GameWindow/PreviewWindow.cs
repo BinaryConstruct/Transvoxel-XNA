@@ -19,10 +19,15 @@ namespace TransvoxelXnaStudio.GameWindow
         public PreviewSettings()
         {
             ShowBoundingBoxes = true;
+            CullMode = CullMode.None;
+            FillMode = FillMode.Solid;
+            ReuseVert = true;
         }
 
-
         public bool ShowBoundingBoxes { get; set; }
+        public CullMode CullMode { get; set; }
+        public FillMode FillMode { get; set; }
+        public bool ReuseVert { get; set; }
     }
     public class PreviewWindow : GraphicsDeviceControl
     {
@@ -136,8 +141,10 @@ namespace TransvoxelXnaStudio.GameWindow
 
             GraphicsDevice.BlendState = BlendState.Opaque;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            var raster = GraphicsDevice.RasterizerState;
 
+
+            var raster = new RasterizerState { CullMode = Settings.CullMode, FillMode = Settings.FillMode };//GraphicsDevice.RasterizerState;
+            GraphicsDevice.RasterizerState = raster;
 
             foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
@@ -160,6 +167,8 @@ namespace TransvoxelXnaStudio.GameWindow
                             GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, chunk.VertexBuffer.VertexCount, 0, chunk.IndexBuffer.IndexCount / 3);
                         }
                     }
+
+                    //return;
                 }
             }
 

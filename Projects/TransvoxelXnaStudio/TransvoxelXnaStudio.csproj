@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{8231B99B-3CF1-42EA-9418-D6C66C8780A8}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TransvoxelXnaStudio</RootNamespace>
     <AssemblyName>TransvoxelXnaStudio</AssemblyName>

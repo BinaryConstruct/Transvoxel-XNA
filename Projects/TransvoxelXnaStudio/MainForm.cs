@@ -81,13 +81,15 @@ namespace TransvoxelXnaStudio
             toolStripProgressBar.Value = pct;
         }
 
-        int sizex = 50;
-        int sizey = 50;
-        int sizez = 50;
+        int sizex = 68;
+        int sizey = 68;
+        int sizez = 68;
 
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {
+            
+
             _logger.Log("MAIN", "Generating Volume Data...");
             Task.Factory.StartNew(
                 () =>
@@ -101,7 +103,10 @@ namespace TransvoxelXnaStudio
                             for (int k = 0; k <= sizez; k++)
                             {
                                 double div = 31.0;
-                                double val = (SimplexNoise.noise(i / div, j / div, k / div)) * 128.0;
+                                double val = (SimplexNoise.noise((i) / div, (j) / div, (k) / div)) * 128.0;
+
+                                val = -100;
+
                                 previewWindow1.TransvoxelManager.VolumeData[i,j,k] = (sbyte)val;
                             }
                         }
@@ -120,6 +125,8 @@ namespace TransvoxelXnaStudio
 
         private void extractMeshBtn_Click(object sender, EventArgs e)
         {
+            previewWindow1.TransvoxelManager.Chunks.Clear();
+            previewWindow1.TransvoxelManager.SurfaceExtractor.UseCache = previewWindow1.Settings.ReuseVert;
             _logger.Log("MAIN", "Extracting Mesh...");
             Task.Factory.StartNew(
                 () =>
