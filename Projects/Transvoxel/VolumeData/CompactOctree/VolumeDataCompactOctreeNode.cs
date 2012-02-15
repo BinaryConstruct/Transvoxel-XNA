@@ -54,7 +54,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             int x = xcoord & mask;
             int y = ycoord & mask;
             int z = zcoord & mask;
-            return new Vector3i(x*2,y*2,z*2);
+            return new Vector3i(x,y,z);
         }
 
         public int Size()

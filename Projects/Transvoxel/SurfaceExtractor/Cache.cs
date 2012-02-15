@@ -18,16 +18,20 @@ namespace Transvoxel.SurfaceExtractor
     }
     internal class RegularCellCache
     {
-        private readonly ReuseCell[] _cache;
+        private readonly ReuseCell[][] _cache;
 
         public RegularCellCache()
         {
-            const int cacheSize = /*2*/ VolumeChunk.CHUNKSIZE * VolumeChunk.CHUNKSIZE * VolumeChunk.CHUNKSIZE;
-            _cache = new ReuseCell[cacheSize];
+            const int cacheSize = VolumeChunk.CHUNKSIZE * VolumeChunk.CHUNKSIZE;
+            _cache = new ReuseCell[2][];
+
+            _cache[0] = new ReuseCell[cacheSize];
+            _cache[1] = new ReuseCell[cacheSize];
 
             for (int i = 0; i < cacheSize; i++)
             {
-                _cache[i] = new ReuseCell(4);
+                _cache[0][i] = new ReuseCell(4);
+                _cache[1][i] = new ReuseCell(4);
             }
         }
 
@@ -36,12 +40,12 @@ namespace Transvoxel.SurfaceExtractor
             get
             {
                 Debug.Assert(x >= 0 && y >= 0 && z >= 0);
-                return _cache[(x)/*&1)*/* VolumeChunk.CHUNKSIZE * VolumeChunk.CHUNKSIZE+y*VolumeChunk.CHUNKSIZE+z];
+                return _cache[x&1][y*VolumeChunk.CHUNKSIZE+z];
             }
             set
             {
                 Debug.Assert(x >= 0 && y >= 0 && z >= 0);
-                _cache[(x/* & 1*/) * VolumeChunk.CHUNKSIZE * VolumeChunk.CHUNKSIZE + y * VolumeChunk.CHUNKSIZE + z] = value;
+                _cache[x & 1][y * VolumeChunk.CHUNKSIZE + z] = value;
             }
         }
 

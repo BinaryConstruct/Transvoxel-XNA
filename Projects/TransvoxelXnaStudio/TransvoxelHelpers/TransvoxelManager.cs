@@ -58,8 +58,11 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                                              };
 
 
+    //    int cnt = 0;
+
         public void ExtractMesh(OctreeNode n)
         {
+
             if (n == null)
                 return;
 
@@ -71,7 +74,10 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
 
             if (lod == 1)//(dst >= 128 && lod == 3) || (dst < 128 && dst >= 64 && lod == 2) || (dst < 64 && lod == 1))
-            {               
+            {
+    //            cnt++;
+    //            if (cnt < 18 || cnt > 18)
+     //               return;
 
                 Vector3i position = n.GetPos();
                 Vector3 posXna = position.ToVector3();

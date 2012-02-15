@@ -105,7 +105,7 @@ namespace TransvoxelXnaStudio
                                 double div = 31.0;
                                 double val = (SimplexNoise.noise((i) / div, (j) / div, (k) / div)) * 128.0;
 
-                                val = -100;
+                                //val = -100;
 
                                 previewWindow1.TransvoxelManager.VolumeData[i,j,k] = (sbyte)val;
                             }

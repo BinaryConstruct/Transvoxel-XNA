@@ -35,7 +35,7 @@ namespace Transvoxel.SurfaceExtractor
 			Mesh mesh = new Mesh();
 			int lod = 1 << (node.GetLevelOfDetail()-1);
 
-            cache = new RegularCellCache(); //delete me??
+           // cache = new RegularCellCache(); //delete me??
 
 			for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
 			{
@@ -66,11 +66,8 @@ namespace Transvoxel.SurfaceExtractor
 
 		internal void PolygonizeCell(Vector3i offsetPos,Vector3i pos, ref Mesh mesh,int lod)
 		{
-            Debug.Assert(lod >= 1);
-
+            Debug.Assert(lod >= 1,"Level of Detail must be greater than 1");
 			offsetPos += pos * lod;
-
-
 
 			byte directionMask = (byte)((pos.X > 0 ? 1 : 0) | ((pos.Z > 0 ? 1 : 0) << 1) | ((pos.Y > 0 ? 1 : 0) << 2));
 
@@ -87,6 +84,9 @@ namespace Transvoxel.SurfaceExtractor
 			if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
 				return;
 
+       //     if (caseCode == 0 || caseCode == 255) //for this cases there is no triangulation
+       //        return;
+
 			byte regularCellClass = Tables.RegularCellClass[caseCode];
 			ushort[] vertexLocations = Tables.RegularVertexData[caseCode];
 
@@ -96,10 +96,10 @@ namespace Transvoxel.SurfaceExtractor
 			byte[] indexOffset = c.Indizes(); //index offsets for current cell
 			ushort[] mappedIndizes = new ushort[indexOffset.Length]; //array with real indizes for current cell
 
-            for (int asdf = 0; asdf < mappedIndizes.Length;asdf++ )
+     /*       for (int asdf = 0; asdf < mappedIndizes.Length;asdf++ )
             {
                 mappedIndizes[asdf] = 65535;
-            }
+            } */
 
 			for (int i = 0; i < vertexCount; i++)
 			{
@@ -117,10 +117,7 @@ namespace Transvoxel.SurfaceExtractor
 
 				long t = (d1 << 8) / (d1 - d0);
 
-               // int ind = -1;
                 int index = -1;
-
-                string outp = "";
 
 				if (UseCache && v1 != 7 && (rDir & directionMask) == rDir) 
 				{
@@ -134,34 +131,27 @@ namespace Transvoxel.SurfaceExtractor
                     int dy = pos.Y - ry;
                     int dz = pos.Z - rz;
 
-                    //Debug.Assert(dx >= 0 && dy >= 0 && dz >= 0);
-
-                  //  if (dx >= 0 && dy >= 0 && dz >= 0)
+                    if (dx >= 0 && dy >= 0 && dz >= 0)
                     {
                         ReuseCell cell = cache[dx, dy, dz];
                         index = cell.Verts[reuseIndex];
                     }
-
-                   // outp += mesh.Vertices[index].ToString() + " ";
 				}
-
-                
 
                 if (index == -1)
                 {
-                    index = GenerateCell(ref offsetPos, ref pos, mesh, lod, t, ref v0, ref v1, ref d0, ref d1);
-                    Debug.Assert(index == mesh.VertexCount() - 1);
-
-                    Console.WriteLine(mesh.Vertices[index].ToString() + " "+outp);
-
-                    ReuseCell cell2 = cache[pos];
-                    cell2.Verts[reuseIndex] = index;
-
+                    GenerateVertex(ref offsetPos, ref pos, mesh, lod, t, ref v0, ref v1, ref d0, ref d1);
+                    index = mesh.LatestAddedVertIndex();
                 }
 
                 Debug.Assert(index >= 0 && index < 65535,"Ind = "+index);
 
-				mappedIndizes[i] = (ushort)index;
+                if ((rDir & 8) != 0)
+                {
+                    cache[pos].Verts[reuseIndex] = mesh.LatestAddedVertIndex();
+                }
+
+                mappedIndizes[i] = (ushort)index;
 			}
 
 			for (int t = 0; t < triangleCount; t++)
@@ -173,7 +163,7 @@ namespace Transvoxel.SurfaceExtractor
 			}
 		}
 
-		private ushort GenerateCell(ref Vector3i offsetPos, ref Vector3i pos, Mesh mesh, int lod, long t,ref byte v0, ref byte v1, ref sbyte d0, ref sbyte d1)
+		private void GenerateVertex(ref Vector3i offsetPos, ref Vector3i pos, Mesh mesh, int lod, long t,ref byte v0, ref byte v1, ref sbyte d0, ref sbyte d1)
 		{
 			Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
 			Vector3f P0 = new Vector3f(iP0.X, iP0.Y, iP0.Z);
@@ -185,9 +175,7 @@ namespace Transvoxel.SurfaceExtractor
 			
 			Vector3f Q = InterpolateVoxelVector(t, P0, P1);
 
-			ushort ret = mesh.VertexCount();
 			mesh.AddVertex(Q);
-			return ret;
 		}
 
 		private void EliminateLodPositionShift(int lod, ref sbyte d0, ref sbyte d1, ref long t, ref Vector3i iP0, ref Vector3f P0, ref Vector3i iP1, ref Vector3f P1)
@@ -233,9 +221,9 @@ namespace Transvoxel.SurfaceExtractor
 		{
 			long u = 0x0100 - t; //256 - t
 			float s = 1.0f / 256.0f;
-			//Vector3f Q = P0 * t + P1 * u; //Density Interpolation
-			//Q *= s; // shift to shader ! 
-            Vector3f Q = P0 * 0.5f + P1 * 0.5f;
+			Vector3f Q = P0 * t + P1 * u; //Density Interpolation
+			Q *= s; // shift to shader ! 
+            //Vector3f Q = P0 * 0.5f + P1 * 0.5f;
 			return Q;
 		}
 
