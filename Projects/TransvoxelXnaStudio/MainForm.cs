@@ -81,26 +81,23 @@ namespace TransvoxelXnaStudio
             toolStripProgressBar.Value = pct;
         }
 
-        int sizex = 68;
-        int sizey = 68;
-        int sizez = 68;
 
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {
+            int size = previewWindow1.Settings.VolumeSize;
             
-
             _logger.Log("MAIN", "Generating Volume Data...");
             Task.Factory.StartNew(
                 () =>
                 {
-                    for (int i = 0; i <= sizex; i++)
+                    for (int i = 0; i <= size; i++)
                     {
-                        _logger.Log("MAIN", i+"/"+sizex);
-                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)sizex) * 100.0f), "Generating Volume Data..."));
-                        for (int j = 0; j <= sizey; j++)
+                        _logger.Log("MAIN", i+"/"+size);
+                        OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)size) * 100.0f), "Generating Volume Data..."));
+                        for (int j = 0; j <= size; j++)
                         {
-                            for (int k = 0; k <= sizez; k++)
+                            for (int k = 0; k <= size; k++)
                             {
                                 double div = 31.0;
                                 double val = (SimplexNoise.noise((i) / div, (j) / div, (k) / div)) * 128.0;

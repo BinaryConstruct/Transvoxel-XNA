@@ -22,12 +22,14 @@ namespace TransvoxelXnaStudio.GameWindow
             CullMode = CullMode.None;
             FillMode = FillMode.Solid;
             ReuseVert = true;
+            VolumeSize = 64;
         }
 
         public bool ShowBoundingBoxes { get; set; }
         public CullMode CullMode { get; set; }
         public FillMode FillMode { get; set; }
         public bool ReuseVert { get; set; }
+        public int VolumeSize { get; set; }
     }
     public class PreviewWindow : GraphicsDeviceControl
     {

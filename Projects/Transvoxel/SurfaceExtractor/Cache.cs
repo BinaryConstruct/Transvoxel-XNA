@@ -35,13 +35,23 @@ namespace Transvoxel.SurfaceExtractor
             }
         }
 
+        public ReuseCell GetReusedIndex(Vector3i pos, byte rDir)
+        {
+            int rx = rDir & 0x01;
+            int rz = (rDir >> 1) & 0x01;
+            int ry = (rDir >> 2) & 0x01;
+
+            int dx = pos.X - rx;
+            int dy = pos.Y - ry;
+            int dz = pos.Z - rz;
+
+            Debug.Assert(dx >= 0 && dy >= 0 && dz >= 0);
+            return _cache[dx & 1][dy * VolumeChunk.CHUNKSIZE + dz];
+        }
+
+
         public ReuseCell this[int x, int y, int z]
         {
-            get
-            {
-                Debug.Assert(x >= 0 && y >= 0 && z >= 0);
-                return _cache[x&1][y*VolumeChunk.CHUNKSIZE+z];
-            }
             set
             {
                 Debug.Assert(x >= 0 && y >= 0 && z >= 0);
@@ -51,10 +61,14 @@ namespace Transvoxel.SurfaceExtractor
 
         public ReuseCell this[Vector3i v]
         {
-            get { return this[v.X, v.Y, v.Z]; }
             set { this[v.X, v.Y, v.Z] = value; }
         }
-        
+
+
+        internal void SetReusableIndex(Vector3i pos, byte reuseIndex, ushort p)
+        {
+            _cache[pos.X & 1][pos.Y * VolumeChunk.CHUNKSIZE + pos.Z].Verts[reuseIndex] = p;
+        }
     }
 
     internal class TransitionCache

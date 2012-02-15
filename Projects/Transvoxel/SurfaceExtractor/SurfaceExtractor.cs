@@ -122,20 +122,8 @@ namespace Transvoxel.SurfaceExtractor
 				if (UseCache && v1 != 7 && (rDir & directionMask) == rDir) 
 				{
                     Debug.Assert(reuseIndex != 0);
-
-                    int rx = rDir & 0x01;
-                    int rz = (rDir >> 1) & 0x01;
-                    int ry = (rDir >> 2) & 0x01;
-
-                    int dx = pos.X - rx;
-                    int dy = pos.Y - ry;
-                    int dz = pos.Z - rz;
-
-                    if (dx >= 0 && dy >= 0 && dz >= 0)
-                    {
-                        ReuseCell cell = cache[dx, dy, dz];
-                        index = cell.Verts[reuseIndex];
-                    }
+                    ReuseCell cell = cache.GetReusedIndex(pos,rDir);
+                    index = cell.Verts[reuseIndex];
 				}
 
                 if (index == -1)
@@ -144,11 +132,9 @@ namespace Transvoxel.SurfaceExtractor
                     index = mesh.LatestAddedVertIndex();
                 }
 
-                Debug.Assert(index >= 0 && index < 65535,"Ind = "+index);
-
                 if ((rDir & 8) != 0)
                 {
-                    cache[pos].Verts[reuseIndex] = mesh.LatestAddedVertIndex();
+                    cache.SetReusableIndex(pos,reuseIndex,mesh.LatestAddedVertIndex());
                 }
 
                 mappedIndizes[i] = (ushort)index;
@@ -170,7 +156,7 @@ namespace Transvoxel.SurfaceExtractor
 			Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
 			Vector3f P1 = new Vector3f(iP1.X, iP1.Y, iP1.Z);
 
-		 //   EliminateLodPositionShift(lod, ref d0, ref d1, ref t, ref iP0, ref P0, ref iP1, ref P1);
+		    EliminateLodPositionShift(lod, ref d0, ref d1, ref t, ref iP0, ref P0, ref iP1, ref P1);
 			
 			
 			Vector3f Q = InterpolateVoxelVector(t, P0, P1);
@@ -180,6 +166,8 @@ namespace Transvoxel.SurfaceExtractor
 
 		private void EliminateLodPositionShift(int lod, ref sbyte d0, ref sbyte d1, ref long t, ref Vector3i iP0, ref Vector3f P0, ref Vector3i iP1, ref Vector3f P1)
 		{
+            
+
 			for (int k = 0; k < lod - 1; k++)
 			{
 				Vector3f vm = (P0 + P1) / 2.0f;
@@ -200,6 +188,8 @@ namespace Transvoxel.SurfaceExtractor
 				}
 			}
 
+            if (d1 == d0) // ?????????????
+                return;
 			t = (d1 << 8) / (d1 - d0); // recalc
 		}
 
