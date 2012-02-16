@@ -15,13 +15,15 @@ namespace Transvoxel.Geometry
 
     public class Mesh
     {
-        List<ushort> indices;
-        List<Vector3f> vertices;
+        private List<ushort> indices;
+        private List<Vector3f> vertices;
+        private List<Vector3f> normals; 
 
         public Mesh()
         {
             indices = new List<ushort>();
             vertices = new List<Vector3f>();
+            normals = new List<Vector3f>();
         }
 
         public void AddIndex(ushort i)
@@ -29,9 +31,10 @@ namespace Transvoxel.Geometry
             indices.Add(i);
         }
 
-        public void AddVertex(Vector3f v)
+        public void AddVertex(Vector3f v, Vector3f normal)
         {
-            vertices.Add(v);   
+            vertices.Add(v);
+            normals.Add(normal);
         }
 
         public ushort[] GetIndices()
@@ -44,9 +47,19 @@ namespace Transvoxel.Geometry
             return vertices.ToArray();
         }
 
+        public Vector3f[] GetNormals()
+        {
+            return normals.ToArray();
+        }
+
         public List<Vector3f> Vertices
         {
             get { return vertices; }
+        }
+
+        public List<Vector3f> Normals
+        {
+            get { return normals; }
         }
 
         public List<ushort> Indices

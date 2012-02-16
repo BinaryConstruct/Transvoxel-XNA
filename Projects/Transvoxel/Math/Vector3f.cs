@@ -149,8 +149,8 @@ namespace Transvoxel.Math
         }
         public static Vector3f Normalize(Vector3f v)
         {
-            if (v.MagnitudeSquare == 0)
-                throw new DivideByZeroException("Normalize_0");
+            if (System.Math.Abs(v.MagnitudeSquare - 0) < float.Epsilon)
+                return v;
 
 
             float inverse = 1 / v.Magnitude;
