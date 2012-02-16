@@ -73,7 +73,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             int lod = n.GetLevelOfDetail();
 
 
-            if ((dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
+            if ((dst >= 512 && lod == 3) || ( dst >= 128 && lod == 2) || (lod == 1))
             {
     //            cnt++;
     //            if (cnt < 18 || cnt > 18)

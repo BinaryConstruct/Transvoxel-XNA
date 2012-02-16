@@ -78,13 +78,23 @@ namespace Transvoxel.SurfaceExtractor
                 density[i] = volume[offsetPos + Tables.CornerIndex[i] * lod];
             }
 
+
             byte caseCode = getCaseCode(density);
 
 
             if ((caseCode ^ ((density[7] >> 7) & 0xFF)) == 0) //for this cases there is no triangulation
                 return;
 
-
+            Vector3f[] cornerNormals = new Vector3f[8];
+            for (int i = 0; i < 8; i++)
+            {
+                var p = offsetPos + Tables.CornerIndex[i] * lod;
+                float nx = (volume[p + Vector3i.UnitX] - volume[p - Vector3i.UnitX]) * 0.5f;
+                float ny = (volume[p + Vector3i.UnitY] - volume[p - Vector3i.UnitY]) * 0.5f;
+                float nz = (volume[p + Vector3i.UnitZ] - volume[p - Vector3i.UnitZ]) * 0.5f;
+                cornerNormals[i] = new Vector3f(nx, ny, nz);
+                cornerNormals[i].Normalize();
+            }
 
             //     if (caseCode == 0 || caseCode == 255) //for this cases there is no triangulation
             //        return;
@@ -103,16 +113,7 @@ namespace Transvoxel.SurfaceExtractor
                        mappedIndizes[asdf] = 65535;
                    } */
 
-            Vector3f[] cornerNormals = new Vector3f[8];
-            for (int i = 0; i < 8; i++)
-            {
-                var p = offsetPos + Tables.CornerIndex[i] * lod;
-                float nx = (volume[p + Vector3i.UnitX] - volume[p - Vector3i.UnitX]) * 0.5f;
-                float ny = (volume[p + Vector3i.UnitY] - volume[p - Vector3i.UnitY]) * 0.5f;
-                float nz = (volume[p + Vector3i.UnitZ] - volume[p - Vector3i.UnitZ]) * 0.5f;
-                cornerNormals[i] = new Vector3f(nx, ny, nz);
-                cornerNormals[i].Normalize();
-            }
+
 
             for (int i = 0; i < vertexCount; i++)
             {
