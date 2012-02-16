@@ -242,6 +242,7 @@ namespace TransvoxelXnaStudio.Host
                 {
                     graphicsDeviceService.ResetDevice(ClientSize.Width,
                                                       ClientSize.Height);
+                    graphicsDeviceService.GraphicsDevice.Viewport = new Viewport(0, 0, ClientSize.Width, ClientSize.Height);
                 }
                 catch (Exception e)
                 {
@@ -252,6 +253,12 @@ namespace TransvoxelXnaStudio.Host
             return null;
         }
 
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            if (graphicsDeviceService != null && graphicsDeviceService.GraphicsDevice != null)
+                graphicsDeviceService.GraphicsDevice.Reset();
+        }
 
         /// <summary>
         /// If we do not have a valid graphics device (for instance if the device
