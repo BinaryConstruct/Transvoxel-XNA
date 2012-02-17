@@ -72,7 +72,12 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             int lod = n.GetLevelOfDetail();
 
+<<<<<<< HEAD
             if (lod == 1)//(dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
+=======
+
+            if ((dst >= 512 && lod == 3) || ( dst >= 128 && lod == 2) || (lod == 1))
+>>>>>>> 0c146ca9f2469427b35365423e0b1a2bbc952e7a
             {
                 //            cnt++;
                 //            if (cnt < 18 || cnt > 18)
@@ -113,11 +118,11 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             }
             else
             {
-                n.Foreach(ExtractMesh);
-                /*for (int i = 0; i < 8; i++)
+
+                for (int i = 0; i < 8; i++)
                 {
                     ExtractMesh(n.GetChilds()[i]);
-                }*/
+                }
             }
         }
     }

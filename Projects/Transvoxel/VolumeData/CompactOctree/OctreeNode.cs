@@ -49,7 +49,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         
 
-        internal OctreeNode<T> Get(int x, int y, int z, int minlevel = 32-VolumeChunk.CHUNKBITS)
+        internal OctreeNode<T> Get(int x, int y, int z, int minlevel)
         {
             if (GetLevel() == minlevel)
                 return this;
@@ -71,10 +71,10 @@ namespace Transvoxel.VolumeData.CompactOctree
             if (!HasChilds() || nodes[bitIndex] == null)
                 return null;
 
-            return nodes[bitIndex].Get(x,y,z);
+            return nodes[bitIndex].Get(x,y,z,minlevel);
         }
 
-        internal T Set(int x, int y, int z, int minlevel=32-VolumeChunk.CHUNKBITS)
+        internal T Set(int x, int y, int z, int minlevel)
         {
             
 
@@ -106,7 +106,7 @@ namespace Transvoxel.VolumeData.CompactOctree
                  //   if (n.GetLevel() == minlevel)
                  //       return n.value;
 
-                    return n.Set(x, y, z);
+                    return n.Set(x, y, z,minlevel);
                 }
             }
             else
@@ -230,6 +230,18 @@ namespace Transvoxel.VolumeData.CompactOctree
         public OctreeNode<T>[] GetChilds()
         {
             return nodes;
+        }
+
+        public delegate void foreachmeth(OctreeNode<T> n);
+        public void Foreach(foreachmeth meth)
+        {
+            if (HasChilds())
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    meth(GetChilds()[i]);
+                }
+            }
         }
     }
 }

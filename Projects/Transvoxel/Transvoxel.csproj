@@ -70,9 +70,12 @@
     <None Include="SurfaceExtractor\ported\TransvoxelManager.cs" />
     <None Include="SurfaceExtractor\ported\Vertex.cs" />
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
-    <Compile Include="VolumeData\CompactOctree\VolumeChunk.cs" />
+    <Compile Include="VolumeData\CompactOctree\OctreeIterator.cs" />
+    <Compile Include="VolumeData\CompactOctree\VolumeChunk.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctree.cs" />
-    <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctreeNode.cs" />
+    <Compile Include="VolumeData\CompactOctree\OctreeNode.cs" />
     <Compile Include="VolumeData\IVolumeData.cs" />
   </ItemGroup>
   <ItemGroup>
