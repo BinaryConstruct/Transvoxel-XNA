@@ -13,8 +13,7 @@ namespace Transvoxel.SurfaceExtractor
 {
 	public interface ISurfaceExtractor
 	{
-		Mesh GenLodCell(OctreeNode<VolumeChunk> n);
-		int ChunkSize { get; }
+		Mesh GenLodCell(OctreeNode<sbyte> n);
 	}
 
 	public class TransvoxelExtractor : ISurfaceExtractor
@@ -26,25 +25,25 @@ namespace Transvoxel.SurfaceExtractor
 		public TransvoxelExtractor(IVolumeData data)
 		{
 			volume = data;
-			cache = new RegularCellCache();
+			cache = new RegularCellCache(volume.ChunkSize*10);
 			UseCache = true;
 		}
 
-		public Mesh GenLodCell(OctreeNode<VolumeChunk> node)
+		public Mesh GenLodCell(OctreeNode<sbyte> node)
 		{
 			Mesh mesh = new Mesh();
-			int lod = 1 << (node.GetLevelOfDetail() - 1);
+			int lod = 1 << (node.GetLod()-volume.ChunkBits);
 
-			for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
+			for (int x = 0; x < volume.ChunkSize; x++)
 			{
-				for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
+				for (int y = 0; y < volume.ChunkSize; y++)
 				{
-					for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
+					for (int z = 0; z < volume.ChunkSize; z++)
 					{
-                        Vector3i position; //new Vector3i(x, y, z);
-                        position.X = x;
-                        position.Y = y;
-                        position.Z = z;
+						Vector3i position; //new Vector3i(x, y, z);
+						position.X = x;
+						position.Y = y;
+						position.Z = z;
 						PolygonizeCell(node.GetPos(), position, ref mesh, lod);
 					}
 				}
@@ -80,9 +79,9 @@ namespace Transvoxel.SurfaceExtractor
 				float nz = (volume[p + Vector3i.UnitZ] - volume[p - Vector3i.UnitZ]) * 0.5f;
 				//cornerNormals[i] = new Vector3f(nx, ny, nz);
 
-                cornerNormals[i].X = nx;
-                cornerNormals[i].Y = ny;
-                cornerNormals[i].Z = nz;
+				cornerNormals[i].X = nx;
+				cornerNormals[i].Y = ny;
+				cornerNormals[i].Z = nz;
 				cornerNormals[i].Normalize();
 			}
 
@@ -128,7 +127,7 @@ namespace Transvoxel.SurfaceExtractor
 
 				if (index == -1)
 				{
-                    Vector3f normal = cornerNormals[v0] * t0 + cornerNormals[v1] * t1;
+					Vector3f normal = cornerNormals[v0] * t0 + cornerNormals[v1] * t1;
 					GenerateVertex(ref offsetPos, ref pos, mesh, lod, t, ref v0, ref v1, ref d0, ref d1, normal);
 					index = mesh.LatestAddedVertIndex();
 				}
@@ -154,17 +153,17 @@ namespace Transvoxel.SurfaceExtractor
 		{
 			Vector3i iP0 = (offsetPos + Tables.CornerIndex[v0] * lod);
 			Vector3f P0;// = new Vector3f(iP0.X, iP0.Y, iP0.Z);
-            P0.X = iP0.X;
-            P0.Y = iP0.Y;
-            P0.Z = iP0.Z;
+			P0.X = iP0.X;
+			P0.Y = iP0.Y;
+			P0.Z = iP0.Z;
 
 			Vector3i iP1 = (offsetPos + Tables.CornerIndex[v1] * lod);
 			Vector3f P1;// = new Vector3f(iP1.X, iP1.Y, iP1.Z);
-            P1.X = iP1.X;
-            P1.Y = iP1.Y;
-            P1.Z = iP1.Z;
+			P1.X = iP1.X;
+			P1.Y = iP1.Y;
+			P1.Z = iP1.Z;
 
-			EliminateLodPositionShift(lod, ref d0, ref d1, ref t, ref iP0, ref P0, ref iP1, ref P1);
+			//EliminateLodPositionShift(lod, ref d0, ref d1, ref t, ref iP0, ref P0, ref iP1, ref P1);
 
 
 			Vector3f Q = InterpolateVoxelVector(t, P0, P1);
@@ -246,11 +245,6 @@ namespace Transvoxel.SurfaceExtractor
 			}
 
 			return code;
-		}
-
-		public int ChunkSize
-		{
-			get { return volume.ChunkSize; }
 		}
 	}
 }

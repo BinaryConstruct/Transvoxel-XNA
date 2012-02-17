@@ -9,6 +9,7 @@ using Transvoxel.VolumeData;
 using System.Linq;
 using Transvoxel.VolumeData.CompactOctree;
 using System.Diagnostics;
+using System.Threading;
 
 namespace TransvoxelXnaStudio.TransvoxelHelpers
 {
@@ -48,21 +49,19 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
         public ConcurrentDictionary<Vector3, Chunk> Chunks
         {
             get { return _chunks; }
+            set { _chunks = value; }
         }
 
         public static Color[] LodColors = new Color[]
-                                             {
-                                                 Color.Green,
-                                                 Color.Yellow,
-                                                 Color.Red
-                                             };
-
-
-    //    int cnt = 0;
-
-        public void ExtractMesh(OctreeNode<VolumeChunk> n)
         {
+            Color.Green,
+            Color.Yellow,
+            Color.Red,
+            Color.AliceBlue,
+        };
 
+        public void ExtractMesh(OctreeNode<sbyte> n)
+        {
             if (n == null)
                 return;
 
@@ -70,9 +69,9 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             float dst = (float)Math.Sqrt(center.X * center.X + center.Y * center.Y + center.Z * center.Z);
 
-            int lod = n.GetLevelOfDetail();
+            int lod = n.GetLod()-_volumeData.ChunkBits;
 
-            if (lod == 1)//(dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
+            if ((dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
             {
                 //            cnt++;
                 //            if (cnt < 18 || cnt > 18)
@@ -81,10 +80,10 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 Vector3i position = n.GetPos();
                 Vector3 posXna = position.ToVector3();
 
-                Logger.GetLogger().Log(null, "" + dst);
+                //Logger.GetLogger().Log(null, "" + dst);
 
                 var m = _surfaceExtractor.GenLodCell(n);
-                var v = Converters.ConvertMeshToXna(m, LodColors[lod - 1]);
+                var v = Converters.ConvertMeshToXna(m, LodColors[0]);
                 var i = m.GetIndices();
 
                 var chunk = new Chunk
@@ -94,7 +93,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     Lod = lod
                 };
 
-                if (i.Length > 0)
+                if (i.Length > 0 && v.Length > 0)
                 {
                     chunk.VertexBuffer = new VertexBuffer(_gd, typeof(VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
                     chunk.VertexBuffer.SetData(v);
@@ -110,6 +109,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     }
                     _chunks.TryAdd(posXna, chunk);
                 }
+                    
             }
             else
             {
@@ -119,6 +119,8 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     ExtractMesh(n.GetChilds()[i]);
                 }*/
             }
+
+
         }
     }
 }

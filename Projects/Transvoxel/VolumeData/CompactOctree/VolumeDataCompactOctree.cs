@@ -8,23 +8,31 @@ namespace Transvoxel.VolumeData.CompactOctree
 {
     public class CompactOctree : IVolumeData
     {
-        private readonly OctreeIterator<VolumeChunk> iterator;
-        private readonly OctreeNode<VolumeChunk> _head;
+        private int chunkbits = 4;
+        private readonly OctreeIterator<sbyte> iterator;
+        private readonly OctreeNode<sbyte> _head;
 
         public CompactOctree()
         {
-            _head = new OctreeNode<VolumeChunk>(null, 0, 0, 0);
-            iterator = new OctreeIterator<VolumeChunk>(_head);
+            _head = new OctreeNode<sbyte>(null, 0, 0, 0);
+            iterator = new OctreeIterator<sbyte>(_head);
         }
 
-        public OctreeNode<VolumeChunk> Head()
+        public OctreeNode<sbyte> Head()
         {
             return _head;
         }
 
         public int ChunkSize
         {
-            get { return VolumeChunk.CHUNKSIZE; }
+            get { return 1<<chunkbits; }
+            set { chunkbits = (int)System.Math.Log(value, 2); }
+        }
+
+        public int ChunkBits
+        {
+            get { return chunkbits; }
+            set { chunkbits = value; }
         }
 
         // Very expensive method, has to traverse the complete octree
@@ -32,15 +40,12 @@ namespace Transvoxel.VolumeData.CompactOctree
         {
             get
             {
-                OctreeNode<VolumeChunk> n = _head.Get(x, y, z,32-VolumeChunk.CHUNKBITS);
-                if (n == null || n.value == null)
-                    return (sbyte)0;
-                return n.value[x,y,z];
+                return _head.GetValue((short)x, (short)y, (short)z, 32);
             }
 
             set
             {
-                _head.Set(x, y, z, 32 - VolumeChunk.CHUNKBITS)[x, y, z] = value;
+                _head.Set((short)x, (short)y, (short)z, value, 32);
             }
         }
 

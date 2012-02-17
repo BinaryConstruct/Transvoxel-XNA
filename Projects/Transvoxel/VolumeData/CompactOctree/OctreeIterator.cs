@@ -13,8 +13,8 @@ namespace Transvoxel.VolumeData.CompactOctree
         //last access
         private OctreeNode<T> node;
         private Vector3i pos;
-        
-        private int minlevel = 32 - VolumeChunk.CHUNKBITS;
+
+        private int minlevel = 32;// - VolumeChunk.CHUNKBITS;
 
         public enum Axis
         { 
@@ -35,15 +35,15 @@ namespace Transvoxel.VolumeData.CompactOctree
 
         public T GetValue()
         {
-            return node.value;
+            return node.GetValue();
         }
 
-        public void DirectAdressing(int x,int y,int z)
+        public void DirectAdressing(short x, short y, short z)
         {
             node = head.Get(x, y, z, minlevel);
         }
 
-        public void IncrementOne(Axis axis)
+    /*    public void IncrementOne(Axis axis)
         {
             int w = node.GetPos()[(int)axis];
             int k = 0;
@@ -57,7 +57,7 @@ namespace Transvoxel.VolumeData.CompactOctree
 
             for (int i = 0; i < k / 2; i++)
             {
-                node = node.parent;
+                node = node.GetParent();
             }
 
             if(axis == Axis.X)
@@ -66,6 +66,6 @@ namespace Transvoxel.VolumeData.CompactOctree
                 node = node.Get(node.GetPos().X, w+1, node.GetPos().Z, minlevel);
             else if(axis == Axis.Z)
                 node = node.Get(node.GetPos().X, node.GetPos().Y, w+1, minlevel);
-        }
+        }*/
     }
 }

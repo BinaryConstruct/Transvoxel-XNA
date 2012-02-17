@@ -66,8 +66,8 @@ namespace ConsoleFunctionalTest
 
 
             Console.WriteLine("Read: " + watch.ElapsedMilliseconds);
-/*
-            for (int x = 0; x < 17; x++)
+
+          /*  for (int x = 0; x < 17; x++)
             {
                 for (int y = 0; y < 16; y++)
                 {
@@ -78,7 +78,7 @@ namespace ConsoleFunctionalTest
                 }
             }
 
-            for (int x = 0; x < 16; x++)
+            for (int x = 0; x < 17; x++)
             {
                 for (int y = 0; y < 16; y++)
                 {
@@ -89,16 +89,16 @@ namespace ConsoleFunctionalTest
                             fail++;
                     }
                 }
-            }*/
+            }
+            */
 
-
-     //       octree[0, 0, 0] = 1;
-     //       octree[0, 0, 0] = 1;
+       //     octree[0, 0, 0] = 1;
+       //     octree[0, 100, 0] = 1;
             
 
      //       Console.WriteLine(octree[0, -3, 0]);
 
-            Console.WriteLine(octree.ToString());
+      //      Console.WriteLine(octree.ToString());
             Console.WriteLine(fail);
             Console.ReadLine();
         }

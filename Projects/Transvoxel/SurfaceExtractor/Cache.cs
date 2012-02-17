@@ -19,16 +19,17 @@ namespace Transvoxel.SurfaceExtractor
     internal class RegularCellCache
     {
         private readonly ReuseCell[][] _cache;
+        private int chunkSize;
 
-        public RegularCellCache()
+        public RegularCellCache(int chunksize)
         {
-            const int cacheSize = VolumeChunk.CHUNKSIZE * VolumeChunk.CHUNKSIZE;
+            this.chunkSize = chunksize;
             _cache = new ReuseCell[2][];
 
-            _cache[0] = new ReuseCell[cacheSize];
-            _cache[1] = new ReuseCell[cacheSize];
+            _cache[0] = new ReuseCell[chunkSize * chunkSize];
+            _cache[1] = new ReuseCell[chunkSize * chunkSize];
 
-            for (int i = 0; i < cacheSize; i++)
+            for (int i = 0; i < chunkSize * chunkSize; i++)
             {
                 _cache[0][i] = new ReuseCell(4);
                 _cache[1][i] = new ReuseCell(4);
@@ -46,7 +47,7 @@ namespace Transvoxel.SurfaceExtractor
             int dz = pos.Z - rz;
 
             Debug.Assert(dx >= 0 && dy >= 0 && dz >= 0);
-            return _cache[dx & 1][dy * VolumeChunk.CHUNKSIZE + dz];
+            return _cache[dx & 1][dy * chunkSize + dz];
         }
 
 
@@ -55,7 +56,7 @@ namespace Transvoxel.SurfaceExtractor
             set
             {
                 Debug.Assert(x >= 0 && y >= 0 && z >= 0);
-                _cache[x & 1][y * VolumeChunk.CHUNKSIZE + z] = value;
+                _cache[x & 1][y * chunkSize + z] = value;
             }
         }
 
@@ -67,7 +68,7 @@ namespace Transvoxel.SurfaceExtractor
 
         internal void SetReusableIndex(Vector3i pos, byte reuseIndex, ushort p)
         {
-            _cache[pos.X & 1][pos.Y * VolumeChunk.CHUNKSIZE + pos.Z].Verts[reuseIndex] = p;
+            _cache[pos.X & 1][pos.Y * chunkSize + pos.Z].Verts[reuseIndex] = p;
         }
     }
 

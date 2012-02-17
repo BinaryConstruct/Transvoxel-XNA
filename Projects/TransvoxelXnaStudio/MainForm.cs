@@ -97,9 +97,6 @@ namespace TransvoxelXnaStudio
                         OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)size) * 100.0f), "Generating Volume Data..."));
                         for (int j = 0; j <= size; j++)
                         {
-
-
-                            
                             for (int k = 0; k <= size; k++)
                             {
                                 double div = 64.0;
@@ -115,7 +112,7 @@ namespace TransvoxelXnaStudio
                     OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
                     _logger.Log("MAIN", "Volume Data Generation Complete.");
 
-                    Console.WriteLine(previewWindow1.TransvoxelManager.VolumeData.ToString());
+                   // Console.WriteLine(previewWindow1.TransvoxelManager.VolumeData.ToString());
                 }
                 );
         }
@@ -127,20 +124,25 @@ namespace TransvoxelXnaStudio
 
         private void extractMeshBtn_Click(object sender, EventArgs e)
         {
-            previewWindow1.TransvoxelManager.Chunks.Clear();
+            previewWindow1.TransvoxelManager.Chunks = new System.Collections.Concurrent.ConcurrentDictionary<Vector3, TransvoxelHelpers.Chunk>();
             previewWindow1.TransvoxelManager.SurfaceExtractor.UseCache = previewWindow1.Settings.ReuseVert;
+            previewWindow1.TransvoxelManager.VolumeData.ChunkBits = previewWindow1.Settings.ChunkSizeBits;
             _logger.Log("MAIN", "Extracting Mesh...");
-            Task.Factory.StartNew(
+
+            
+
+            new Thread(
                 () =>
                 {
-                    
+                    //Thread.CurrentThread.IsBackground = true;
+
                     IVolumeData v = previewWindow1.TransvoxelManager.VolumeData;
                     CompactOctree o = (CompactOctree)v;
                     previewWindow1.TransvoxelManager.ExtractMesh(o.Head());
                     _logger.Log("MAIN", "Mesh Extraction Complete.");
                 }
 
-                );
+                ).Start();
         }
 
         private void UpdateStatusText()
