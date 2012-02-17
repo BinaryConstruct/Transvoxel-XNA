@@ -7,7 +7,7 @@ using Transvoxel.VolumeData;
 
 namespace Transvoxel.SurfaceExtractor
 {
-    internal static class TransvoxelExtractor
+    internal static class TransvoxelExtractor2
     {
         public const int BlockWidth = 16;
         public const int Primary = 0;
