@@ -13,7 +13,7 @@ namespace Transvoxel.SurfaceExtractor
 {
 	public interface ISurfaceExtractor
 	{
-		Mesh GenLodCell(OctreeNode n);
+		Mesh GenLodCell(OctreeNode<VolumeChunk> n);
 		int ChunkSize { get; }
 	}
 
@@ -30,7 +30,7 @@ namespace Transvoxel.SurfaceExtractor
 			UseCache = true;
 		}
 
-		public Mesh GenLodCell(OctreeNode node)
+		public Mesh GenLodCell(OctreeNode<VolumeChunk> node)
 		{
 			Mesh mesh = new Mesh();
 			int lod = 1 << (node.GetLevelOfDetail()-1);

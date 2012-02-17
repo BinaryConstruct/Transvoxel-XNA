@@ -13,7 +13,7 @@ namespace Transvoxel.VolumeData.CompactOctree
     public class VolumeChunk : IVolumeData
     {
         // the used bits of a coordinate to adress a voxel in the chunk
-        public const int CHUNKBITS = 4;
+        public const int CHUNKBITS = 3;
 
         // = 2^(CHUNKBITS)
         public const int CHUNKSIZE = 1 << CHUNKBITS; 
@@ -42,7 +42,7 @@ namespace Transvoxel.VolumeData.CompactOctree
             }
         }
 
-        public bool ContainsOnlyZero()
+        public bool Empty()
         { 
             int i=0;
             foreach(sbyte s in values)

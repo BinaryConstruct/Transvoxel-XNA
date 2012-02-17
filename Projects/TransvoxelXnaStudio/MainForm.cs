@@ -97,9 +97,12 @@ namespace TransvoxelXnaStudio
                         OnProgressChanged(null, new ProgressChangedEventArgs((int)(((float)i/(float)size) * 100.0f), "Generating Volume Data..."));
                         for (int j = 0; j <= size; j++)
                         {
+
+
+                            
                             for (int k = 0; k <= size; k++)
                             {
-                                double div = 31.0;
+                                double div = 64.0;
                                 double val = (SimplexNoise.noise((i) / div, (j) / div, (k) / div)) * 128.0;
 
                                 //val = -100;
@@ -111,6 +114,8 @@ namespace TransvoxelXnaStudio
                     }
                     OnProgressChanged(null, new ProgressChangedEventArgs(0, string.Empty));
                     _logger.Log("MAIN", "Volume Data Generation Complete.");
+
+                    Console.WriteLine(previewWindow1.TransvoxelManager.VolumeData.ToString());
                 }
                 );
         }

@@ -60,7 +60,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
     //    int cnt = 0;
 
-        public void ExtractMesh(OctreeNode n)
+        public void ExtractMesh(OctreeNode<VolumeChunk> n)
         {
 
             if (n == null)
@@ -72,12 +72,11 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             int lod = n.GetLevelOfDetail();
 
-
-            if ((dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
+            if (lod == 1)//(dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
             {
-    //            cnt++;
-    //            if (cnt < 18 || cnt > 18)
-     //               return;
+                //            cnt++;
+                //            if (cnt < 18 || cnt > 18)
+                //               return;
 
                 Vector3i position = n.GetPos();
                 Vector3 posXna = position.ToVector3();
@@ -85,7 +84,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                 Logger.GetLogger().Log(null, "" + dst);
 
                 var m = _surfaceExtractor.GenLodCell(n);
-                var v = Converters.ConvertMeshToXna(m, LodColors[lod-1]);
+                var v = Converters.ConvertMeshToXna(m, LodColors[lod - 1]);
                 var i = m.GetIndices();
 
                 var chunk = new Chunk
@@ -110,40 +109,16 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                         _chunks.TryRemove(posXna, out removed);
                     }
                     _chunks.TryAdd(posXna, chunk);
-                }               
+                }
             }
-            else 
+            else
             {
-                if(n is OctreeChildNode)
+
+                for (int i = 0; i < 8; i++)
                 {
-                    for (int i = 0; i < 8; i++)
-                    {
-                        OctreeChildNode node = (OctreeChildNode)n;
-                        ExtractMesh(node.GetChilds()[i]);
-                    }
+                    ExtractMesh(n.GetChilds()[i]);
                 }
             }
         }
-
-        
-        /*public void GenerateVolumeData(Vector3 position)
-        {
-           
-            for (int x = 0; x < VolumeChunk.CHUNKSIZE; x++)
-            {
-                int localX = (int)position.X + x;
-                for (int y = 0; y < VolumeChunk.CHUNKSIZE; y++)
-                {
-                    int localY = (int)position.Y + y;
-                    for (int z = 0; z < VolumeChunk.CHUNKSIZE; z++)
-                    {
-                        int localZ = (int)position.Z + z;
-                        double div = 31.0;
-                        double val = (SimplexNoise.noise(localX / div, localY / div, localZ /div)) * 128.0;
-                        _volumeData[localX, localY, localZ] = (sbyte)val;
-                    }
-                }
-            }
-        }*/
     }
 }

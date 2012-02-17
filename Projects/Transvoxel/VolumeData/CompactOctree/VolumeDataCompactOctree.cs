@@ -8,14 +8,14 @@ namespace Transvoxel.VolumeData.CompactOctree
 {
     public class CompactOctree : IVolumeData
     {
-        private readonly OctreeChildNode _head;
+        private readonly OctreeNode<VolumeChunk> _head;
 
         public CompactOctree()
         {
-            _head = new OctreeChildNode(null, 0, 0, 0);
+            _head = new OctreeNode<VolumeChunk>(null, 0, 0, 0);
         }
 
-        public OctreeNode Head()
+        public OctreeNode<VolumeChunk> Head()
         {
             return _head;
         }
@@ -30,12 +30,15 @@ namespace Transvoxel.VolumeData.CompactOctree
         {
             get
             {
-                return _head.Get(x, y, z);
+                OctreeNode<VolumeChunk> n = _head.Get(x, y, z);
+                if (n == null || n.value == null)
+                    return (sbyte)0;
+                return n.value[x,y,z];
             }
 
             set
             {
-                _head.Set(x, y, z, value);
+                _head.Set(x, y, z)[x, y, z] = value;
             }
         }
 
@@ -43,11 +46,11 @@ namespace Transvoxel.VolumeData.CompactOctree
         {
             get { return this[v.X, v.Y, v.Z]; }
             set { this[v.X, v.Y, v.Z] = value; }
-        }
+        }       
 
         public override string ToString()
         {
-            return _head.ToString(0);
+            return _head.ToStringA(0);
         }
 
         

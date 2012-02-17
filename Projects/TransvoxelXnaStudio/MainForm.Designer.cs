@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            TransvoxelXnaStudio.GameWindow.PreviewSettings previewSettings1 = new TransvoxelXnaStudio.GameWindow.PreviewSettings();
+            TransvoxelXnaStudio.GameWindow.PreviewSettings previewSettings2 = new TransvoxelXnaStudio.GameWindow.PreviewSettings();
             this.toolArea = new System.Windows.Forms.Panel();
             this.propertiesContainer = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
@@ -288,11 +288,12 @@
             this.previewWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.previewWindow1.Location = new System.Drawing.Point(250, 0);
             this.previewWindow1.Name = "previewWindow1";
-            previewSettings1.CullMode = Microsoft.Xna.Framework.Graphics.CullMode.None;
-            previewSettings1.FillMode = Microsoft.Xna.Framework.Graphics.FillMode.Solid;
-            previewSettings1.ReuseVert = true;
-            previewSettings1.ShowBoundingBoxes = true;
-            this.previewWindow1.Settings = previewSettings1;
+            previewSettings2.CullMode = Microsoft.Xna.Framework.Graphics.CullMode.None;
+            previewSettings2.FillMode = Microsoft.Xna.Framework.Graphics.FillMode.Solid;
+            previewSettings2.ReuseVert = true;
+            previewSettings2.ShowBoundingBoxes = true;
+            previewSettings2.VolumeSize = 64;
+            this.previewWindow1.Settings = previewSettings2;
             this.previewWindow1.Size = new System.Drawing.Size(614, 492);
             this.previewWindow1.TabIndex = 1;
             this.previewWindow1.Text = "previewWindow1";

@@ -7,16 +7,19 @@ using System.Diagnostics;
 
 namespace Transvoxel.VolumeData.CompactOctree
 {
-    public abstract class OctreeNode
+    public class OctreeNode<T> where T:new()
     {
         internal int offsetBitNum = 0;  //equal bits for all subnodes
         internal int level = 0;         //octree depth (before the offset bits)
         internal int xcoord = 0;
         internal int ycoord = 0;
         internal int zcoord = 0;
-        internal OctreeChildNode parent;
 
-        internal OctreeNode(OctreeChildNode parent, int x, int y, int z)
+        internal OctreeNode<T> parent;
+        internal T value = default(T);
+        private OctreeNode<T>[] nodes = null;//new OctreeNode[8]; //index: x+y*2+z*4 | x,y,z elementof {0,1}
+
+        internal OctreeNode(OctreeNode<T> parent, int x, int y, int z)
         {
             this.parent = parent;
             xcoord = x;
@@ -26,18 +29,136 @@ namespace Transvoxel.VolumeData.CompactOctree
             level = 0;
         }
 
-        //public abstract OctreeNode GetNode(int x, int y, int z);
-        internal abstract sbyte Get(int x, int y, int z);
-        internal abstract void Set(int x, int y, int z, sbyte val);
-        internal abstract bool HasChilds();
+        public OctreeNode<T> initChild(int place, int x, int y, int z)
+        {
+            OctreeNode<T> newChild = new OctreeNode<T>(this, x, y, z);
+            SetChild(newChild, place);//nodes[place] = newChild;
+            return newChild;
+        }
 
-        public virtual string ToString(int lz)
+        public OctreeNode<T> initLeaf(int place, int x, int y, int z)
+        {
+            OctreeNode<T> leaf = new OctreeNode<T>(this, x, y, z);
+            SetChild(leaf, place); //nodes[place] = leaf;
+            leaf.level = level + offsetBitNum + 1;
+            leaf.offsetBitNum = 32- VolumeChunk.CHUNKBITS - leaf.level;
+
+            leaf.value = new T();
+            return leaf;
+        }
+
+        
+
+        internal OctreeNode<T> Get(int x, int y, int z, int minlevel = 32-VolumeChunk.CHUNKBITS)
+        {
+            if (GetLevel() == minlevel)
+                return this;
+
+            int equalOffsetNum = EqualOffsetNum(x, y, z);
+            int l = level;
+
+            if (equalOffsetNum == offsetBitNum)
+            {
+                l += offsetBitNum;
+            }
+            else
+            {
+                return null;
+            }
+
+            int bitIndex = BitHack.BitIndex(x, y, z, l);
+
+            if (!HasChilds() || nodes[bitIndex] == null)
+                return null;
+
+            return nodes[bitIndex].Get(x,y,z);
+        }
+
+        internal T Set(int x, int y, int z, int minlevel=32-VolumeChunk.CHUNKBITS)
+        {
+            
+
+            int equalOffsetNum = EqualOffsetNum(x, y, z);
+
+            if (equalOffsetNum == offsetBitNum)
+            {
+                int bitIndex = BitHack.BitIndex(x, y, z, level + offsetBitNum);
+
+                if (GetLevel() == minlevel)
+                {
+                    return value;
+                }
+
+                if (!HasChilds() || nodes[bitIndex] == null)
+                {
+                    //Node doesn't exist - create it
+                    OctreeNode<T> leaf = initLeaf(bitIndex, x, y, z);
+
+                    return leaf.value;
+                    //leaf.value[x, y, z] = val;
+                    //leaf.setChunkVal(x, y, z, val);
+                }
+                else
+                {
+                    //Node exists - refer Set call
+                    OctreeNode<T> n = nodes[bitIndex];
+
+                 //   if (n.GetLevel() == minlevel)
+                 //       return n.value;
+
+                    return n.Set(x, y, z);
+                }
+            }
+            else
+            {
+                //Create Node
+                OctreeNode<T> newc = parent.initChild(parent.GetChildIndex(this), x, y, z);
+                newc.offsetBitNum = equalOffsetNum;
+                newc.level = level;
+
+                //Add this as child to the new Node
+                int bitIndex = BitHack.BitIndex(xcoord, ycoord, zcoord, newc.level+newc.offsetBitNum);
+                newc.SetChild(this, bitIndex);
+                offsetBitNum -= (equalOffsetNum + 1);
+                level = newc.level + newc.offsetBitNum + 1;
+
+                bitIndex = BitHack.BitIndex(x, y, z, newc.level + newc.offsetBitNum);
+                OctreeNode<T> leaf = newc.initLeaf(bitIndex, x, y, z);
+                //leaf.setChunkVal(x, y, z, val);
+                //leaf.value[x, y, z] = val;
+
+                return leaf.value;
+            }
+        }
+
+        internal bool HasChilds()
+        {
+            return nodes != null;
+        }
+
+        public string ToStringA(int lz)
+        {
+            string lzstr = new string(' ', lz);
+            string ret = ToStringB(lz) + "\n";
+
+            if (!HasChilds())
+                return ret;
+            
+            for (int i = 0; i < 8; i++)
+            {
+                ret += lzstr + "Node" + i + " = " + (!HasChilds() || nodes[i] == null ? "null" : nodes[i].ToStringA(lz + 1)) + "\n";
+            }
+
+            return ret;
+        }
+
+        public string ToStringB(int lz)
         {
             string lzstr = new string(' ', lz);
             return lzstr + "< " + this.GetType().ToString() + " > offsetBitNum:" + offsetBitNum+" lvl:"+GetLevel()+" lod:"+GetLevelOfDetail();
         }
 
-        private int GetLevel()
+        internal int GetLevel()
         {
             return level + offsetBitNum;
         }
@@ -84,17 +205,31 @@ namespace Transvoxel.VolumeData.CompactOctree
             return BitHack.min(equalX, equalY, equalZ);
         }
 
-        //Iteration methods, for fast relativ adressing
-        //x,y,z relative coordiantes
-        public OctreeNode IterateZ(int z)
+        public int GetChildIndex(OctreeNode<T> n)
         {
-            uint mask = BitHack.Mask(level-1);
-            if ((zcoord & mask) == 0)
-            { 
-                //return parent.chi
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                if (n == nodes[i])
+                    return i;
             }
 
-            return null;
+            //Throws index out of bounds, because GetChildIndex always adresses an array
+            return -1;
+        }
+
+        internal void SetChild(OctreeNode<T> n, int i)
+        {
+            if (nodes == null)
+            {
+                nodes = new OctreeNode<T>[8];
+            }
+            nodes[i] = n;
+            n.parent = this;
+        }
+
+        public OctreeNode<T>[] GetChilds()
+        {
+            return nodes;
         }
     }
 }
