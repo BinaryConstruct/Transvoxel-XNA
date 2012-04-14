@@ -18,7 +18,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
         private readonly GraphicsDevice _gd;
         private ConcurrentDictionary<Vector3, Chunk> _chunks;
         private TransvoxelExtractor _surfaceExtractor;
-        private IVolumeData _volumeData;
+        private IVolumeData<sbyte> _volumeData;
         private Logger _logger;
         private string _logSend;
 
@@ -31,7 +31,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             // Initialize Transvoxel
             _logSend = "TransvoxelManager";
             _logger.Log(_logSend, "Creating Octree");
-            _volumeData = new CompactOctree();
+            _volumeData = new HashedVolume<sbyte>();
             _logger.Log(_logSend, "Creating TransvoxelExtractor");
             _surfaceExtractor = new TransvoxelExtractor(_volumeData);
         }
@@ -41,7 +41,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             get { return _surfaceExtractor; }
         }
 
-        public IVolumeData VolumeData
+        public IVolumeData<sbyte> VolumeData
         {
             get { return _volumeData; }
         }
@@ -60,67 +60,41 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             Color.AliceBlue,
         };
 
-        public void ExtractMesh(OctreeNode<sbyte> n)
+        public void ExtractMesh(WorldChunk<sbyte> wc)
         {
-            if (n == null)
-                return;
+            int lod = 1;
+            Vector3i position = wc.GetPosition();
+            Vector3 posXna = position.ToVector3();
 
-            Vector3i center = n.GetCenter();
+            //Logger.GetLogger().Log(null, "" + dst);
 
-            float dst = (float)Math.Sqrt(center.X * center.X + center.Y * center.Y + center.Z * center.Z);
+            var m = _surfaceExtractor.GenLodCell(wc);
+            var v = Converters.ConvertMeshToXna(m, LodColors[0]);
+            var i = m.GetIndices();
 
-            int lod = n.GetLod()-_volumeData.ChunkBits;
-
-            if ((dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
+            var chunk = new Chunk
             {
-                //            cnt++;
-                //            if (cnt < 18 || cnt > 18)
-                //               return;
+                BoundingBox = new BoundingBox(posXna, posXna + new Vector3(wc.Size(), wc.Size(), wc.Size())),
+                Position = posXna,
+                Lod = lod
+            };
 
-                Vector3i position = n.GetPos();
-                Vector3 posXna = position.ToVector3();
+            if (i.Length > 0 && v.Length > 0)
+            {
+                chunk.VertexBuffer = new VertexBuffer(_gd, typeof(VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
+                chunk.VertexBuffer.SetData(v);
+                chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
+                chunk.IndexBuffer.SetData(i);
 
-                //Logger.GetLogger().Log(null, "" + dst);
+                Console.WriteLine("Chunk has : " + v.Length + " Vertices " + i.Length + " Indices");
 
-                var m = _surfaceExtractor.GenLodCell(n);
-                var v = Converters.ConvertMeshToXna(m, LodColors[0]);
-                var i = m.GetIndices();
-
-                var chunk = new Chunk
+                if (_chunks.ContainsKey(posXna))
                 {
-                    BoundingBox = new BoundingBox(posXna, posXna + new Vector3(n.Size(), n.Size(), n.Size())),
-                    Position = posXna,
-                    Lod = lod
-                };
-
-                if (i.Length > 0 && v.Length > 0)
-                {
-                    chunk.VertexBuffer = new VertexBuffer(_gd, typeof(VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
-                    chunk.VertexBuffer.SetData(v);
-                    chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
-                    chunk.IndexBuffer.SetData(i);
-
-                    Console.WriteLine("Chunk has : " + v.Length + " Vertices " + i.Length + " Indices");
-
-                    if (_chunks.ContainsKey(posXna))
-                    {
-                        Chunk removed;
-                        _chunks.TryRemove(posXna, out removed);
-                    }
-                    _chunks.TryAdd(posXna, chunk);
+                    Chunk removed;
+                    _chunks.TryRemove(posXna, out removed);
                 }
-                    
-            }
-            else
-            {
-                n.Foreach(ExtractMesh);
-                /*for (int i = 0; i < 8; i++)
-                {
-                    ExtractMesh(n.GetChilds()[i]);
-                }*/
-            }
-
-
+                _chunks.TryAdd(posXna, chunk);
+            }            
         }
     }
 }

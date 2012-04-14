@@ -288,12 +288,10 @@
             this.previewWindow1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.previewWindow1.Location = new System.Drawing.Point(250, 0);
             this.previewWindow1.Name = "previewWindow1";
-            previewSettings1.ChunkSizeBits = 4;
             previewSettings1.CullMode = Microsoft.Xna.Framework.Graphics.CullMode.None;
             previewSettings1.FillMode = Microsoft.Xna.Framework.Graphics.FillMode.Solid;
             previewSettings1.ReuseVert = true;
             previewSettings1.ShowBoundingBoxes = true;
-            previewSettings1.VolumeSize = 64;
             this.previewWindow1.Settings = previewSettings1;
             this.previewWindow1.Size = new System.Drawing.Size(614, 492);
             this.previewWindow1.TabIndex = 1;

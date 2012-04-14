@@ -9,7 +9,7 @@ namespace ConsoleFunctionalTest
     {
         public static void TestOctree()
         {
-            IVolumeData octree = new CompactOctree();
+            IVolumeData<sbyte> octree = new HashedVolume<sbyte>();
             Stopwatch watch = new Stopwatch();
             int fail = 0;
             watch.Start();

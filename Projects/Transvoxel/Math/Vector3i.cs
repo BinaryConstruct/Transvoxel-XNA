@@ -113,6 +113,14 @@ namespace Transvoxel.Math
                                     v0.Y / v1.Y,
                                     v0.Z / v1.Z);
         }
+
+        public static Vector3i operator %(Vector3i v0, int i)
+        {
+            return new Vector3i(v0.X % i,
+                                    v0.Y % i,
+                                    v0.Z % i);
+        }
+
         public static Vector3i operator *(Vector3i v0, Vector3i v1)
         {
             return new Vector3i(v0.X * v1.X,

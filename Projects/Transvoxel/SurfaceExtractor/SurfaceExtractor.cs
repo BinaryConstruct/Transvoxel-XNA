@@ -13,26 +13,26 @@ namespace Transvoxel.SurfaceExtractor
 {
 	public interface ISurfaceExtractor
 	{
-		Mesh GenLodCell(OctreeNode<sbyte> n);
+		Mesh GenLodCell(WorldChunk<sbyte> n);
 	}
 
 	public class TransvoxelExtractor : ISurfaceExtractor
 	{
 		public bool UseCache { get; set; }
-		IVolumeData volume;
+		IVolumeData<sbyte> volume;
 		RegularCellCache cache;
 
-		public TransvoxelExtractor(IVolumeData data)
+		public TransvoxelExtractor(IVolumeData<sbyte> data)
 		{
 			volume = data;
 			cache = new RegularCellCache(volume.ChunkSize*10);
 			UseCache = true;
 		}
 
-		public Mesh GenLodCell(OctreeNode<sbyte> node)
+		public Mesh GenLodCell(WorldChunk<sbyte> chunk)
 		{
 			Mesh mesh = new Mesh();
-			int lod = 1 << (node.GetLod()-volume.ChunkBits);
+			int lod = 1;
 
 			for (int x = 0; x < volume.ChunkSize; x++)
 			{
@@ -44,7 +44,7 @@ namespace Transvoxel.SurfaceExtractor
 						position.X = x;
 						position.Y = y;
 						position.Z = z;
-						PolygonizeCell(node.GetPos(), position, ref mesh, lod);
+						PolygonizeCell(chunk.GetPosition(), position, ref mesh, lod);
 					}
 				}
 			}

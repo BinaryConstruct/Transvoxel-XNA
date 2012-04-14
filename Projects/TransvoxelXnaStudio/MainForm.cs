@@ -13,6 +13,7 @@ using Transvoxel.VolumeData;
 using Transvoxel.VolumeData.CompactOctree;
 using System.Threading;
 using Transvoxel.Math;
+using TransvoxelXnaStudio.TransvoxelHelpers;
 
 namespace TransvoxelXnaStudio
 {
@@ -85,7 +86,7 @@ namespace TransvoxelXnaStudio
 
         private void genVolBtn_Click(object sender, EventArgs e)
         {
-            int size = previewWindow1.Settings.VolumeSize;
+            int size = previewWindow1.Settings.PreGeneratedRandomSize;
             
             _logger.Log("MAIN", "Generating Volume Data...");
             Task.Factory.StartNew(
@@ -126,7 +127,7 @@ namespace TransvoxelXnaStudio
         {
             previewWindow1.TransvoxelManager.Chunks = new System.Collections.Concurrent.ConcurrentDictionary<Vector3, TransvoxelHelpers.Chunk>();
             previewWindow1.TransvoxelManager.SurfaceExtractor.UseCache = previewWindow1.Settings.ReuseVert;
-            previewWindow1.TransvoxelManager.VolumeData.ChunkBits = previewWindow1.Settings.ChunkSizeBits;
+            previewWindow1.TransvoxelManager.VolumeData.ChunkSize = previewWindow1.Settings.ChunkSize;
             _logger.Log("MAIN", "Extracting Mesh...");
 
             
@@ -136,9 +137,13 @@ namespace TransvoxelXnaStudio
                 {
                     //Thread.CurrentThread.IsBackground = true;
 
-                    IVolumeData v = previewWindow1.TransvoxelManager.VolumeData;
-                    CompactOctree o = (CompactOctree)v;
-                    previewWindow1.TransvoxelManager.ExtractMesh(o.Head());
+                    TransvoxelManager tvm = previewWindow1.TransvoxelManager;
+                    HashedVolume<sbyte> v = (HashedVolume<sbyte>)tvm.VolumeData;
+                    foreach(WorldChunk<sbyte> c in v.data.Values)
+                    {
+                        tvm.ExtractMesh(c);
+                    }
+                    
                     _logger.Log("MAIN", "Mesh Extraction Complete.");
                 }
 

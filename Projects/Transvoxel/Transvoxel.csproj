@@ -60,19 +60,21 @@
     <Compile Include="Math\AxisAlignedBoundingBox.cs" />
     <Compile Include="Math\Matrix3X3.cs" />
     <Compile Include="Math\PerlinNoise.cs" />
+    <Compile Include="Math\RunLengthCompression.cs" />
     <Compile Include="Math\SimplexNoise.cs" />
     <Compile Include="Math\Vector3f.cs" />
     <Compile Include="Math\Vector3i.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SurfaceExtractor\Cache.cs" />
     <Compile Include="SurfaceExtractor\SurfaceExtractor.cs" />
+    <Compile Include="VolumeData\Array3.cs" />
     <None Include="SurfaceExtractor\ported\TransvoxelExtractor.cs" />
     <None Include="SurfaceExtractor\ported\TransvoxelManager.cs" />
     <None Include="SurfaceExtractor\ported\Vertex.cs" />
     <Compile Include="VolumeData\CompactOctree\BitHacks.cs" />
-    <Compile Include="VolumeData\CompactOctree\OctreeIterator.cs" />
-    <Compile Include="VolumeData\CompactOctree\VolumeDataCompactOctree.cs" />
+    <Compile Include="VolumeData\CompactOctree\Octree.cs" />
     <Compile Include="VolumeData\CompactOctree\OctreeNode.cs" />
+    <Compile Include="VolumeData\HashedVolume.cs" />
     <Compile Include="VolumeData\IVolumeData.cs" />
   </ItemGroup>
   <ItemGroup>

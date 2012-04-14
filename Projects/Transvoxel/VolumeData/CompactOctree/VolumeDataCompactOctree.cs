@@ -9,13 +9,13 @@ namespace Transvoxel.VolumeData.CompactOctree
     public class CompactOctree : IVolumeData
     {
         private int chunkbits = 4;
-        private readonly OctreeIterator<sbyte> iterator;
+      //  private readonly OctreeIterator<sbyte> iterator;
         private readonly OctreeNode<sbyte> _head;
 
         public CompactOctree()
         {
             _head = new OctreeNode<sbyte>(null, 0, 0, 0);
-            iterator = new OctreeIterator<sbyte>(_head);
+    //        iterator = new OctreeIterator<sbyte>(_head);
         }
 
         public OctreeNode<sbyte> Head()
