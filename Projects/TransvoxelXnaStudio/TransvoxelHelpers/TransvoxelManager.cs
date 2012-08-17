@@ -10,6 +10,7 @@ using System.Linq;
 using Transvoxel.VolumeData.CompactOctree;
 using System.Diagnostics;
 using System.Threading;
+using Transvoxel.VolumeData.Dictionary;
 
 namespace TransvoxelXnaStudio.TransvoxelHelpers
 {
@@ -31,7 +32,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             // Initialize Transvoxel
             _logSend = "TransvoxelManager";
             _logger.Log(_logSend, "Creating Octree");
-            _volumeData = new CompactOctree();
+            _volumeData = new VolumePage(new VolumeSize(8));
             _logger.Log(_logSend, "Creating TransvoxelExtractor");
             _surfaceExtractor = new TransvoxelExtractor(_volumeData);
         }
@@ -60,6 +61,57 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
             Color.AliceBlue,
         };
 
+        public void ExtractMesh(int size, int lod)
+        {
+            
+            int numchunks = size / VolumeData.ChunkSize;
+            for (int j = 0; j < numchunks; j++)
+            {
+            for (int h = 0; h < numchunks; h++)
+            {
+                
+                    
+                        for (int k = 0; k < numchunks; k++)
+                        {
+
+                        Vector3i position = new Vector3i(h, j, k) * 8*lod;
+                        Vector3 posXna = position.ToVector3();
+
+                        //Logger.GetLogger().Log(null, "" + dst);
+
+                        var m = _surfaceExtractor.GenLodRegion(position, 8, lod);
+                        //var m = _surfaceExtractor.GenLodCell(n);
+                        var v = Converters.ConvertMeshToXna(m, LodColors[lod % LodColors.Length]);
+                        var i = m.GetIndices();
+
+                        var chunk = new Chunk
+                        {
+                            BoundingBox = new BoundingBox(posXna, posXna + new Vector3(8, 8, 8)*lod),
+                            Position = posXna,
+                            Lod = lod
+                        };
+
+                        if (i.Length > 0 && v.Length > 0)
+                        {
+                            chunk.VertexBuffer = new VertexBuffer(_gd, typeof(VertexPositionTextureNormalColor), v.Length, BufferUsage.WriteOnly);
+                            chunk.VertexBuffer.SetData(v);
+                            chunk.IndexBuffer = new IndexBuffer(_gd, IndexElementSize.SixteenBits, i.Length, BufferUsage.WriteOnly);
+                            chunk.IndexBuffer.SetData(i);
+
+                            Console.WriteLine("Chunk has : " + v.Length + " Vertices " + i.Length + " Indices");
+
+                            if (_chunks.ContainsKey(posXna))
+                            {
+                                Chunk removed;
+                                _chunks.TryRemove(posXna, out removed);
+                            }
+                            _chunks.TryAdd(posXna, chunk);
+                        }
+                    }
+                }
+            }
+        }
+
         public void ExtractMesh(OctreeNode<sbyte> n)
         {
             if (n == null)
@@ -69,7 +121,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
             float dst = (float)Math.Sqrt(center.X * center.X + center.Y * center.Y + center.Z * center.Z);
 
-            int lod = n.GetLod()-_volumeData.ChunkBits;
+            int lod = n.GetLod() - _volumeData.ChunkBits;
 
             if ((dst >= 512 && lod == 3) || (dst < 512 && dst >= 128 && lod == 2) || (dst < 128 && lod == 1))
             {
@@ -82,8 +134,10 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
 
                 //Logger.GetLogger().Log(null, "" + dst);
 
-                var m = _surfaceExtractor.GenLodCell(n);
-                var v = Converters.ConvertMeshToXna(m, LodColors[0]);
+                var m = _surfaceExtractor.GenLodRegion(position, n.Size(), lod);
+
+                //var m = _surfaceExtractor.GenLodCell(n);
+                var v = Converters.ConvertMeshToXna(m, LodColors[lod % LodColors.Length]);
                 var i = m.GetIndices();
 
                 var chunk = new Chunk
@@ -92,6 +146,8 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     Position = posXna,
                     Lod = lod
                 };
+
+                
 
                 if (i.Length > 0 && v.Length > 0)
                 {
@@ -109,7 +165,7 @@ namespace TransvoxelXnaStudio.TransvoxelHelpers
                     }
                     _chunks.TryAdd(posXna, chunk);
                 }
-                    
+
             }
             else
             {

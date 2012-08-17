@@ -24,6 +24,7 @@ namespace TransvoxelXnaStudio.GameWindow
             ReuseVert = true;
             VolumeSize = 64;
             ChunkSizeBits = 4;
+            LOD = 1;
         }
 
         public bool ShowBoundingBoxes { get; set; }
@@ -32,6 +33,7 @@ namespace TransvoxelXnaStudio.GameWindow
         public bool ReuseVert { get; set; }
         public int VolumeSize { get; set; }
         public int ChunkSizeBits { get; set; }
+        public int LOD { get; set; }
     }
     public class PreviewWindow : GraphicsDeviceControl
     {
@@ -193,8 +195,8 @@ namespace TransvoxelXnaStudio.GameWindow
                         _tvm.Chunks.TryGetValue(key, out chunk);
                         if (chunk == null) continue;
 
-                        int i = (chunk.Lod-_tvm.VolumeData.ChunkBits)%TransvoxelManager.LodColors.Length;
-                        SetupBoundingBox(chunk.BoundingBox, TransvoxelManager.LodColors[0]);
+                        int i = (chunk.Lod)%TransvoxelManager.LodColors.Length;
+                        SetupBoundingBox(chunk.BoundingBox, TransvoxelManager.LodColors[i]);
                         //if (viewFastFrustrum.Intersects(chunk.BoundingBox) && chunk.IndexBuffer != null)
                         //if (chunk.IndexBuffer != null)
                         {

@@ -137,8 +137,9 @@ namespace TransvoxelXnaStudio
                     //Thread.CurrentThread.IsBackground = true;
 
                     IVolumeData v = previewWindow1.TransvoxelManager.VolumeData;
-                    CompactOctree o = (CompactOctree)v;
-                    previewWindow1.TransvoxelManager.ExtractMesh(o.Head());
+                    //CompactOctree o = (CompactOctree)v;
+                    //previewWindow1.TransvoxelManager.ExtractMesh(o);
+                    previewWindow1.TransvoxelManager.ExtractMesh(previewWindow1.Settings.VolumeSize, previewWindow1.Settings.LOD);
                     _logger.Log("MAIN", "Mesh Extraction Complete.");
                 }
 
