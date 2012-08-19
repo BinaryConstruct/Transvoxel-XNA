@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Transvoxel.VolumeData.CompactOctree;
-using Transvoxel.Geometry;
+﻿using Transvoxel.Geometry;
 using Transvoxel.VolumeData;
 using Transvoxel.Math;
 using Transvoxel.Lengyel;
@@ -14,19 +9,19 @@ namespace Transvoxel.SurfaceExtractor
     public interface ISurfaceExtractor
     {
         Mesh GenLodRegion(Vector3i min, int size,int lod);
-        Mesh GenLodCell(OctreeNode<sbyte> n);
+        //Mesh GenLodCell(OctreeNode<sbyte> n);
     }
 
     public class TransvoxelExtractor : ISurfaceExtractor
     {
         public bool UseCache { get; set; }
-        IVolumeData volume;
+        IVolumeData<sbyte> volume;
         RegularCellCache cache;
 
-        public TransvoxelExtractor(IVolumeData data)
+        public TransvoxelExtractor(IVolumeData<sbyte> data)
         {
             volume = data;
-            cache = new RegularCellCache(volume.ChunkSize * 10);
+            cache = new RegularCellCache(volume.Size.SideLength * 10);
             UseCache = true;
         }
 
@@ -47,28 +42,6 @@ namespace Transvoxel.SurfaceExtractor
             return mesh;
         }
 
-        public Mesh GenLodCell(OctreeNode<sbyte> node)
-        {
-            Mesh mesh = new Mesh();
-            int lod = 1 << (node.GetLod() - volume.ChunkBits);
-
-            for (int x = 0; x < volume.ChunkSize; x++)
-            {
-                for (int y = 0; y < volume.ChunkSize; y++)
-                {
-                    for (int z = 0; z < volume.ChunkSize; z++)
-                    {
-                        Vector3i position; //new Vector3i(x, y, z);
-                        position.X = x;
-                        position.Y = y;
-                        position.Z = z;
-                        PolygonizeCell(node.GetPos(), position, ref mesh, lod);
-                    }
-                }
-            }
-
-            return mesh;
-        }
 
         internal void PolygonizeCell(Vector3i offsetPos, Vector3i pos, ref Mesh mesh, int lod)
         {

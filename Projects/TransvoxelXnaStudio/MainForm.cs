@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using TransvoxelXnaStudio.Framework;
 using Transvoxel.VolumeData;
-using Transvoxel.VolumeData.CompactOctree;
 using System.Threading;
 using Transvoxel.Math;
 
@@ -126,7 +120,6 @@ namespace TransvoxelXnaStudio
         {
             previewWindow1.TransvoxelManager.Chunks = new System.Collections.Concurrent.ConcurrentDictionary<Vector3, TransvoxelHelpers.Chunk>();
             previewWindow1.TransvoxelManager.SurfaceExtractor.UseCache = previewWindow1.Settings.ReuseVert;
-            previewWindow1.TransvoxelManager.VolumeData.ChunkBits = previewWindow1.Settings.ChunkSizeBits;
             _logger.Log("MAIN", "Extracting Mesh...");
 
             
@@ -136,7 +129,7 @@ namespace TransvoxelXnaStudio
                 {
                     //Thread.CurrentThread.IsBackground = true;
 
-                    IVolumeData v = previewWindow1.TransvoxelManager.VolumeData;
+                    var v = previewWindow1.TransvoxelManager.VolumeData;
                     //CompactOctree o = (CompactOctree)v;
                     //previewWindow1.TransvoxelManager.ExtractMesh(o);
                     previewWindow1.TransvoxelManager.ExtractMesh(previewWindow1.Settings.VolumeSize, previewWindow1.Settings.LOD);

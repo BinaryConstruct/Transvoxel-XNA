@@ -1,13 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Timers;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Transvoxel.Math;
-using Transvoxel.SurfaceExtractor;
-using Transvoxel.VolumeData;
-using Transvoxel.VolumeData.CompactOctree;
 using TransvoxelXnaStudio.Host;
 using TransvoxelXnaStudio.TransvoxelHelpers;
 

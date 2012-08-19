@@ -1,5 +1,4 @@
 using Transvoxel.Math;
-using Transvoxel.VolumeData.CompactOctree;
 using System.Diagnostics;
 
 namespace Transvoxel.SurfaceExtractor

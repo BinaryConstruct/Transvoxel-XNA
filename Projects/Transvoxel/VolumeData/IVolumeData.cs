@@ -1,12 +1,14 @@
+using Microsoft.Xna.Framework;
 using Transvoxel.Math;
+using Transvoxel.VolumeData.VolumeHash;
 
 namespace Transvoxel.VolumeData
 {
-    public interface IVolumeData
+    public interface IVolumeData<T>
     {
-        sbyte this[int x, int y, int z] { get; set; }
-        sbyte this[Vector3i v] { get; set; }
-        int ChunkSize { get; set; }
-        int ChunkBits { get; set; }
+        T this[int x, int y, int z] { get; set; }
+        T this[Vector3i v] { get; set; }
+        T this[Vector3 v] { get; set; }
+        VolumeSize Size { get; }
     }
 }

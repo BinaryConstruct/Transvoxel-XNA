@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Transvoxel.VolumeData;
-using Transvoxel.VolumeData.CompactOctree;
 
 namespace ConsoleFunctionalTest
 {
