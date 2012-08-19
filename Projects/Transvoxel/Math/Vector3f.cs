@@ -62,6 +62,7 @@ namespace Transvoxel.Math
         public static Vector3f UnitZ = new Vector3f(0, 0, 1);
         public static Vector3f Zero = new Vector3f(0, 0, 0);
         public static Vector3f One = new Vector3f(1, 1, 1);
+        public static Vector3f Epsilon = new Vector3f(float.Epsilon, float.Epsilon, float.Epsilon);
 
         #region Vector Math
 

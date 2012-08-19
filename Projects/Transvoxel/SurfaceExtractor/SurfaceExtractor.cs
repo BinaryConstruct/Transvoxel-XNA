@@ -13,7 +13,7 @@ namespace Transvoxel.SurfaceExtractor
 {
     public interface ISurfaceExtractor
     {
-        Mesh GenLodRegion(Vector3i min, int size,int lod);
+        Mesh GenLodRegion(Vector3i min, int size, int lod);
         Mesh GenLodCell(OctreeNode<sbyte> n);
     }
 
@@ -33,11 +33,11 @@ namespace Transvoxel.SurfaceExtractor
         public Mesh GenLodRegion(Vector3i min, int size, int lod)
         {
             Mesh mesh = new Mesh();
-            for (int x = 0; x < size ; x++)
+            for (int x = 0; x < size; x++)
             {
-                for (int y = 0; y < size; y ++)
+                for (int y = 0; y < size; y++)
                 {
-                    for (int z = 0; z < size; z ++)
+                    for (int z = 0; z < size; z++)
                     {
                         Vector3i position = new Vector3i(x, y, z);
                         PolygonizeCell(min, position, ref mesh, lod);
@@ -146,6 +146,7 @@ namespace Transvoxel.SurfaceExtractor
                 if (index == -1)
                 {
                     Vector3f normal = cornerNormals[v0] * t0 + cornerNormals[v1] * t1;
+                    normal.Normalize();
                     GenerateVertex(ref offsetPos, ref pos, mesh, lod, t, ref v0, ref v1, ref d0, ref d1, normal);
                     index = mesh.LatestAddedVertIndex();
                 }
