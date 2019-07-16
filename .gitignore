@@ -1,13 +1,8 @@
 
-#ignore thumbnails created by windows
+#Ignore thumbnails created by Windows
 Thumbs.db
-#Ignore files build by Visual Studio
-Storage.dat
-Index.dat
-*.*.docstates
-*.gpState
+#Ignore files built by Visual Studio
 *.obj
-*.zip
 *.exe
 *.pdb
 *.user
@@ -24,18 +19,14 @@ Index.dat
 *.cache
 *.ilk
 *.log
-#visual studio profiler
-*.vsp
 [Bb]in
 [Dd]ebug*/
-Binaries/
-Binaries/*
 *.lib
 *.sbr
 obj/
 [Rr]elease*/
 _ReSharper*/
-*.ReSharper*
 [Tt]est[Rr]esult*
-*.docstates
-*.user
+.vs/
+#Nuget packages folder
+packages/
